@@ -99,7 +99,7 @@ namespace OpenMeteo
     public enum WeatherModelOptionsParameter
     { 
         best_match,
-        ecmwf_ifs04,
+        ecmwf_ifs,
         ecmwf_ifs025,
         ecmwf_aifs025_single,
         metno_nordic,
