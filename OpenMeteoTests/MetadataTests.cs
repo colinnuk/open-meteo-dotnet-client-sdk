@@ -8,6 +8,7 @@ namespace OpenMeteoTests;
 public class MetadataTests
 {
     [DataTestMethod]
+    [DataRow(WeatherModelOptionsParameter.ecmwf_ifs)]
     [DataRow(WeatherModelOptionsParameter.ecmwf_ifs025)]
     [DataRow(WeatherModelOptionsParameter.ecmwf_aifs025_single)]
     [DataRow(WeatherModelOptionsParameter.icon_global)]
