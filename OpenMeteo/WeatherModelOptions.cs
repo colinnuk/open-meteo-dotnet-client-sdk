@@ -128,5 +128,7 @@ namespace OpenMeteo
         italia_meteo_arpae_icon_2i,
         ukmo_global_deterministic_10km,
         ukmo_uk_deterministic_2km,
+        meteoswiss_icon_ch1,
+        meteoswiss_icon_ch2
     }
 }

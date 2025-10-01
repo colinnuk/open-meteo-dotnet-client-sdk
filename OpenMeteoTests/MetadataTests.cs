@@ -1,6 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenMeteo;
-using System;
 using System.Threading.Tasks;
 
 namespace OpenMeteoTests;
@@ -32,6 +31,8 @@ public class MetadataTests
     [DataRow(WeatherModelOptionsParameter.metno_nordic)]
     [DataRow(WeatherModelOptionsParameter.bom_access_global)]
     [DataRow(WeatherModelOptionsParameter.italia_meteo_arpae_icon_2i)]
+    [DataRow(WeatherModelOptionsParameter.meteoswiss_icon_ch1)]
+    [DataRow(WeatherModelOptionsParameter.meteoswiss_icon_ch2)]
     public async Task Metadata_Async_Test(WeatherModelOptionsParameter model)
     {
         OpenMeteoClient client = new();
