@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -96,8 +97,8 @@ namespace OpenMeteoTests
                 null,
                 TimeformatType.iso8601, 
                 0,
-                "2022-08-30",
-                "2022-08-31",
+                DateTime.UtcNow.Date.AddDays(-2).ToString("yyyy-MM-dd"),
+                DateTime.UtcNow.Date.AddDays(-1).ToString("yyyy-MM-dd"),
                 null,
                 CellSelectionType.nearest
                 );
