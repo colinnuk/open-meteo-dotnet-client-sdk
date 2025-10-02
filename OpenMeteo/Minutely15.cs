@@ -15,7 +15,7 @@ namespace OpenMeteo
         public float[]? rain { get; set; }
         public float[]? snowfall { get; set; }
         public float?[]? snowfall_height { get; set; }
-        public float[]? freezinglevel_height { get; set; }
+        public float[]? freezing_level_height { get; set; }
         public int[]? weathercode { get; set; }
         public float[]? windspeed_10m { get; set; }
         public float[]? windspeed_80m { get; set; }
