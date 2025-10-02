@@ -112,7 +112,7 @@ namespace OpenMeteo
         rain, 
         snowfall, 
         snowfall_height, 
-        freezinglevel_height, 
+        freezing_level_height, 
         weathercode, 
         windspeed_10m, 
         windspeed_80m, 
