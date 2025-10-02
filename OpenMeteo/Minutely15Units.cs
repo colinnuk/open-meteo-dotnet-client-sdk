@@ -15,7 +15,7 @@ namespace OpenMeteo
         public string? Rain { get; set; }
         public string? Snowfall { get; set; }
         public string? Snowfall_height { get; set; }
-        public string? freezing_level_height { get; set; }
+        public string? Freezing_level_height { get; set; }
         public string? Weathercode { get; set; }
         public string? Windspeed_10m { get; set; }
         public string? Windspeed_80m { get; set; }

@@ -249,7 +249,7 @@ namespace OpenMeteo
         public float?[]? Showers_best_match { get; set; }
         public float?[]? Snowfall_best_match { get; set; }
         public float?[]? Snow_depth_best_match { get; set; }
-        public float?[]? freezing_level_height_best_match { get; set; }
+        public float?[]? Freezing_level_height_best_match { get; set; }
         public int?[]? Weathercode_best_match { get; set; }
         public float?[]? Pressure_msl_best_match { get; set; }
         public float?[]? Surface_pressure_best_match { get; set; }
@@ -603,7 +603,7 @@ namespace OpenMeteo
         public float?[]? Showers_gfs_seamless { get; set; }
         public float?[]? Snowfall_gfs_seamless { get; set; }
         public float?[]? Snow_depth_gfs_seamless { get; set; }
-        public float?[]? freezing_level_height_gfs_seamless { get; set; }
+        public float?[]? Freezing_level_height_gfs_seamless { get; set; }
         public int?[]? Weathercode_gfs_seamless { get; set; }
         public float?[]? Pressure_msl_gfs_seamless { get; set; }
         public float?[]? Surface_pressure_gfs_seamless { get; set; }
@@ -773,7 +773,7 @@ namespace OpenMeteo
         public float?[]? Showers_gfs_global { get; set; }
         public float?[]? Snowfall_gfs_global { get; set; }
         public float?[]? Snow_depth_gfs_global { get; set; }
-        public float?[]? freezing_level_height_gfs_global { get; set; }
+        public float?[]? Freezing_level_height_gfs_global { get; set; }
         public int?[]? Weathercode_gfs_global { get; set; }
         public float?[]? Pressure_msl_gfs_global { get; set; }
         public float?[]? Surface_pressure_gfs_global { get; set; }
@@ -1423,7 +1423,7 @@ namespace OpenMeteo
         public float?[]? Showers_icon_seamless { get; set; }
         public float?[]? Snowfall_icon_seamless { get; set; }
         public float?[]? Snow_depth_icon_seamless { get; set; }
-        public float?[]? freezing_level_height_icon_seamless { get; set; }
+        public float?[]? Freezing_level_height_icon_seamless { get; set; }
         public int?[]? Weathercode_icon_seamless { get; set; }
         public float?[]? Pressure_msl_icon_seamless { get; set; }
         public float?[]? Surface_pressure_icon_seamless { get; set; }
@@ -1608,7 +1608,7 @@ namespace OpenMeteo
         public float?[]? Showers_icon_global { get; set; }
         public float?[]? Snowfall_icon_global { get; set; }
         public float?[]? Snow_depth_icon_global { get; set; }
-        public float?[]? freezing_level_height_icon_global { get; set; }
+        public float?[]? Freezing_level_height_icon_global { get; set; }
         public int?[]? Weathercode_icon_global { get; set; }
         public float?[]? Pressure_msl_icon_global { get; set; }
         public float?[]? Surface_pressure_icon_global { get; set; }
