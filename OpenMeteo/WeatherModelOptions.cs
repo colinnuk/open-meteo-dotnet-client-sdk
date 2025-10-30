@@ -108,6 +108,7 @@ namespace OpenMeteo
         gfs_hrrr,
         gfs_graphcast025,
         ncep_nbm_conus,
+        ncep_nam_conus,
         jma_seamless,
         jma_msm,
         jma_gsm,

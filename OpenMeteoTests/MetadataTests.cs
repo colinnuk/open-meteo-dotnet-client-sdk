@@ -23,6 +23,7 @@ public class MetadataTests
     [DataRow(WeatherModelOptionsParameter.gfs_graphcast025)]
     [DataRow(WeatherModelOptionsParameter.gfs_hrrr)]
     [DataRow(WeatherModelOptionsParameter.ncep_nbm_conus)]
+    [DataRow(WeatherModelOptionsParameter.ncep_nam_conus)]
     [DataRow(WeatherModelOptionsParameter.gem_global)]
     [DataRow(WeatherModelOptionsParameter.gem_hrdps_continental)]
     [DataRow(WeatherModelOptionsParameter.gem_regional)]
