@@ -123,6 +123,7 @@ namespace OpenMeteoTests
         [DataRow(WeatherModelOptionsParameter.gfs_graphcast025, "ncep_gfs_graphcast025")]
         [DataRow(WeatherModelOptionsParameter.gfs_hrrr, "ncep_hrrr_conus")]
         [DataRow(WeatherModelOptionsParameter.ncep_nbm_conus, "ncep_nbm_conus")]
+        [DataRow(WeatherModelOptionsParameter.ncep_nam_conus, "ncep_nam_conus")]
         [DataRow(WeatherModelOptionsParameter.gem_global, "cmc_gem_gdps")]
         [DataRow(WeatherModelOptionsParameter.gem_hrdps_continental, "cmc_gem_hrdps")]
         [DataRow(WeatherModelOptionsParameter.gem_regional, "cmc_gem_rdps")]
