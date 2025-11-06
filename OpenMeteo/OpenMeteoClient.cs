@@ -40,7 +40,7 @@ namespace OpenMeteo
         }
 
         /// <summary>
-        /// Creates a new <seealso cref="OpenMeteoClient"/> object with a logger and an API key
+        /// Creates a new <seealso cref="OpenMeteoClient"/> object with an API key
         /// </summary>
         /// <param name="apiKey">The API key to use the customer OpenMeteo URLs such as https://customer-api.open-meteo.com</param>
         public OpenMeteoClient(string apiKey)
@@ -61,6 +61,54 @@ namespace OpenMeteo
             _logger = logger;
             _urlFactory = new UrlFactory(apiKey);
 
+            if (!string.IsNullOrEmpty(apiKey))
+                _logger?.Information($"{nameof(OpenMeteoClient)} Initialised with API key starting with: {apiKey[..2]}");
+        }
+
+        /// <summary>
+        /// Creates a new <seealso cref="OpenMeteoClient"/> object with a custom base URL
+        /// </summary>
+        /// <param name="customBaseUri">Custom base Uri for the OpenMeteo API</param>
+        public OpenMeteoClient(Uri customBaseUri)
+        {
+            httpController = new HttpController();
+            _urlFactory = new UrlFactory(customBaseUri);
+        }
+
+        /// <summary>
+        /// Creates a new <seealso cref="OpenMeteoClient"/> object with a logger and a custom base URL
+        /// </summary>
+        /// <param name="logger">Logger instance</param>
+        /// <param name="customBaseUri">Custom base Uri for the OpenMeteo API</param>
+        public OpenMeteoClient(IOpenMeteoLogger logger, Uri customBaseUri)
+        {
+            httpController = new HttpController();
+            _logger = logger;
+            _urlFactory = new UrlFactory(customBaseUri);
+        }
+
+        /// <summary>
+        /// Creates a new <seealso cref="OpenMeteoClient"/> object with an API key and a custom base URL
+        /// </summary>
+        /// <param name="apiKey">API key</param>
+        /// <param name="customBaseUri">Custom base Uri for the OpenMeteo API</param>
+        public OpenMeteoClient(string apiKey, Uri customBaseUri)
+        {
+            httpController = new HttpController();
+            _urlFactory = new UrlFactory(apiKey, customBaseUri);
+        }
+
+        /// <summary>
+        /// Creates a new <seealso cref="OpenMeteoClient"/> object with a logger, an API key, and a custom base URL
+        /// </summary>
+        /// <param name="logger">Logger instance</param>
+        /// <param name="apiKey">API key</param>
+        /// <param name="customBaseUri">Custom base Uri for the OpenMeteo API</param>
+        public OpenMeteoClient(IOpenMeteoLogger logger, string apiKey, Uri customBaseUri)
+        {
+            httpController = new HttpController();
+            _logger = logger;
+            _urlFactory = new UrlFactory(apiKey, customBaseUri);
             if (!string.IsNullOrEmpty(apiKey))
                 _logger?.Information($"{nameof(OpenMeteoClient)} Initialised with API key starting with: {apiKey[..2]}");
         }

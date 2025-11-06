@@ -12,6 +12,7 @@ public class UrlFactory
     private readonly string _customerApiUrlFragment = "customer-";
 
     private readonly string _apiKey = string.Empty;
+    private readonly Uri? _customBaseUri = null;
 
     public UrlFactory() 
     {
@@ -20,6 +21,17 @@ public class UrlFactory
     public UrlFactory(string apiKey)
     {
         _apiKey = apiKey;
+    }
+
+    public UrlFactory(Uri customBaseUri)
+    {
+        _customBaseUri = customBaseUri;
+    }
+
+    public UrlFactory(string apiKey, Uri customBaseUri)
+    {
+        _apiKey = apiKey;
+        _customBaseUri = customBaseUri;
     }
 
     public string SanitiseUrl(string url)
@@ -232,7 +244,6 @@ public class UrlFactory
         {
             Query = $"latitude={options.Latitude.ToString(CultureInfo.InvariantCulture)}&longitude={options.Longitude.ToString(CultureInfo.InvariantCulture)}"
         };
-
         SetApiKeyIfNeeded(uri);
         return uri.ToString();
     }
@@ -251,6 +262,10 @@ public class UrlFactory
 
     private string GetBaseUrl(string url)
     {
+        if (_customBaseUri != null)
+        {
+            return _customBaseUri.ToString();
+        }
         var prependCustomerIfHasApiKey = string.IsNullOrEmpty(_apiKey) ? string.Empty : _customerApiUrlFragment;
         return $"https://{prependCustomerIfHasApiKey}{url}";
     }
