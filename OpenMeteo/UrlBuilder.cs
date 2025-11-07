@@ -39,58 +39,54 @@ namespace OpenMeteo
 
         public UrlBuilder AddParameter(string key, string value)
         {
-            _parameters[key.ToLower()] = value.ToLower();
+            _parameters[key.ToLower()] = value;
             return this;
         }
 
         public UrlBuilder AddCollection(string key, IEnumerable<string> values)
         {
-            _collections[key.ToLower()] = values.Select(v => v.ToLower());
+            _collections[key.ToLower()] = values;
             return this;
         }
 
         public string Build()
         {
-            var builder = new UriBuilder(_baseUri);
-            if (!string.IsNullOrEmpty(_subdomain))
+            var builder = new UriBuilder(_baseUri)
             {
-                var hostParts = builder.Host.Split('.');
-                if (hostParts.Length > 1)
-                {
-                    builder.Host = _subdomain + "." + string.Join('.', hostParts);
-                }
-                else
-                {
-                    builder.Host = _subdomain + "." + builder.Host;
-                }
-            }
-
-            builder.Path = _path;
-
-
-            if (!string.IsNullOrEmpty(_apiKey))
-            {
-                _parameters["apikey"] = _apiKey;
-            }
-
-            var query = BuildQueryString(_parameters, _collections);
-            builder.Query = query;
+                Host = BuildFullHostName(_baseUri.Host),
+                Path = _path,
+                Query = BuildQueryString()
+            };
             return builder.Uri.ToString();
         }
 
-        private static string BuildQueryString(Dictionary<string, string> parameters, Dictionary<string, IEnumerable<string>> collections)
+        private string BuildFullHostName(string hostname)
+        {
+            if (string.IsNullOrEmpty(_subdomain))
+            {
+                return hostname;
+            }
+            return $"{_subdomain}.{hostname}";            
+        }
+
+        private string BuildQueryString()
         {
             var queryParts = new List<string>();
-            foreach (var kvp in parameters)
+            foreach (var kvp in _parameters)
             {
                 if (!string.IsNullOrEmpty(kvp.Value))
                     queryParts.Add($"{Uri.EscapeDataString(kvp.Key)}={Uri.EscapeDataString(kvp.Value)}");
             }
-            foreach (var kvp in collections)
+            foreach (var kvp in _collections)
             {
                 var joined = string.Join(",", kvp.Value);
                 if (!string.IsNullOrEmpty(joined))
-                    queryParts.Add($"{Uri.EscapeDataString(kvp.Key)}={Uri.EscapeDataString(joined)}");
+                    // Encode key, but NOT the comma in values
+                    queryParts.Add($"{Uri.EscapeDataString(kvp.Key)}={string.Join(",", kvp.Value.Select(Uri.EscapeDataString))}");
+            }
+            if (!string.IsNullOrEmpty(_apiKey))
+            {
+                queryParts.Add($"apikey={_apiKey}");
             }
             return string.Join("&", queryParts);
         }
