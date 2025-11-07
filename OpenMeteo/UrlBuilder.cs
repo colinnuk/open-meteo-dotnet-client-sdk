@@ -37,14 +37,16 @@ namespace OpenMeteo
             return this;
         }
 
-        public UrlBuilder AddParameter(string key, string value)
+        public UrlBuilder AddParameter(string key, string? value)
         {
+            if (string.IsNullOrWhiteSpace(value)) return this;
             _parameters[key.ToLower()] = value;
             return this;
         }
 
         public UrlBuilder AddCollection(string key, IEnumerable<string> values)
         {
+            if (!values.Any()) return this;
             _collections[key.ToLower()] = values;
             return this;
         }

@@ -24,10 +24,17 @@ namespace OpenMeteo
                 .WithPath(ApiPath);
         }
 
+        public WeatherForecastUrlBuilder(string apiKey)
+        {
+            _urlBuilder = new UrlBuilder()
+                .WithApiKey(apiKey)
+                .WithSubdomain($"customer-{DefaultSubdomain}")
+                .WithPath(ApiPath);
+        }
+
         public WeatherForecastUrlBuilder WithApiKey(string apiKey)
         {
             _urlBuilder.WithApiKey(apiKey);
-            _urlBuilder.WithSubdomain($"customer-{DefaultSubdomain}");
             return this;
         }
 
@@ -53,8 +60,8 @@ namespace OpenMeteo
                 _urlBuilder.AddCollection(nameof(options.Models).ToLower(), options.Models.Parameter.Select(x => x.ToString()));
             if (options.Current.Count > 0)
                 _urlBuilder.AddCollection(nameof(options.Current).ToLower(), options.Current.Parameter.Select(x => x.ToString()));
-            if (options.Minutely15.Count > 0)
-                _urlBuilder.AddCollection(nameof(options.Minutely15).ToLower(), options.Minutely15.Parameter.Select(x => x.ToString()));
+            if (options.Minutely_15.Count > 0)
+                _urlBuilder.AddCollection(nameof(options.Minutely_15).ToLower(), options.Minutely_15.Parameter.Select(x => x.ToString()));
 
             return this;
         }

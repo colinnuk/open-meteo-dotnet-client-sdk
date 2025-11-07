@@ -117,14 +117,14 @@ namespace OpenMeteoTests
                 Daily = DailyOptions.All,
                 Models = WeatherModelOptions.All,
                 Current = CurrentOptions.All,
-                Minutely15 = Minutely15Options.All
+                Minutely_15 = Minutely15Options.All
             };
 
             Assert.IsTrue(HourlyOptions.All.Parameter.All(p => options.Hourly.Parameter.Contains(p)));
             Assert.IsTrue(DailyOptions.All.Parameter.All(p => options.Daily.Parameter.Contains(p)));
             Assert.IsTrue(WeatherModelOptions.All.Parameter.All(p => options.Models.Parameter.Contains(p)));
             Assert.IsTrue(CurrentOptions.All.Parameter.All(p => options.Current.Parameter.Contains(p)));
-            Assert.IsTrue(Minutely15Options.All.Parameter.All(p => options.Minutely15.Parameter.Contains(p)));
+            Assert.IsTrue(Minutely15Options.All.Parameter.All(p => options.Minutely_15.Parameter.Contains(p)));
         }
 
         [TestMethod]

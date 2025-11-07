@@ -50,7 +50,7 @@ namespace OpenMeteo
         /// Include current weather conditions in API response.
         /// </summary>
         public CurrentOptions Current { get { return _current; } set { if (value != null) _current = value; } }
-        public Minutely15Options Minutely15 { get { return _minutely15; } set { if (value != null) _minutely15 = value; } }
+        public Minutely15Options Minutely_15 { get { return _minutely15; } set { if (value != null) _minutely15 = value; } }
 
         /// <summary>
         /// Default is "iso8601". Other options: "unixtime". 
@@ -60,24 +60,24 @@ namespace OpenMeteo
         public TimeformatType Timeformat { get; set; }
 
         /// <summary>
-        /// Default is "0". Other options: "1", "2"
+        /// Number of days to get the past forecast for. Mutually exclusive with start_date & end_date.
         /// </summary>
         /// <value></value>
-        public int Past_Days { get; set; }
+        public int? Past_Days { get; set; }
 
         /// <summary>
         /// The time interval to get weather data. A day must be specified as an ISO8601 date (e.g. 2022-06-30).
         /// (yyyy-mm-dd)
         /// https://open-meteo.com/en/docs
         /// </summary>
-        public string Start_date { get; set; }
+        public string? Start_date { get; set; }
 
         /// <summary>
         /// The time interval to get weather data. A day must be specified as an ISO8601 date (e.g. 2022-06-30).
         /// (yyyy-mm-dd)
         /// https://open-meteo.com/en/docs
         /// </summary>
-        public string End_date { get; set; }
+        public string? End_date { get; set; }
 
         private HourlyOptions _hourly = new HourlyOptions();
         private DailyOptions _daily = new DailyOptions();
@@ -103,7 +103,7 @@ namespace OpenMeteo
             if (current != null)
                 Current = current;
             if (minutely15 != null)
-                Minutely15 = minutely15;
+                Minutely_15 = minutely15;
 
             Timeformat = timeformat;
             Past_Days = past_Days;

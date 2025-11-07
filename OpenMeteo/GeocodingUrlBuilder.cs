@@ -22,10 +22,17 @@ namespace OpenMeteo
                  .WithPath(ApiPath);
         }
 
+        public GeocodingUrlBuilder(string apiKey)
+        {
+            _urlBuilder = new UrlBuilder()
+                .WithApiKey(apiKey)
+                .WithSubdomain($"customer-{DefaultSubdomain}")
+                .WithPath(ApiPath);
+        }
+
         public GeocodingUrlBuilder WithApiKey(string apiKey)
         {
             _urlBuilder.WithApiKey(apiKey);
-            _urlBuilder.WithSubdomain($"customer-{DefaultSubdomain}");
             return this;
         }
 

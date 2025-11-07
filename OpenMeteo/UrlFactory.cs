@@ -61,8 +61,8 @@ public class UrlFactory
             collections[nameof(options.Models).ToLower()] = options.Models.Parameter.Select(x => x.ToString());
         if (options.Current.Count >0)
             collections[nameof(options.Current).ToLower()] = options.Current.Parameter.Select(x => x.ToString());
-        if (options.Minutely15.Count >0)
-            collections[nameof(options.Minutely15).ToLower()] = options.Minutely15.Parameter.Select(x => x.ToString());
+        if (options.Minutely_15.Count >0)
+            collections[nameof(options.Minutely_15).ToLower()] = options.Minutely_15.Parameter.Select(x => x.ToString());
 
         UriBuilder uri = new(GetBaseUrl(_weatherApiUrl))
         {

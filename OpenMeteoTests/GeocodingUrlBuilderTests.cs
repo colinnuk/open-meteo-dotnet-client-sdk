@@ -14,7 +14,7 @@ namespace OpenMeteoTests
                 .WithOptions(GetGeocodingOptions())
                 .Build();
 
-            var expectedUrl = "https://geocoding-api.open-meteo.com/v1/search?name=new york&count=100&format=json&language=en";
+            var expectedUrl = "https://geocoding-api.open-meteo.com/v1/search?name=New York&count=100&format=json&language=en";
             Assert.AreEqual(expectedUrl, url);
         }
 
@@ -26,7 +26,7 @@ namespace OpenMeteoTests
                 .WithOptions(GetGeocodingOptions())
                 .Build();
 
-            var expectedUrl = "https://customer-geocoding-api.open-meteo.com/v1/search?name=new york&count=100&format=json&language=en&apikey=testapikey";
+            var expectedUrl = "https://customer-geocoding-api.open-meteo.com/v1/search?name=New York&count=100&format=json&language=en&apikey=testApiKey";
             Assert.AreEqual(expectedUrl, url);
         }
 
@@ -38,7 +38,7 @@ namespace OpenMeteoTests
                 .WithOptions(GetGeocodingOptions())
                 .Build();
 
-            var expectedUrl = "https://custom.example.com/v1/search?name=new york&count=100&format=json&language=en";
+            var expectedUrl = "https://custom.example.com/v1/search?name=New York&count=100&format=json&language=en";
             Assert.AreEqual(expectedUrl, url);
         }
 
@@ -51,7 +51,7 @@ namespace OpenMeteoTests
                 .WithOptions(GetGeocodingOptions())
                 .Build();
 
-            var expectedUrl = "https://customer-geocoding-api.custom.example.com/v1/search?name=new york&count=100&format=json&language=en&apikey=testapikey";
+            var expectedUrl = "https://customer-geocoding-api.custom.example.com/v1/search?name=New York&count=100&format=json&language=en&apikey=testApiKey";
             Assert.AreEqual(expectedUrl, url);
         }
 
@@ -63,7 +63,7 @@ namespace OpenMeteoTests
                 .WithOptions(options)
                 .Build();
 
-            var expectedUrl = "https://geocoding-api.open-meteo.com/v1/search?name=berlin&count=1&format=json&language=en";
+            var expectedUrl = "https://geocoding-api.open-meteo.com/v1/search?name=Berlin&count=100&format=json&language=en";
             Assert.AreEqual(expectedUrl, url);
         }
 

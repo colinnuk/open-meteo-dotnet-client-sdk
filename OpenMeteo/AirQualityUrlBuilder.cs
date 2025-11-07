@@ -24,10 +24,17 @@ namespace OpenMeteo
                 .WithPath(ApiPath);
         }
 
+        public AirQualityUrlBuilder(string apiKey)
+        {
+            _urlBuilder = new UrlBuilder()
+                .WithApiKey(apiKey)
+                .WithSubdomain($"customer-{DefaultSubdomain}")
+                .WithPath(ApiPath);
+        }
+
         public AirQualityUrlBuilder WithApiKey(string apiKey)
         {
             _urlBuilder.WithApiKey(apiKey);
-            _urlBuilder.WithSubdomain($"customer-{DefaultSubdomain}");
             return this;
         }
 

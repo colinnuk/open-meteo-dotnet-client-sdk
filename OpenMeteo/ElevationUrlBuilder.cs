@@ -23,10 +23,17 @@ namespace OpenMeteo
                 .WithPath(ApiPath);
         }
 
+        public ElevationUrlBuilder(string apiKey)
+        {
+            _urlBuilder = new UrlBuilder()
+                .WithApiKey(apiKey)
+                .WithSubdomain($"customer-{DefaultSubdomain}")
+                .WithPath(ApiPath);
+        }
+
         public ElevationUrlBuilder WithApiKey(string apiKey)
         {
             _urlBuilder.WithApiKey(apiKey);
-            _urlBuilder.WithSubdomain($"customer-{DefaultSubdomain}");
             return this;
         }
 

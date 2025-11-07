@@ -161,7 +161,7 @@ namespace OpenMeteoTests
             Cell_Selection = CellSelectionType.nearest,
             Models = new WeatherModelOptions([WeatherModelOptionsParameter.gfs_hrrr, WeatherModelOptionsParameter.gfs_global]),
             Current = new CurrentOptions([CurrentOptionsParameter.temperature_2m]),
-            Minutely15 = new Minutely15Options([Minutely15OptionsParameter.precipitation])
+            Minutely_15 = new Minutely15Options([Minutely15OptionsParameter.precipitation])
         };
 
         private static GeocodingOptions GetGeocodingOptions() => new("New York");
