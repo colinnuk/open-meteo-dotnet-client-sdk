@@ -54,7 +54,6 @@ namespace OpenMeteo
             var builder = new UriBuilder(_baseUri);
             if (!string.IsNullOrEmpty(_subdomain))
             {
-
                 var hostParts = builder.Host.Split('.');
                 if (hostParts.Length > 1)
                 {
