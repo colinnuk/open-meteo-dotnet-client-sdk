@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -37,11 +36,6 @@ public class UrlFactory
         _customBaseUri = customBaseUri;
     }
 
-    public string SanitiseUrl(string url)
-    {
-        return string.IsNullOrEmpty(_apiKey) ? url : url.Replace(_apiKey, "APIKEY");
-    }
-
     public string GetUrlWithOptions(WeatherForecastOptions options)
     {
         var parameters = new Dictionary<string, string>
@@ -70,8 +64,10 @@ public class UrlFactory
         if (options.Minutely15.Count >0)
             collections[nameof(options.Minutely15).ToLower()] = options.Minutely15.Parameter.Select(x => x.ToString());
 
-        UriBuilder uri = new(GetBaseUrl(_weatherApiUrl));
-        uri.Query = BuildQueryString(parameters, collections);
+        UriBuilder uri = new(GetBaseUrl(_weatherApiUrl))
+        {
+            Query = BuildQueryString(parameters, collections)
+        };
         SetApiKeyIfNeeded(uri);
         return uri.ToString();
     }
@@ -85,12 +81,14 @@ public class UrlFactory
         var parameters = new Dictionary<string, string>
         {
             [nameof(options.Name).ToLower()] = options.Name,
-            [nameof(options.Count).ToLower()] = options.Count >0 ? options.Count.ToString() : null,
+            [nameof(options.Count).ToLower()] = options.Count > 0 ? options.Count.ToString() : 1.ToString(),
             [nameof(options.Format).ToLower()] = options.Format,
             [nameof(options.Language).ToLower()] = options.Language
         };
-        UriBuilder uri = new(GetBaseUrl(_geocodeApiUrl));
-        uri.Query = BuildQueryString(parameters);
+        UriBuilder uri = new(GetBaseUrl(_geocodeApiUrl))
+        {
+            Query = BuildQueryString(parameters)
+        };
         SetApiKeyIfNeeded(uri);
         return uri.ToString();
     }
@@ -113,8 +111,10 @@ public class UrlFactory
         if (options.Hourly.Count >0)
             collections[nameof(options.Hourly).ToLower()] = options.Hourly.Parameter.Select(x => x.ToString());
 
-        UriBuilder uri = new(GetBaseUrl(_airQualityApiUrl));
-        uri.Query = BuildQueryString(parameters, collections);
+        UriBuilder uri = new(GetBaseUrl(_airQualityApiUrl))
+        {
+            Query = BuildQueryString(parameters, collections)
+        };
         SetApiKeyIfNeeded(uri);
         return uri.ToString();
     }
@@ -126,8 +126,10 @@ public class UrlFactory
             [nameof(options.Latitude).ToLower()] = options.Latitude.ToString(CultureInfo.InvariantCulture),
             [nameof(options.Longitude).ToLower()] = options.Longitude.ToString(CultureInfo.InvariantCulture)
         };
-        UriBuilder uri = new(GetBaseUrl(_elevationApiUrl));
-        uri.Query = BuildQueryString(parameters);
+        UriBuilder uri = new(GetBaseUrl(_elevationApiUrl))
+        {
+            Query = BuildQueryString(parameters)
+        };
         SetApiKeyIfNeeded(uri);
         return uri.ToString();
     }
@@ -154,7 +156,12 @@ public class UrlFactory
         return $"https://{prependCustomerIfHasApiKey}{url}";
     }
 
-    private static string BuildQueryString(Dictionary<string, string> parameters, Dictionary<string, IEnumerable<string>> collections = null)
+    private static string BuildQueryString(Dictionary<string, string> parameters)
+    {
+        return BuildQueryString(parameters, []);
+    }
+
+    private static string BuildQueryString(Dictionary<string, string> parameters, Dictionary<string, IEnumerable<string>> collections)
     {
         var queryParts = new List<string>();
         foreach (var kvp in parameters)
@@ -162,14 +169,11 @@ public class UrlFactory
             if (!string.IsNullOrEmpty(kvp.Value))
                 queryParts.Add($"{Uri.EscapeDataString(kvp.Key)}={Uri.EscapeDataString(kvp.Value)}");
         }
-        if (collections != null)
+        foreach (var kvp in collections)
         {
-            foreach (var kvp in collections)
-            {
-                var joined = string.Join(",", kvp.Value);
-                if (!string.IsNullOrEmpty(joined))
-                    queryParts.Add($"{Uri.EscapeDataString(kvp.Key)}={Uri.EscapeDataString(joined)}");
-            }
+            var joined = string.Join(",", kvp.Value);
+            if (!string.IsNullOrEmpty(joined))
+                queryParts.Add($"{Uri.EscapeDataString(kvp.Key)}={Uri.EscapeDataString(joined)}");
         }
         return string.Join("&", queryParts);
     }
