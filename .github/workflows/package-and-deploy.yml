@@ -22,7 +22,6 @@ jobs:
       uses: actions/checkout@v3
       with:
           fetch-depth: 0
-          ref: master
 
     - name: Determine Version
       id: gitversion
@@ -41,6 +40,7 @@ jobs:
       run: dotnet test --configuration Release /p:Version=${{ steps.gitversion.outputs.AssemblySemVer }} --no-build --verbosity normal
       
     - name: Create Release for Tag
+      if: github.ref == 'refs/heads/master'
       uses: yyx990803/release-tag@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -48,7 +48,12 @@ jobs:
         tag_name: ${{ steps.gitversion.outputs.FullSemVer }}
 
     - name: Package nuget
-      run: dotnet pack ./OpenMeteo/OpenMeteo.csproj --configuration release -o:package /p:PackageVersion=${{ steps.gitversion.outputs.AssemblySemVer }}
+      run: |
+        if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+          dotnet pack ./OpenMeteo/OpenMeteo.csproj --configuration release -o:package /p:PackageVersion=${{ steps.gitversion.outputs.FullSemVer }}
+        else
+          dotnet pack ./OpenMeteo/OpenMeteo.csproj --configuration release -o:package /p:PackageVersion=${{ steps.gitversion.outputs.AssemblySemVer }}
+        fi
 
     - name: Push generated package to NuGet.org
       run: dotnet nuget push ./package/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
