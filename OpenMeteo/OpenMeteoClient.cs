@@ -196,7 +196,7 @@ namespace OpenMeteo
         {
             try
             {
-                var url = UrlBuilderFactory.Create<WeatherForecastMetadataUrlBuilder>(_customBaseUri)
+                var url = UrlBuilderFactory.Create<WeatherForecastMetadataUrlBuilder>(_customBaseUri, _apiKey)
                     .WithModel(weatherModel)
                     .Build();
 
