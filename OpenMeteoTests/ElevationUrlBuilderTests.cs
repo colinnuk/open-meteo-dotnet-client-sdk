@@ -26,7 +26,7 @@ namespace OpenMeteoTests
                 .WithOptions(GetElevationOptions())
                 .Build();
 
-            var expectedUrl = "https://customer-api.open-meteo.com/v1/elevation?latitude=40.7128&longitude=-74.006&apikey=testapikey";
+            var expectedUrl = "https://api.open-meteo.com/v1/elevation?latitude=40.7128&longitude=-74.006&apikey=testApiKey";
             Assert.AreEqual(expectedUrl, url);
         }
 
@@ -51,7 +51,30 @@ namespace OpenMeteoTests
                 .WithOptions(GetElevationOptions())
                 .Build();
 
-            var expectedUrl = "https://customer-api.custom.example.com/v1/elevation?latitude=40.7128&longitude=-74.006&apikey=testapikey";
+            var expectedUrl = "https://custom.example.com/v1/elevation?latitude=40.7128&longitude=-74.006&apikey=testApiKey";
+            Assert.AreEqual(expectedUrl, url);
+        }
+
+        [TestMethod]
+        public void Build_WithCustomBaseUriAndApiKey_Constructor_Test()
+        {
+            var customUri = new Uri("https://custom.example.com");
+            var url = new ElevationUrlBuilder(customUri, "testApiKey")
+                .WithOptions(GetElevationOptions())
+                .Build();
+
+            var expectedUrl = "https://custom.example.com/v1/elevation?latitude=40.7128&longitude=-74.006&apikey=testApiKey";
+            Assert.AreEqual(expectedUrl, url);
+        }
+
+        [TestMethod]
+        public void Build_WithApiKeyConstructor_Test()
+        {
+            var url = new ElevationUrlBuilder("testApiKey")
+                .WithOptions(GetElevationOptions())
+                .Build();
+
+            var expectedUrl = "https://customer-api.open-meteo.com/v1/elevation?latitude=40.7128&longitude=-74.006&apikey=testApiKey";
             Assert.AreEqual(expectedUrl, url);
         }
 

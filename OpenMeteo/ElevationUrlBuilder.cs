@@ -3,32 +3,25 @@ using System.Globalization;
 
 namespace OpenMeteo
 {
-    public class ElevationUrlBuilder
+    public class ElevationUrlBuilder : ApiUrlBuilder
     {
-        private readonly UrlBuilder _urlBuilder;
-        private const string DefaultSubdomain = "api";
-        private const string ApiPath = "/v1/elevation";
+        protected override string DefaultSubdomain => "api";
+        protected override string ApiPath => "/v1/elevation";
 
-        public ElevationUrlBuilder()
+        public ElevationUrlBuilder() : base()
         {
-            _urlBuilder = new UrlBuilder()
-                .WithSubdomain(DefaultSubdomain)
-                .WithPath(ApiPath);
         }
 
-        public ElevationUrlBuilder(Uri customBaseUri)
+        public ElevationUrlBuilder(Uri customBaseUri) : base(customBaseUri)
         {
-            _urlBuilder = new UrlBuilder()
-                .WithBaseUri(customBaseUri)
-                .WithPath(ApiPath);
         }
 
-        public ElevationUrlBuilder(string apiKey)
+        public ElevationUrlBuilder(string apiKey) : base(apiKey)
         {
-            _urlBuilder = new UrlBuilder()
-                .WithApiKey(apiKey)
-                .WithSubdomain($"customer-{DefaultSubdomain}")
-                .WithPath(ApiPath);
+        }
+
+        public ElevationUrlBuilder(Uri customBaseUri, string apiKey) : base(customBaseUri, apiKey)
+        {
         }
 
         public ElevationUrlBuilder WithApiKey(string apiKey)
@@ -43,11 +36,6 @@ namespace OpenMeteo
             _urlBuilder.AddParameter(nameof(options.Longitude).ToLower(), options.Longitude.ToString(CultureInfo.InvariantCulture));
 
             return this;
-        }
-
-        public string Build()
-        {
-            return _urlBuilder.Build();
         }
     }
 }

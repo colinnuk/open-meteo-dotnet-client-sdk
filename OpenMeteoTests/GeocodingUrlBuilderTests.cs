@@ -50,7 +50,19 @@ namespace OpenMeteoTests
                 .WithOptions(GetGeocodingOptions())
                 .Build();
 
-            var expectedUrl = "https://customer-geocoding-api.custom.example.com/v1/search?name=New York&count=100&format=json&language=en&apikey=testApiKey";
+            var expectedUrl = "https://custom.example.com/v1/search?name=New York&count=100&format=json&language=en&apikey=testApiKey";
+            Assert.AreEqual(expectedUrl, url);
+        }
+
+        [TestMethod]
+        public void Build_WithCustomBaseUriAndApiKey_Constructor_Test()
+        {
+            var customUri = new Uri("https://custom.example.com");
+            var url = new GeocodingUrlBuilder(customUri, "testApiKey")
+                .WithOptions(GetGeocodingOptions())
+                .Build();
+
+            var expectedUrl = "https://custom.example.com/v1/search?name=New York&count=100&format=json&language=en&apikey=testApiKey";
             Assert.AreEqual(expectedUrl, url);
         }
 

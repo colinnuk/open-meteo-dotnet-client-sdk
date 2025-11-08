@@ -4,40 +4,25 @@ using System.Linq;
 
 namespace OpenMeteo
 {
-    public class WeatherForecastUrlBuilder
+    public class WeatherForecastUrlBuilder : ApiUrlBuilder
     {
-        private readonly UrlBuilder _urlBuilder;
-        private const string DefaultSubdomain = "api";
-        private const string ApiPath = "/v1/forecast";
+        protected override string DefaultSubdomain => "api";
+        protected override string ApiPath => "/v1/forecast";
 
-        public WeatherForecastUrlBuilder()
+        public WeatherForecastUrlBuilder() : base()
         {
-            _urlBuilder = new UrlBuilder()
-                .WithSubdomain(DefaultSubdomain)
-                .WithPath(ApiPath);
         }
 
-        public WeatherForecastUrlBuilder(Uri customBaseUri, string apiKey)
+        public WeatherForecastUrlBuilder(Uri customBaseUri) : base(customBaseUri)
         {
-            _urlBuilder = new UrlBuilder()
-                .WithBaseUri(customBaseUri)
-                .WithPath(ApiPath)
-                .WithApiKey(apiKey);
         }
 
-        public WeatherForecastUrlBuilder(Uri customBaseUri)
+        public WeatherForecastUrlBuilder(string apiKey) : base(apiKey)
         {
-            _urlBuilder = new UrlBuilder()
-                .WithBaseUri(customBaseUri)
-                .WithPath(ApiPath);
         }
 
-        public WeatherForecastUrlBuilder(string apiKey)
+        public WeatherForecastUrlBuilder(Uri customBaseUri, string apiKey) : base(customBaseUri, apiKey)
         {
-            _urlBuilder = new UrlBuilder()
-                .WithApiKey(apiKey)
-                .WithSubdomain($"customer-{DefaultSubdomain}")
-                .WithPath(ApiPath);
         }
 
         public WeatherForecastUrlBuilder WithOptions(WeatherForecastOptions options)
@@ -66,11 +51,6 @@ namespace OpenMeteo
                 _urlBuilder.AddCollection(nameof(options.Minutely_15).ToLower(), options.Minutely_15.Parameter.Select(x => x.ToString()));
 
             return this;
-        }
-
-        public string Build()
-        {
-            return _urlBuilder.Build();
         }
     }
 }

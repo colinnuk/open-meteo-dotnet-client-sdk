@@ -4,32 +4,25 @@ using System.Linq;
 
 namespace OpenMeteo
 {
-    public class AirQualityUrlBuilder
+    public class AirQualityUrlBuilder : ApiUrlBuilder
     {
-        private readonly UrlBuilder _urlBuilder;
-        private const string DefaultSubdomain = "air-quality-api";
-        private const string ApiPath = "/v1/air-quality";
+        protected override string DefaultSubdomain => "air-quality-api";
+        protected override string ApiPath => "/v1/air-quality";
 
-        public AirQualityUrlBuilder()
+        public AirQualityUrlBuilder() : base()
         {
-            _urlBuilder = new UrlBuilder()
-                .WithSubdomain(DefaultSubdomain)
-                .WithPath(ApiPath);
         }
 
-        public AirQualityUrlBuilder(Uri customBaseUri)
+        public AirQualityUrlBuilder(Uri customBaseUri) : base(customBaseUri)
         {
-            _urlBuilder = new UrlBuilder()
-                .WithBaseUri(customBaseUri)
-                .WithPath(ApiPath);
         }
 
-        public AirQualityUrlBuilder(string apiKey)
+        public AirQualityUrlBuilder(string apiKey) : base(apiKey)
         {
-            _urlBuilder = new UrlBuilder()
-                .WithApiKey(apiKey)
-                .WithSubdomain($"customer-{DefaultSubdomain}")
-                .WithPath(ApiPath);
+        }
+
+        public AirQualityUrlBuilder(Uri customBaseUri, string apiKey) : base(customBaseUri, apiKey)
+        {
         }
 
         public AirQualityUrlBuilder WithApiKey(string apiKey)
@@ -50,11 +43,6 @@ namespace OpenMeteo
                 _urlBuilder.AddCollection(nameof(options.Hourly).ToLower(), options.Hourly.Parameter.Select(x => x.ToString()));
 
             return this;
-        }
-
-        public string Build()
-        {
-            return _urlBuilder.Build();
         }
     }
 }

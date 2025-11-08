@@ -2,32 +2,25 @@ using System;
 
 namespace OpenMeteo
 {
-    public class GeocodingUrlBuilder
+    public class GeocodingUrlBuilder : ApiUrlBuilder
     {
-        private readonly UrlBuilder _urlBuilder;
-        private const string DefaultSubdomain = "geocoding-api";
-        private const string ApiPath = "/v1/search";
+        protected override string DefaultSubdomain => "geocoding-api";
+        protected override string ApiPath => "/v1/search";
 
-        public GeocodingUrlBuilder()
+        public GeocodingUrlBuilder() : base()
         {
-            _urlBuilder = new UrlBuilder()
-                .WithSubdomain(DefaultSubdomain)
-                .WithPath(ApiPath);
         }
 
-        public GeocodingUrlBuilder(Uri customBaseUri)
+        public GeocodingUrlBuilder(Uri customBaseUri) : base(customBaseUri)
         {
-            _urlBuilder = new UrlBuilder()
-                 .WithBaseUri(customBaseUri)
-                 .WithPath(ApiPath);
         }
 
-        public GeocodingUrlBuilder(string apiKey)
+        public GeocodingUrlBuilder(string apiKey) : base(apiKey)
         {
-            _urlBuilder = new UrlBuilder()
-                .WithApiKey(apiKey)
-                .WithSubdomain($"customer-{DefaultSubdomain}")
-                .WithPath(ApiPath);
+        }
+
+        public GeocodingUrlBuilder(Uri customBaseUri, string apiKey) : base(customBaseUri, apiKey)
+        {
         }
 
         public GeocodingUrlBuilder WithApiKey(string apiKey)
@@ -44,11 +37,6 @@ namespace OpenMeteo
             _urlBuilder.AddParameter(nameof(options.Language).ToLower(), options.Language);
 
             return this;
-        }
-
-        public string Build()
-        {
-            return _urlBuilder.Build();
         }
     }
 }
