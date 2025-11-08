@@ -17,6 +17,14 @@ namespace OpenMeteo
                 .WithPath(ApiPath);
         }
 
+        public WeatherForecastUrlBuilder(Uri customBaseUri, string apiKey)
+        {
+            _urlBuilder = new UrlBuilder()
+                .WithBaseUri(customBaseUri)
+                .WithPath(ApiPath)
+                .WithApiKey(apiKey);
+        }
+
         public WeatherForecastUrlBuilder(Uri customBaseUri)
         {
             _urlBuilder = new UrlBuilder()
@@ -30,12 +38,6 @@ namespace OpenMeteo
                 .WithApiKey(apiKey)
                 .WithSubdomain($"customer-{DefaultSubdomain}")
                 .WithPath(ApiPath);
-        }
-
-        public WeatherForecastUrlBuilder WithApiKey(string apiKey)
-        {
-            _urlBuilder.WithApiKey(apiKey);
-            return this;
         }
 
         public WeatherForecastUrlBuilder WithOptions(WeatherForecastOptions options)

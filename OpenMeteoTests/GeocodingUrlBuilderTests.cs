@@ -21,8 +21,7 @@ namespace OpenMeteoTests
         [TestMethod]
         public void Build_WithOptions_WithApiKey_Test()
         {
-            var url = new GeocodingUrlBuilder()
-                .WithApiKey("testApiKey")
+            var url = new GeocodingUrlBuilder("testApiKey")
                 .WithOptions(GetGeocodingOptions())
                 .Build();
 

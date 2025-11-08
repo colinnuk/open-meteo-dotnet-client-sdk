@@ -45,8 +45,7 @@ namespace OpenMeteoTests
         public void Build_WithCustomBaseUri_WithApiKey_Test()
         {
             var customUri = new Uri("https://custom.example.com");
-            var url = new WeatherForecastUrlBuilder(customUri)
-                .WithApiKey("testApiKey")
+            var url = new WeatherForecastUrlBuilder(customUri, "testApiKey")
                 .WithOptions(GetWeatherForecastOptions())
                 .Build();
 
