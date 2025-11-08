@@ -8,7 +8,6 @@ on:
       - '**/*.cs'
       - '**/*.csproj'
 
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -32,13 +31,6 @@ jobs:
           useConfigFile: true
           configFilePath: ./.github/gitversion.yml
 
-    - name: Create Release for Tag
-      uses: yyx990803/release-tag@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ steps.gitversion.outputs.FullSemVer }}
-
     - name: Restore dependencies
       run: dotnet restore
       
@@ -48,6 +40,13 @@ jobs:
     - name: Run tests
       run: dotnet test --configuration Release /p:Version=${{ steps.gitversion.outputs.AssemblySemVer }} --no-build --verbosity normal
       
+    - name: Create Release for Tag
+      uses: yyx990803/release-tag@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ steps.gitversion.outputs.FullSemVer }}
+
     - name: Package nuget
       run: dotnet pack ./OpenMeteo/OpenMeteo.csproj --configuration release -o:package /p:PackageVersion=${{ steps.gitversion.outputs.AssemblySemVer }}
 
