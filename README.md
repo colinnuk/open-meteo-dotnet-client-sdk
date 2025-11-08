@@ -46,7 +46,7 @@ static async Task RunAsync()
     var client = new OpenMeteo.OpenMeteoClient();
 
     // Make a new api call to get the current weather in tokyo
-    var weatherData = await client.QueryAsync("Tokyo");
+    var weatherData = await client.QueryWeatherApiAsync("Tokyo");
 
     // Output the current weather to console
     Console.WriteLine("Weather in Tokyo: " + weatherData.Current.Temperature + weatherData.CurrentUnits.Temperature);
