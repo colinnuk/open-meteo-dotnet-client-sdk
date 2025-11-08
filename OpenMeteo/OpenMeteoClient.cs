@@ -26,8 +26,12 @@ namespace OpenMeteo
         /// <summary>
         /// If set to true, exceptions from the OpenMeteo API will be rethrown. Default is false.
         /// </summary>
-        /// <param name="rethrowExceptions"></param>
         public bool RethrowExceptions { get; set; } = false;
+
+        /// <summary>
+        /// If set to true, calls to the OpenMeteo API will use FlatBuffers format. Default is false.
+        /// </summary>
+        public bool UseFlatbuffers { get; set; } = false;
 
         /// <summary>
         /// Creates a new <seealso cref="OpenMeteoClient"/> object to connect to the public OpenMeteo API
@@ -196,7 +200,7 @@ namespace OpenMeteo
         {
             try
             {
-                var url = UrlBuilderFactory.Create<WeatherForecastMetadataUrlBuilder>(_customBaseUri, _apiKey)
+                var url = UrlBuilderFactory.Create<WeatherForecastMetadataUrlBuilder>(_customBaseUri)
                     .WithModel(weatherModel)
                     .Build();
 
@@ -247,6 +251,7 @@ namespace OpenMeteo
             {
                 var url = UrlBuilderFactory.Create<WeatherForecastUrlBuilder>(_customBaseUri, _apiKey)
                     .WithOptions(options)
+                    .WithFlatbuffers(UseFlatbuffers)
                     .Build();
                 HttpResponseMessage response = await httpController.Client.GetAsync(url);
                 if(response.IsSuccessStatusCode)
@@ -325,5 +330,4 @@ namespace OpenMeteo
         }
     }
 }
-
     

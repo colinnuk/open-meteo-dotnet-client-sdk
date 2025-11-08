@@ -54,5 +54,11 @@ namespace OpenMeteo.Weather
 
             return this;
         }
+
+        public WeatherForecastUrlBuilder WithFlatbuffers(bool useFlatbuffers)
+        {
+            _urlBuilder.WithFlatbuffers(useFlatbuffers);
+            return this;
+        }
     }
 }

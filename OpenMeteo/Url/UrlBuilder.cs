@@ -10,6 +10,8 @@ namespace OpenMeteo.Url
         private string? _subdomain = null;
         private string _path = string.Empty;
         private string? _apiKey = null;
+        private bool _useFlatbuffers = false;
+
         private readonly Dictionary<string, string> _parameters = [];
         private readonly Dictionary<string, IEnumerable<string>> _collections = [];
 
@@ -34,6 +36,12 @@ namespace OpenMeteo.Url
         public UrlBuilder WithApiKey(string apiKey)
         {
             _apiKey = apiKey;
+            return this;
+        }
+
+        public UrlBuilder WithFlatbuffers(bool useFlatbuffers)
+        {
+            _useFlatbuffers = useFlatbuffers;
             return this;
         }
 
@@ -89,6 +97,10 @@ namespace OpenMeteo.Url
             if (!string.IsNullOrEmpty(_apiKey))
             {
                 queryParts.Add($"apikey={_apiKey}");
+            }
+            if (_useFlatbuffers)
+            {
+                queryParts.Add("format=flatbuffers");
             }
             return string.Join("&", queryParts);
         }
