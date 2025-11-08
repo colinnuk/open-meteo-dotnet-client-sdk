@@ -11,8 +11,9 @@ namespace OpenMeteo
     public class OpenMeteoClient
     {
         private readonly HttpController httpController;
-        private readonly UrlFactory _urlFactory = new();
         private readonly JsonSerializerOptions _jsonSerializerOptions = new() { PropertyNameCaseInsensitive = true };
+        private readonly Uri? _customBaseUri;
+        private readonly string? _apiKey;
 
         /// <summary>
         /// If set to true, exceptions from the OpenMeteo API will be rethrown. Default is false.
@@ -35,7 +36,7 @@ namespace OpenMeteo
         public OpenMeteoClient(string apiKey)
         {
             httpController = new HttpController();
-            _urlFactory = new UrlFactory(apiKey);
+            _apiKey = apiKey;
         }
 
         /// <summary>
@@ -46,7 +47,8 @@ namespace OpenMeteo
         public OpenMeteoClient(string apiKey, Uri customBaseUri)
         {
             httpController = new HttpController();
-            _urlFactory = new UrlFactory(apiKey, customBaseUri);
+            _apiKey = apiKey;
+            _customBaseUri = customBaseUri;
         }
 
         /// <summary>
@@ -56,7 +58,7 @@ namespace OpenMeteo
         public OpenMeteoClient(Uri customBaseUri)
         {
             httpController = new HttpController();
-            _urlFactory = new UrlFactory(customBaseUri);
+            _customBaseUri = customBaseUri;
         }
 
         /// <summary>
@@ -186,7 +188,12 @@ namespace OpenMeteo
         {
             try
             {
-                var url = _urlFactory.GetWeatherForecastMetadataUrl(weatherModel);
+                var options = new WeatherForecastOptions();
+                options.Models.Add(weatherModel);
+                var url = UrlBuilderFactory.Create<WeatherForecastUrlBuilder>(_customBaseUri, _apiKey)
+                    .WithOptions(options)
+                    .Build();
+
                 HttpResponseMessage response = await httpController.Client.GetAsync(url);
                 response.EnsureSuccessStatusCode();
 
@@ -211,7 +218,9 @@ namespace OpenMeteo
         {
             try
             {
-                var url = _urlFactory.GetUrlWithOptions(options);
+                var url = UrlBuilderFactory.Create<AirQualityUrlBuilder>(_customBaseUri, _apiKey)
+                    .WithOptions(options)
+                    .Build();
                 HttpResponseMessage response = await httpController.Client.GetAsync(url);
                 response.EnsureSuccessStatusCode();
 
@@ -230,7 +239,9 @@ namespace OpenMeteo
         {
             try
             {
-                var url = _urlFactory.GetUrlWithOptions(options);
+                var url = UrlBuilderFactory.Create<WeatherForecastUrlBuilder>(_customBaseUri, _apiKey)
+                    .WithOptions(options)
+                    .Build();
                 HttpResponseMessage response = await httpController.Client.GetAsync(url);
                 if(response.IsSuccessStatusCode)
                 {
@@ -267,7 +278,9 @@ namespace OpenMeteo
             try
             {
 
-                var url = _urlFactory.GetUrlWithOptions(options);
+                var url = UrlBuilderFactory.Create<GeocodingUrlBuilder>(_customBaseUri, _apiKey)
+                    .WithOptions(options)
+                    .Build();
                 HttpResponseMessage response = await httpController.Client.GetAsync(url);
                 response.EnsureSuccessStatusCode();
 
@@ -287,7 +300,9 @@ namespace OpenMeteo
         {
             try
             {
-                var url = _urlFactory.GetUrlWithOptions(options);
+                var url = UrlBuilderFactory.Create<ElevationUrlBuilder>(_customBaseUri, _apiKey)
+                    .WithOptions(options)
+                    .Build();
                 HttpResponseMessage response = await httpController.Client.GetAsync(url);
                 response.EnsureSuccessStatusCode();
 
