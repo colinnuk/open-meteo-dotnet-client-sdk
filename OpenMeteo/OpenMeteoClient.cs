@@ -245,6 +245,22 @@ namespace OpenMeteo
             }
         }
 
+        private async Task<ErrorResponse?> ParseErrorResponseAsync(HttpResponseMessage response)
+        {
+            if ((int)response.StatusCode >=400 && (int)response.StatusCode <500)
+            {
+                try
+                {
+                    return await JsonSerializer.DeserializeAsync<ErrorResponse>(await response.Content.ReadAsStreamAsync(), _jsonSerializerOptions);
+                }
+                catch (Exception)
+                {
+                    // Empty catch block to ignore deserialization errors for error response
+                }
+            }
+            return null;
+        }
+
         private async Task<WeatherForecast?> GetWeatherForecastAsync(WeatherForecastOptions options)
         {
             try
@@ -260,19 +276,7 @@ namespace OpenMeteo
                     return weatherForecast;
                 }
 
-                ErrorResponse? error = null;
-                if((int)response.StatusCode >=400 && (int)response.StatusCode <500)
-                {
-                    try
-                    {
-                        error = await JsonSerializer.DeserializeAsync<ErrorResponse>(await response.Content.ReadAsStreamAsync(), _jsonSerializerOptions);
-                    }
-                    catch (Exception) 
-                    {
-                        // Empty catch block to ignore deserialization errors for error response
-                    }
-                } 
-                
+                ErrorResponse? error = await ParseErrorResponseAsync(response);
                 throw new OpenMeteoClientException(error?.Reason ?? "Exception in OpenMeteoClient", response.StatusCode);
             }
             catch (Exception)
@@ -288,7 +292,6 @@ namespace OpenMeteo
         {
             try
             {
-
                 var url = UrlBuilderFactory.Create<GeocodingUrlBuilder>(_customBaseUri, _apiKey)
                     .WithOptions(options)
                     .Build();
