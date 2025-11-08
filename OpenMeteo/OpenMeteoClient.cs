@@ -188,10 +188,8 @@ namespace OpenMeteo
         {
             try
             {
-                var options = new WeatherForecastOptions();
-                options.Models.Add(weatherModel);
-                var url = UrlBuilderFactory.Create<WeatherForecastUrlBuilder>(_customBaseUri, _apiKey)
-                    .WithOptions(options)
+                var url = UrlBuilderFactory.Create<WeatherForecastMetadataUrlBuilder>(_customBaseUri)
+                    .WithModel(weatherModel)
                     .Build();
 
                 HttpResponseMessage response = await httpController.Client.GetAsync(url);
@@ -320,3 +318,4 @@ namespace OpenMeteo
     }
 }
 
+    
