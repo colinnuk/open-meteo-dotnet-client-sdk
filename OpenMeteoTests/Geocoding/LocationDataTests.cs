@@ -9,6 +9,7 @@ namespace OpenMeteoTests.Geocoding
     public class LocationDataTests
     {
         [TestMethod]
+        [Ignore] // Ignored to reduce the number of API calls during testing
         public async Task Get_Location_Data_With_String_Test()
         {
             OpenMeteoClient client = new();
