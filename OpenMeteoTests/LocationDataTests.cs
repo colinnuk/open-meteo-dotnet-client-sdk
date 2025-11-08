@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenMeteo;
+using OpenMeteo.Geocoding;
 using System.Threading.Tasks;
 
 namespace OpenMeteoTests

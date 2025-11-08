@@ -1,5 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OpenMeteo;
+using OpenMeteo.Weather;
 
 namespace OpenMeteoTests
 {

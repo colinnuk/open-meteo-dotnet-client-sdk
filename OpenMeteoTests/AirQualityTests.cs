@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenMeteo;
+using OpenMeteo.AirQuality;
 using System.Threading.Tasks;
 
 namespace OpenMeteoTests
@@ -18,7 +19,7 @@ namespace OpenMeteoTests
                 Longitude = 13.4115f
             };
 
-            AirQuality res = await client.QueryAirQualityAsync(options);
+            var res = await client.QueryAirQualityAsync(options);
 
             Assert.IsNotNull(res);
             Assert.IsNotNull(res?.Hourly);

@@ -1,6 +1,10 @@
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OpenMeteo;
+using OpenMeteo.AirQuality;
+using OpenMeteo.Elevation;
+using OpenMeteo.Geocoding;
+using OpenMeteo.Url;
+using OpenMeteo.Weather;
 
 namespace OpenMeteoTests
 {

@@ -5,6 +5,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenMeteo;
+using OpenMeteo.Geocoding;
+using OpenMeteo.Weather.Options;
+using OpenMeteo.Weather.ResponseModel;
 
 namespace OpenMeteoTests
 {
