@@ -18,11 +18,11 @@ namespace OpenMeteoTests
             Assert.IsNotNull(options.Daily);
             Assert.IsNotNull(options.Hourly);
             Assert.IsNotNull(options.Current);
-            Assert.IsNotNull(options.Minutely15);
+            Assert.IsNotNull(options.Minutely_15);
             Assert.AreEqual(0, options.Daily.Parameter.Count);
             Assert.AreEqual(0, options.Hourly.Parameter.Count);
             Assert.AreEqual(0, options.Current.Parameter.Count);
-            Assert.AreEqual(0, options.Minutely15.Parameter.Count);
+            Assert.AreEqual(0, options.Minutely_15.Parameter.Count);
         }
 
         [TestMethod]
@@ -53,7 +53,7 @@ namespace OpenMeteoTests
             Assert.IsNotNull(options.Daily);
             Assert.IsNotNull(options.Hourly);
             Assert.IsNotNull(options.Current);
-            Assert.IsNotNull(options.Minutely15);
+            Assert.IsNotNull(options.Minutely_15);
             Assert.AreEqual(1, options.Past_Days);
             Assert.AreEqual(string.Empty, options.Start_date);
             Assert.AreEqual(string.Empty, options.End_date);

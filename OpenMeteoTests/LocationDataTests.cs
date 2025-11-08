@@ -1,9 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenMeteo;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace OpenMeteoTests
@@ -33,17 +29,6 @@ namespace OpenMeteoTests
             Assert.IsNotNull(res);
             Assert.IsNotNull(res.Locations);
             Assert.AreEqual("japan", res.Locations[0].Country.ToLower());
-        }
-
-        [TestMethod]
-        public async Task Get_Location_Latitude_Longitude_Test()
-        {
-            OpenMeteoClient client = new();
-            var res = await client.GetLocationLatitudeLongitudeAsync("Tokyo");
-
-            Assert.IsNotNull(res);
-            Assert.IsTrue(res?.latitude > 0);
-            Assert.IsTrue(res?.longitude > 0);
         }
     }
 }

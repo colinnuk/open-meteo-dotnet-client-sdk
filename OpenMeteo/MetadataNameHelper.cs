@@ -3,7 +3,7 @@
 namespace OpenMeteo;
 internal static class MetadataNameHelper
 {
-    public static string GetPrefixForWeatherModel(WeatherModelOptionsParameter weatherModel) => weatherModel switch
+    public static string GetMetadataUrlName(WeatherModelOptionsParameter weatherModel) => weatherModel switch
     {
         WeatherModelOptionsParameter.ecmwf_ifs => "ecmwf_ifs",
         WeatherModelOptionsParameter.ecmwf_ifs025 => "ecmwf_ifs025",

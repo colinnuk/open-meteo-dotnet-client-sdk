@@ -19,15 +19,5 @@ namespace OpenMeteoTests
             Assert.IsNotNull(res);
             Assert.AreEqual(res.Elevation.Length, 1);
         }
-
-        [TestMethod]
-        public void Elevation_Sync_Test()
-        {
-            OpenMeteoClient client = new();
-            var res = client.QueryElevation(Latitude, Longitude);
-
-            Assert.IsNotNull(res);
-            Assert.AreEqual(res.Elevation.Length, 1);
-        }
     }
 }

@@ -16,7 +16,7 @@ namespace OpenMeteoTests
         {
             OpenMeteoClient client = new OpenMeteoClient();
             string location = "Tokyo";
-            WeatherForecast weatherData = await client.QueryAsync(location);
+            WeatherForecast weatherData = await client.QueryWeatherApiAsync(location);
 
             Assert.IsNotNull(weatherData);
             Assert.IsNotNull(weatherData.Longitude);
@@ -28,7 +28,7 @@ namespace OpenMeteoTests
         {
             OpenMeteoClient client = new OpenMeteoClient();
             
-            WeatherForecast weatherData = await client.QueryAsync(1.125f, 2.25f);
+            WeatherForecast weatherData = await client.QueryWeatherApiAsync(1.125f, 2.25f);
 
             Assert.IsNotNull(weatherData);
             Assert.IsNotNull(weatherData.Longitude);
@@ -45,7 +45,7 @@ namespace OpenMeteoTests
 
             OpenMeteoClient client = new OpenMeteoClient();
             
-            WeatherForecast weatherData = await client.QueryAsync(1.125f, 2.25f);
+            WeatherForecast weatherData = await client.QueryWeatherApiAsync(1.125f, 2.25f);
 
             Assert.IsNotNull(weatherData);
             Assert.IsNotNull(weatherData.Longitude);
@@ -60,7 +60,7 @@ namespace OpenMeteoTests
         {
             OpenMeteoClient client = new OpenMeteoClient();
             GeocodingOptions options = new GeocodingOptions("Tokyo");
-            WeatherForecast weatherData = await client.QueryAsync(options);
+            WeatherForecast weatherData = await client.QueryWeatherApiAsync(options);
 
             Assert.IsNotNull(weatherData);
             Assert.IsNotNull(weatherData.Longitude);
@@ -73,7 +73,7 @@ namespace OpenMeteoTests
             OpenMeteoClient client = new();
             WeatherForecastOptions weatherForecast = new();
 
-            var res = await client.QueryAsync(weatherForecast);
+            var res = await client.QueryWeatherApiAsync(weatherForecast);
 
             Assert.IsNotNull(res);
             Assert.AreEqual(0f, res.Latitude);
@@ -103,7 +103,7 @@ namespace OpenMeteoTests
                 CellSelectionType.nearest
                 );
 
-            var res = await client.QueryAsync("Tokyo", options);
+            var res = await client.QueryWeatherApiAsync("Tokyo", options);
 
             Assert.IsNotNull(res);
         }
@@ -117,14 +117,14 @@ namespace OpenMeteoTests
                 Daily = DailyOptions.All,
                 Models = WeatherModelOptions.All,
                 Current = CurrentOptions.All,
-                Minutely15 = Minutely15Options.All
+                Minutely_15 = Minutely15Options.All
             };
 
             Assert.IsTrue(HourlyOptions.All.Parameter.All(p => options.Hourly.Parameter.Contains(p)));
             Assert.IsTrue(DailyOptions.All.Parameter.All(p => options.Daily.Parameter.Contains(p)));
             Assert.IsTrue(WeatherModelOptions.All.Parameter.All(p => options.Models.Parameter.Contains(p)));
             Assert.IsTrue(CurrentOptions.All.Parameter.All(p => options.Current.Parameter.Contains(p)));
-            Assert.IsTrue(Minutely15Options.All.Parameter.All(p => options.Minutely15.Parameter.Contains(p)));
+            Assert.IsTrue(Minutely15Options.All.Parameter.All(p => options.Minutely_15.Parameter.Contains(p)));
         }
 
         [TestMethod]
@@ -142,7 +142,7 @@ namespace OpenMeteoTests
                 Models = new WeatherModelOptions(WeatherModelOptionsParameter.gfs_hrrr),
             };
 
-            var ex = await Assert.ThrowsExceptionAsync<OpenMeteoClientException>(async () => await client.QueryAsync(options));
+            var ex = await Assert.ThrowsExceptionAsync<OpenMeteoClientException>(async () => await client.QueryWeatherApiAsync(options));
             Assert.AreEqual(System.Net.HttpStatusCode.BadRequest, ex.StatusCode);
             Assert.AreEqual("No data is available for this location", ex.Message);
         }
@@ -179,7 +179,7 @@ namespace OpenMeteoTests
             };
 
 
-            var res = await client.QueryAsync(options);
+            var res = await client.QueryWeatherApiAsync(options);
             Assert.IsNotNull(res);
         }
     }
