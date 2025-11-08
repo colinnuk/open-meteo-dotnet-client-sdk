@@ -12,8 +12,9 @@ Forked from [https://github.com/AlienDwarf/open-meteo-dotnet](https://github.com
 Support for:
 - Most of the OpenMeteo weather models (as of October 2025)
 - Using OpenMeteo with an API key
+- Using custom URLs for self-hosted OpenMeteo instances
 - dotnet 8 (and above)
-- Specific client library Exceptions can be thrown
+- Specific client library Exceptions optionally thrown for detailed error handling
 
 ## 🔨 Installation/Build
 
@@ -42,10 +43,10 @@ static async Task RunAsync()
     // Before using the library you have to create a new client. 
     // Once created you can reuse it for every other api call you are going to make. 
     // There is no need to create multiple clients.
-    OpenMeteo.OpenMeteoClient client = new OpenMeteo.OpenMeteoClient();
+    var client = new OpenMeteo.OpenMeteoClient();
 
     // Make a new api call to get the current weather in tokyo
-    WeatherForecast weatherData = await client.QueryAsync("Tokyo");
+    var weatherData = await client.QueryAsync("Tokyo");
 
     // Output the current weather to console
     Console.WriteLine("Weather in Tokyo: " + weatherData.Current.Temperature + weatherData.CurrentUnits.Temperature);
