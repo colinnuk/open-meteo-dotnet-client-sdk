@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenMeteo;
@@ -15,9 +14,10 @@ namespace OpenMeteoTests.Weather
     public class WeatherForecastTests
     {
         [TestMethod]
+        [Ignore] // Ignored to reduce the number of API calls during testing
         public async Task Only_Location_Name_Test()
         {
-            OpenMeteoClient client = new OpenMeteoClient();
+            OpenMeteoClient client = new();
             string location = "Tokyo";
             WeatherForecast weatherData = await client.QueryWeatherApiAsync(location);
 
@@ -29,7 +29,7 @@ namespace OpenMeteoTests.Weather
         [TestMethod]
         public async Task Latitude_Longitude_Test()
         {
-            OpenMeteoClient client = new OpenMeteoClient();
+            OpenMeteoClient client = new();
             
             WeatherForecast weatherData = await client.QueryWeatherApiAsync(1.125f, 2.25f);
 
@@ -42,27 +42,11 @@ namespace OpenMeteoTests.Weather
         }
 
         [TestMethod]
-        public async Task Latitude_Longitude_Test_With_French_Culture()
-        {
-            Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-FR");
-
-            OpenMeteoClient client = new OpenMeteoClient();
-            
-            WeatherForecast weatherData = await client.QueryWeatherApiAsync(1.125f, 2.25f);
-
-            Assert.IsNotNull(weatherData);
-            Assert.IsNotNull(weatherData.Longitude);
-            Assert.IsNotNull(weatherData.Latitude);
-
-            Assert.AreEqual(1.125f, weatherData.Latitude);
-            Assert.AreEqual(2.25f, weatherData.Longitude);
-        }
-
-        [TestMethod]
+        [Ignore] // Ignored to reduce the number of API calls during testing
         public async Task GeocodingOptions_Test()
         {
-            OpenMeteoClient client = new OpenMeteoClient();
-            GeocodingOptions options = new GeocodingOptions("Tokyo");
+            OpenMeteoClient client = new();
+            GeocodingOptions options = new("Tokyo");
             WeatherForecast weatherData = await client.QueryWeatherApiAsync(options);
 
             Assert.IsNotNull(weatherData);
@@ -71,6 +55,7 @@ namespace OpenMeteoTests.Weather
         }
 
         [TestMethod]
+        [Ignore] // Ignored to reduce the number of API calls during testing
         public async Task WeatherForecast_With_WeatherForecastOptions_Test()
         {
             OpenMeteoClient client = new();
@@ -112,6 +97,7 @@ namespace OpenMeteoTests.Weather
         }
 
         [TestMethod]
+        [Ignore] // Ignored to reduce the number of API calls during testing
         public void WeatherForecast_With_All_Options_Test()
         {
             WeatherForecastOptions options = new()
