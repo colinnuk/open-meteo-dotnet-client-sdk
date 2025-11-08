@@ -2,6 +2,14 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Text.Json;
+using OpenMeteo.AirQuality;
+using OpenMeteo.Weather.Options;
+using OpenMeteo.Weather.ResponseModel;
+using OpenMeteo.Weather.Metadata;
+using OpenMeteo.Elevation;
+using OpenMeteo.Geocoding;
+using OpenMeteo.Weather;
+using OpenMeteo.Url;
 
 namespace OpenMeteo
 {
@@ -145,8 +153,8 @@ namespace OpenMeteo
         /// Gets air quality data for a given location with individual options
         /// </summary>
         /// <param name="options">options for air quality request</param>
-        /// <returns><see cref="AirQuality"/> if successfull or <see cref="null"/> if failed</returns>
-        public async Task<AirQuality?> QueryAirQualityAsync(AirQualityOptions options)
+        /// <returns><see cref="AirQualityResponse"/> if successfull or <see cref="null"/> if failed</returns>
+        public async Task<AirQualityResponse?> QueryAirQualityAsync(AirQualityOptions options)
         {
             return await GetAirQualityAsync(options);
         }
@@ -212,7 +220,7 @@ namespace OpenMeteo
             apiModel.temporal_resolution_seconds,
             apiModel.update_interval_seconds);
 
-        private async Task<AirQuality?> GetAirQualityAsync(AirQualityOptions options)
+        private async Task<AirQualityResponse?> GetAirQualityAsync(AirQualityOptions options)
         {
             try
             {
@@ -222,7 +230,7 @@ namespace OpenMeteo
                 HttpResponseMessage response = await httpController.Client.GetAsync(url);
                 response.EnsureSuccessStatusCode();
 
-                AirQuality? airQuality = await JsonSerializer.DeserializeAsync<AirQuality>(await response.Content.ReadAsStreamAsync(), _jsonSerializerOptions);
+                AirQualityResponse? airQuality = await JsonSerializer.DeserializeAsync<AirQualityResponse>(await response.Content.ReadAsStreamAsync(), _jsonSerializerOptions);
                 return airQuality;
             }
             catch (HttpRequestException)
