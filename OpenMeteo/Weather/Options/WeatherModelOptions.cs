@@ -120,6 +120,7 @@ namespace OpenMeteo.Weather.Options
         gem_global,
         gem_regional,
         gem_hrdps_continental,
+        gem_hrdps_west,
         meteofrance_seamless,
         meteofrance_arpege_world,
         meteofrance_arpege_europe,
