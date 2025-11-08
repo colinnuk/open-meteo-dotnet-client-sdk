@@ -18,6 +18,14 @@ namespace OpenMeteo.Weather.Metadata
         {
         }
 
+        public WeatherForecastMetadataUrlBuilder(string apiKey) : base(apiKey)
+        {
+        }
+
+        public WeatherForecastMetadataUrlBuilder(Uri customBaseUri, string apiKey) : base(customBaseUri, apiKey)
+        {
+        }
+
         public WeatherForecastMetadataUrlBuilder WithModel(WeatherModelOptionsParameter weatherModel)
         {
             var metaName = MetadataNameHelper.GetMetadataUrlName(weatherModel);
