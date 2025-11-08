@@ -14,7 +14,6 @@ Support for:
 - Using OpenMeteo with an API key
 - dotnet 8 (and above)
 - Specific client library Exceptions can be thrown
-- Possible to register any custom logger in the Client SDK via the `IOpenMeteoLogger` interface
 
 ## 🔨 Installation/Build
 
