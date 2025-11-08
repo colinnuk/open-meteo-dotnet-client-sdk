@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Text.Json;
@@ -22,6 +22,7 @@ namespace OpenMeteo
         private readonly JsonSerializerOptions _jsonSerializerOptions = new() { PropertyNameCaseInsensitive = true };
         private readonly Uri? _customBaseUri;
         private readonly string? _apiKey;
+        private readonly WeatherForecastResponseParser _weatherForecastParser;
 
         /// <summary>
         /// If set to true, exceptions from the OpenMeteo API will be rethrown. Default is false.
@@ -39,6 +40,7 @@ namespace OpenMeteo
         public OpenMeteoClient()
         {
             httpController = new HttpController();
+            _weatherForecastParser = new WeatherForecastResponseParser(_jsonSerializerOptions);
         }
 
         /// <summary>
@@ -49,6 +51,7 @@ namespace OpenMeteo
         {
             httpController = new HttpController();
             _apiKey = apiKey;
+            _weatherForecastParser = new WeatherForecastResponseParser(_jsonSerializerOptions);
         }
 
         /// <summary>
@@ -61,6 +64,7 @@ namespace OpenMeteo
             httpController = new HttpController();
             _apiKey = apiKey;
             _customBaseUri = customBaseUri;
+            _weatherForecastParser = new WeatherForecastResponseParser(_jsonSerializerOptions);
         }
 
         /// <summary>
@@ -71,6 +75,7 @@ namespace OpenMeteo
         {
             httpController = new HttpController();
             _customBaseUri = customBaseUri;
+            _weatherForecastParser = new WeatherForecastResponseParser(_jsonSerializerOptions);
         }
 
         /// <summary>
@@ -102,7 +107,7 @@ namespace OpenMeteo
             {
                 Latitude = response.Locations[0].Latitude,
                 Longitude = response.Locations[0].Longitude,
-                Current = CurrentOptions.All                
+                Current = CurrentOptions.All
             };
 
             return await GetWeatherForecastAsync(weatherForecastOptions);
@@ -130,7 +135,7 @@ namespace OpenMeteo
             {
                 Latitude = latitude,
                 Longitude = longitude,
-                
+
             };
             return await QueryWeatherApiAsync(options);
         }
@@ -146,7 +151,7 @@ namespace OpenMeteo
             GeocodingApiResponse? geocodingApiResponse = await GetLocationDataAsync(location);
             if (geocodingApiResponse == null || geocodingApiResponse?.Locations == null)
                 return null;
-            
+
             options.Longitude = geocodingApiResponse.Locations[0].Longitude;
             options.Latitude = geocodingApiResponse.Locations[0].Latitude;
 
@@ -247,7 +252,7 @@ namespace OpenMeteo
 
         private async Task<ErrorResponse?> ParseErrorResponseAsync(HttpResponseMessage response)
         {
-            if ((int)response.StatusCode >=400 && (int)response.StatusCode <500)
+            if ((int)response.StatusCode >= 400 && (int)response.StatusCode < 500)
             {
                 try
                 {
@@ -270,10 +275,11 @@ namespace OpenMeteo
                     .WithFlatbuffers(UseFlatbuffers)
                     .Build();
                 HttpResponseMessage response = await httpController.Client.GetAsync(url);
-                if(response.IsSuccessStatusCode)
+                if (response.IsSuccessStatusCode)
                 {
-                    WeatherForecast? weatherForecast = await JsonSerializer.DeserializeAsync<WeatherForecast>(await response.Content.ReadAsStreamAsync(), _jsonSerializerOptions);
-                    return weatherForecast;
+                    return UseFlatbuffers
+                        ? await _weatherForecastParser.ConvertFlatBuffersAsync(response)
+                        : await _weatherForecastParser.DeserializeJsonAsync(response);
                 }
 
                 ErrorResponse? error = await ParseErrorResponseAsync(response);
@@ -333,4 +339,3 @@ namespace OpenMeteo
         }
     }
 }
-    
