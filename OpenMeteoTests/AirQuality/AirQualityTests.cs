@@ -3,7 +3,7 @@ using OpenMeteo;
 using OpenMeteo.AirQuality;
 using System.Threading.Tasks;
 
-namespace OpenMeteoTests
+namespace OpenMeteoTests.AirQuality
 {
     [TestClass]
     public class AirQualityTests

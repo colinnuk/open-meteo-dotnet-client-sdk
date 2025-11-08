@@ -1,7 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenMeteo.Weather.Options;
 
-namespace OpenMeteoTests
+namespace OpenMeteoTests.Weather
 {
     [TestClass]
     public class WeatherForecastOptionsTests

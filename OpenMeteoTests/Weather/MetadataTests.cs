@@ -3,7 +3,7 @@ using OpenMeteo;
 using OpenMeteo.Weather.Options;
 using System.Threading.Tasks;
 
-namespace OpenMeteoTests;
+namespace OpenMeteoTests.Weather;
 
 [TestClass]
 public class MetadataTests

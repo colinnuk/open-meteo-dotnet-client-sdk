@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenMeteo.AirQuality;
 using System;
-namespace OpenMeteoTests
+namespace OpenMeteoTests.AirQuality
 {
     [TestClass]
     public class AirQualityOptionsTests

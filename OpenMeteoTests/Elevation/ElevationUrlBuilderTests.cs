@@ -1,9 +1,8 @@
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OpenMeteo;
 using OpenMeteo.Elevation;
 
-namespace OpenMeteoTests
+namespace OpenMeteoTests.Elevation
 {
     [TestClass]
     public class ElevationUrlBuilderTests

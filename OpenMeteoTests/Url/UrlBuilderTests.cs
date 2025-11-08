@@ -2,7 +2,7 @@ using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenMeteo.Url;
 
-namespace OpenMeteoTests
+namespace OpenMeteoTests.Url
 {
     [TestClass]
     public class UrlBuilderTests

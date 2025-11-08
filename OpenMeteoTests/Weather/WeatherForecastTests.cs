@@ -9,7 +9,7 @@ using OpenMeteo.Geocoding;
 using OpenMeteo.Weather.Options;
 using OpenMeteo.Weather.ResponseModel;
 
-namespace OpenMeteoTests
+namespace OpenMeteoTests.Weather
 {
     [TestClass]
     public class WeatherForecastTests
@@ -148,42 +148,6 @@ namespace OpenMeteoTests
             var ex = await Assert.ThrowsExceptionAsync<OpenMeteoClientException>(async () => await client.QueryWeatherApiAsync(options));
             Assert.AreEqual(System.Net.HttpStatusCode.BadRequest, ex.StatusCode);
             Assert.AreEqual("No data is available for this location", ex.Message);
-        }
-
-        [TestMethod]
-        [Ignore]
-        public async Task MeteoSwissCH1_Null_Daily_Values_Test()
-        {
-            // Test for a location in Switzerland where MeteoSwiss CH1 model returns null daily values
-            OpenMeteoClient client = new()
-            {
-                RethrowExceptions = true
-            };
-
-            var utcDateNow = DateTime.UtcNow.Date;
-            var utcDateEnd = utcDateNow.AddDays(1);
-
-            var options = new WeatherForecastOptions()
-            {
-                Latitude = 46.21f,
-                Longitude = 7.31f,
-                Daily = new DailyOptions(DailyOptionsParameter.temperature_2m_max),
-                Models = new WeatherModelOptions(WeatherModelOptionsParameter.meteoswiss_icon_ch1),
-
-                Temperature_Unit = TemperatureUnitType.celsius,
-                Windspeed_Unit = WindspeedUnitType.kmh,
-                Precipitation_Unit = PrecipitationUnitType.mm,
-                Timeformat = TimeformatType.iso8601,
-                Cell_Selection = CellSelectionType.land,
-                Timezone = "GMT",
-
-                Start_date = utcDateNow.ToString("yyyy-MM-dd"),
-                End_date = utcDateEnd.ToString("yyyy-MM-dd")
-            };
-
-
-            var res = await client.QueryWeatherApiAsync(options);
-            Assert.IsNotNull(res);
         }
     }
 }

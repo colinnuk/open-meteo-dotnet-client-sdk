@@ -1,7 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenMeteo.Weather;
 
-namespace OpenMeteoTests
+namespace OpenMeteoTests.Weather
 {
     [TestClass]
     public class WeatherCodeHelperTests

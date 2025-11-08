@@ -6,7 +6,7 @@ using OpenMeteo.Geocoding;
 using OpenMeteo.Url;
 using OpenMeteo.Weather;
 
-namespace OpenMeteoTests
+namespace OpenMeteoTests.Url
 {
     [TestClass]
     public class UrlBuilderFactoryTests

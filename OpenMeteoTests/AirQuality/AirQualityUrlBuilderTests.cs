@@ -2,7 +2,7 @@ using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenMeteo.AirQuality;
 
-namespace OpenMeteoTests
+namespace OpenMeteoTests.AirQuality
 {
     [TestClass]
     public class AirQualityUrlBuilderTests

@@ -2,7 +2,7 @@
 using OpenMeteo;
 using System.Threading.Tasks;
 
-namespace OpenMeteoTests
+namespace OpenMeteoTests.Elevation
 {
     [TestClass]
     public class ElevationTests

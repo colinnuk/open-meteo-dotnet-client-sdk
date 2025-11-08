@@ -4,7 +4,7 @@ using OpenMeteo;
 using OpenMeteo.Weather;
 using OpenMeteo.Weather.Options;
 
-namespace OpenMeteoTests
+namespace OpenMeteoTests.Weather
 {
     [TestClass]
     public class WeatherForecastUrlBuilderTests

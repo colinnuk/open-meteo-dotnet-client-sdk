@@ -3,7 +3,7 @@ using OpenMeteo;
 using OpenMeteo.Geocoding;
 using System.Threading.Tasks;
 
-namespace OpenMeteoTests
+namespace OpenMeteoTests.Geocoding
 {
     [TestClass]
     public class LocationDataTests

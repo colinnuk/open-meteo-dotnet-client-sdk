@@ -2,7 +2,7 @@
 using OpenMeteo.Weather.Options;
 using System;
 
-namespace OpenMeteoTests
+namespace OpenMeteoTests.Weather
 {
     [TestClass]
     public class HourlyOptionsTests
