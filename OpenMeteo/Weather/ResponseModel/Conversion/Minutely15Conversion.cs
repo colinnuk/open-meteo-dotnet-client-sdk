@@ -12,7 +12,7 @@ namespace OpenMeteo.Weather.ResponseModel.Conversion
             if (forecastOptions?.Minutely_15 == null || forecastOptions.Minutely_15.Count ==0) return null;
             var minutely = new Minutely15
             {
-                time = WeatherConversionHelpers.BuildTimeArray(fbMinutely15, forecastOptions.Timezone)
+                Time = WeatherConversionHelpers.BuildTimeArray(fbMinutely15, forecastOptions.Timezone)
             };
             for (int i =0; i < fbMinutely15?.VariablesLength && i < forecastOptions.Minutely_15.Parameter.Count; i++)
             {
