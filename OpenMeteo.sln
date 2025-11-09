@@ -7,6 +7,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenMeteo", "OpenMeteo\Open
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenMeteoTests", "OpenMeteoTests\OpenMeteoTests.csproj", "{13F57033-8014-4D9B-9F72-17279706325D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
+	ProjectSection(SolutionItems) = preProject
+		.github\gitversion.yml = .github\gitversion.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build-and-test.yml = .github\workflows\build-and-test.yml
+		.github\workflows\determine-version.yml = .github\workflows\determine-version.yml
+		.github\workflows\package-and-deploy.yml = .github\workflows\package-and-deploy.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +36,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {56F42F3D-6ED0-4AB4-9B68-B218D934FFE3}
