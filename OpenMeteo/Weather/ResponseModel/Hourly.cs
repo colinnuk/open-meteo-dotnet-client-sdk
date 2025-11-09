@@ -100,11 +100,11 @@
         public float?[]? Dewpoint_400hPa { get; set; }
         public float?[]? Dewpoint_300hPa { get; set; }
         public float?[]? Dewpoint_250hPa { get; set; }
-        public float?[]? dewpoint_200hPa { get; set; }
+        public float?[]? Dewpoint_200hPa { get; set; }
         public float?[]? Dewpoint_150hPa { get; set; }
         public float?[]? Dewpoint_100hPa { get; set; }
         public float?[]? Dewpoint_70hPa { get; set; }
-        public float?[]? dewpoint_50hPa { get; set; }
+        public float?[]? Dewpoint_50hPa { get; set; }
         public object?[]? Dewpoint_30hPa { get; set; }
         public int?[]? Relativehumidity_1000hPa { get; set; }
         public int?[]? Relativehumidity_975hPa { get; set; }

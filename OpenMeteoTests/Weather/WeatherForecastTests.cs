@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -27,6 +26,7 @@ namespace OpenMeteoTests.Weather
         }
 
         [TestMethod]
+        [Ignore] // Ignored to reduce the number of API calls during testing
         public async Task Latitude_Longitude_Test()
         {
             OpenMeteoClient client = new();
@@ -97,7 +97,6 @@ namespace OpenMeteoTests.Weather
         }
 
         [TestMethod]
-        [Ignore] // Ignored to reduce the number of API calls during testing
         public void WeatherForecast_With_All_Options_Test()
         {
             WeatherForecastOptions options = new()
@@ -134,6 +133,42 @@ namespace OpenMeteoTests.Weather
             var ex = await Assert.ThrowsExceptionAsync<OpenMeteoClientException>(async () => await client.QueryWeatherApiAsync(options));
             Assert.AreEqual(System.Net.HttpStatusCode.BadRequest, ex.StatusCode);
             Assert.AreEqual("No data is available for this location", ex.Message);
+        }
+
+        [TestMethod]
+        public async Task FlatBuffers_Enabled_Returns_WeatherForecast()
+        {
+            var client = new OpenMeteoClient() { UseFlatbuffers = true };
+            var options = new WeatherForecastOptions(52.52f, 13.41f);
+            var result = await client.QueryWeatherApiAsync(options);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(52.52f, result.Latitude, 0.01f);
+            Assert.AreEqual(13.41f, result.Longitude, 0.01f);
+        }
+
+        [TestMethod]
+        [Ignore]
+        public async Task FlatBuffers_ComplexOptions_Returns_WeatherForecast()
+        {
+            var client = new OpenMeteoClient() { UseFlatbuffers = true };
+            var options = new WeatherForecastOptions
+            {
+                Latitude = 52.52f,
+                Longitude = 13.41f,
+                Hourly = HourlyOptions.All,
+                Daily = DailyOptions.All,
+                Current = CurrentOptions.All,
+                Minutely_15 = Minutely15Options.All,
+                Models = new WeatherModelOptions(WeatherModelOptionsParameter.best_match)
+            };
+            var result = await client.QueryWeatherApiAsync(options);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(52.52f, result.Latitude, 0.01f);
+            Assert.AreEqual(13.41f, result.Longitude, 0.01f);
+            Assert.IsNotNull(result.Hourly);
+            Assert.IsNotNull(result.Daily);
+            Assert.IsNotNull(result.Current);
+            Assert.IsNotNull(result.Minutely15);
         }
     }
 }
