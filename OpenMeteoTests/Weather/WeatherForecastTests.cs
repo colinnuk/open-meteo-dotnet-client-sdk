@@ -85,8 +85,8 @@ namespace OpenMeteoTests.Weather
                 null,
                 TimeformatType.iso8601, 
                 0,
-                DateTime.UtcNow.Date.AddDays(-2).ToString("yyyy-MM-dd"),
-                DateTime.UtcNow.Date.AddDays(-1).ToString("yyyy-MM-dd"),
+                DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-2),
+                DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-1),
                 null,
                 CellSelectionType.nearest
                 );

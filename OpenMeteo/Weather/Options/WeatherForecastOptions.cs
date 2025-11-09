@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Text.Json.Serialization;
 
 namespace OpenMeteo.Weather.Options
 {
@@ -37,7 +36,7 @@ namespace OpenMeteo.Weather.Options
         public CellSelectionType Cell_Selection { get; set; }
 
         /// <summary>
-        /// Default is "GMT". Any time zone name from the time zone database is supported.
+        /// Default is "GMT". Any time zone name from the time zone database is supported. (eg . Europe/Berlin, America/New_York)
         /// </summary>
         public string Timezone { get; set; }
 
@@ -54,7 +53,6 @@ namespace OpenMeteo.Weather.Options
 
         /// <summary>
         /// Default is "iso8601". Other options: "unixtime". 
-        /// Please note that all timestamp are in GMT+0!
         /// See https://open-meteo.com/en/docs for more info
         /// </summary>
         public TimeformatType Timeformat { get; set; }
@@ -65,27 +63,18 @@ namespace OpenMeteo.Weather.Options
         /// <value></value>
         public int? Past_Days { get; set; }
 
-        /// <summary>
-        /// The time interval to get weather data. A day must be specified as an ISO8601 date (e.g. 2022-06-30).
-        /// (yyyy-mm-dd)
-        /// https://open-meteo.com/en/docs
-        /// </summary>
-        public string? Start_date { get; set; }
+        [JsonConverter(typeof(DateOnlyConverter))]
+        public DateOnly? Start_date { get; set; }
+        [JsonConverter(typeof(DateOnlyConverter))]
+        public DateOnly? End_date { get; set; }
 
-        /// <summary>
-        /// The time interval to get weather data. A day must be specified as an ISO8601 date (e.g. 2022-06-30).
-        /// (yyyy-mm-dd)
-        /// https://open-meteo.com/en/docs
-        /// </summary>
-        public string? End_date { get; set; }
+        private HourlyOptions _hourly = [];
+        private DailyOptions _daily = [];
+        private WeatherModelOptions _models = [];
+        private CurrentOptions _current = [];
+        private Minutely15Options _minutely15 = [];
 
-        private HourlyOptions _hourly = new HourlyOptions();
-        private DailyOptions _daily = new DailyOptions();
-        private WeatherModelOptions _models = new WeatherModelOptions();
-        private CurrentOptions _current = new CurrentOptions();
-        private Minutely15Options _minutely15 = new Minutely15Options();
-
-        public WeatherForecastOptions(float latitude, float longitude, TemperatureUnitType temperature_Unit, WindspeedUnitType windspeed_Unit, PrecipitationUnitType precipitation_Unit, string timezone, HourlyOptions hourly, DailyOptions daily, CurrentOptions current, Minutely15Options minutely15, TimeformatType timeformat, int past_Days, string start_date, string end_date, WeatherModelOptions models, CellSelectionType cell_selection)
+        public WeatherForecastOptions(float latitude, float longitude, TemperatureUnitType temperature_Unit, WindspeedUnitType windspeed_Unit, PrecipitationUnitType precipitation_Unit, string timezone, HourlyOptions hourly, DailyOptions daily, CurrentOptions current, Minutely15Options minutely15, TimeformatType timeformat, int past_Days, DateOnly? start_date, DateOnly? end_date, WeatherModelOptions models, CellSelectionType cell_selection)
         {
             Latitude = latitude;
             Longitude = longitude;
@@ -122,8 +111,8 @@ namespace OpenMeteo.Weather.Options
             Cell_Selection = CellSelectionType.land;
             Timezone = "GMT";
             
-            Start_date = string.Empty;
-            End_date = string.Empty;
+            Start_date = null;
+            End_date = null;
         }
         public WeatherForecastOptions()
         {
@@ -136,8 +125,8 @@ namespace OpenMeteo.Weather.Options
             Cell_Selection = CellSelectionType.land;
             Timezone = "GMT";
             
-            Start_date = string.Empty;
-            End_date = string.Empty;
+            Start_date = null;
+            End_date = null;
         }
     }
 

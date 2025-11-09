@@ -1,3 +1,5 @@
+using System;
+using System.Text.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenMeteo.Weather.Options;
 
@@ -28,7 +30,7 @@ namespace OpenMeteoTests.Weather
         [TestMethod]
         public void Latitude_Longitude_WeatherForecastOptions_Constructor_Test()
         {
-            WeatherForecastOptions options = new WeatherForecastOptions(2.4f, 3.5f);
+            WeatherForecastOptions options = new(2.4f, 3.5f);
 
             Assert.IsNotNull(options);
             Assert.AreEqual(2.4f, options.Latitude);
@@ -39,9 +41,9 @@ namespace OpenMeteoTests.Weather
         [TestMethod]
         public void Full_WeatherForecastOptions_Constructor_Test()
         {
-            WeatherForecastOptions options = new WeatherForecastOptions(
+            WeatherForecastOptions options = new(
                 10.5f, 20.5f, TemperatureUnitType.fahrenheit, WindspeedUnitType.kmh, PrecipitationUnitType.mm, "auto",
-                new HourlyOptions(), new DailyOptions(), new CurrentOptions(), new Minutely15Options(), TimeformatType.iso8601, 1, "", "", new WeatherModelOptions(), CellSelectionType.land);
+                new HourlyOptions(), new DailyOptions(), new CurrentOptions(), new Minutely15Options(), TimeformatType.iso8601, 1, null, null, new WeatherModelOptions(), CellSelectionType.land);
 
             Assert.AreEqual(10.5f, options.Latitude);
             Assert.AreEqual(20.5f, options.Longitude);
@@ -55,17 +57,17 @@ namespace OpenMeteoTests.Weather
             Assert.IsNotNull(options.Current);
             Assert.IsNotNull(options.Minutely_15);
             Assert.AreEqual(1, options.Past_Days);
-            Assert.AreEqual(string.Empty, options.Start_date);
-            Assert.AreEqual(string.Empty, options.End_date);
+            Assert.IsNull(options.Start_date);
+            Assert.IsNull(options.End_date);
 
         }
 
         [TestMethod]
         public void WeatherForecastOptions_Daily_Hourly_Test()
         {
-            WeatherForecastOptions options = new WeatherForecastOptions(
+            WeatherForecastOptions options = new(
                 10.5f, 20.5f, TemperatureUnitType.fahrenheit, WindspeedUnitType.kmh, PrecipitationUnitType.mm, "auto",
-                new HourlyOptions(), new DailyOptions(), new CurrentOptions(), new Minutely15Options(), TimeformatType.iso8601, 1, "", "", new WeatherModelOptions(), CellSelectionType.land);
+                new HourlyOptions(), new DailyOptions(), new CurrentOptions(), new Minutely15Options(), TimeformatType.iso8601, 1, null, null, new WeatherModelOptions(), CellSelectionType.land);
 
             options.Daily.Add(DailyOptionsParameter.sunset);
             options.Daily.Add(DailyOptionsParameter.sunrise);
@@ -80,6 +82,21 @@ namespace OpenMeteoTests.Weather
             Assert.IsTrue(options.Daily.Parameter.Count == 2);
             Assert.IsTrue(options.Daily.Parameter.Contains(DailyOptionsParameter.sunrise));
             Assert.IsTrue(options.Daily.Parameter.Contains(DailyOptionsParameter.sunset));
+        }
+
+        [TestMethod]
+        public void WeatherForecastOptions_DateOnly_Serialization_Test()
+        {
+            var options = new WeatherForecastOptions(1.0f, 2.0f)
+            {
+                Start_date = new DateOnly(2024, 6, 1),
+                End_date = new DateOnly(2024, 6, 2)
+            };
+            var json = JsonSerializer.Serialize(options);
+
+            var deserialized = JsonSerializer.Deserialize<WeatherForecastOptions>(json);
+            Assert.AreEqual(new DateOnly(2024, 6, 1), deserialized.Start_date);
+            Assert.AreEqual(new DateOnly(2024, 6, 2), deserialized.End_date);
         }
     }
 }
