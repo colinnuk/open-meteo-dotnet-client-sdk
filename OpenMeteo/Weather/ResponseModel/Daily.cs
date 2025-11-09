@@ -1,8 +1,12 @@
-﻿namespace OpenMeteo.Weather.ResponseModel
+﻿using OpenMeteo.Weather.Options;
+using System;
+using System.Text.Json.Serialization;
+
+namespace OpenMeteo.Weather.ResponseModel
 {
     public class Daily
     {
-        public string[]? Time { get; set; }
+        public DateOnly[]? Time { get; set; }
 
         /// <summary>
         /// The most severe daily weather condition

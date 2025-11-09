@@ -6,20 +6,20 @@ namespace OpenMeteo.Weather.ResponseModel.Conversion
 {
     internal static class CurrentConversion
     {
-        public static Current? ConvertCurrent(VariablesWithTime? fbCurrent, CurrentOptions? requestedOptions)
+        public static Current? ConvertCurrent(VariablesWithTime? fbCurrent, WeatherForecastOptions? forecastOptions)
         {
             if (fbCurrent == null) return null;
-            if (requestedOptions == null || requestedOptions.Count == 0) return null;
+            if (forecastOptions?.Current == null || forecastOptions.Current.Count == 0) return null;
 
             var current = new Current
             {
-                Time = WeatherConversionHelpers.ConvertUnixToIso8601(fbCurrent?.Time),
+                Time = WeatherConversionHelpers.ConvertUnixToDateTimeOffset(fbCurrent.Value.Time, forecastOptions.Timezone),
                 Interval = fbCurrent?.Interval
             };
 
-            for (int i = 0; i < fbCurrent?.VariablesLength && i < requestedOptions.Parameter.Count; i++)
+            for (int i = 0; i < fbCurrent?.VariablesLength && i < forecastOptions.Current.Parameter.Count; i++)
             {
-                MapCurrentVariableByParameter(current, requestedOptions.Parameter[i], fbCurrent?.Variables(i));
+                MapCurrentVariableByParameter(current, forecastOptions.Current.Parameter[i], fbCurrent?.Variables(i));
             }
 
             return current;

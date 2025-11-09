@@ -1,8 +1,9 @@
-﻿namespace OpenMeteo.Weather.ResponseModel
+﻿using System;
+namespace OpenMeteo.Weather.ResponseModel
 {
     public class Hourly
     {
-        public string[]? Time { get; set; }
+        public DateTimeOffset[]? Time { get; set; }
         public float?[]? Temperature_2m { get; set; }
         public int?[]? Relativehumidity_2m { get; set; }
         public float?[]? Dewpoint_2m { get; set; }

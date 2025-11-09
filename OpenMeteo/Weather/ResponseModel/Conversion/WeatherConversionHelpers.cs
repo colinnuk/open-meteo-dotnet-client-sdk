@@ -18,24 +18,26 @@ namespace OpenMeteo.Weather.ResponseModel.Conversion
             return 0;
         }
 
-        public static string[]? BuildTimeArray(VariablesWithTime? variablesWithTime)
+        public static DateTimeOffset[]? BuildTimeArray(VariablesWithTime? variablesWithTime, string timezoneId)
         {
             if (variablesWithTime == null || variablesWithTime.Value.Time <= 0)
                 return null;
             int timeCount = GetTimeCount(variablesWithTime);
-            var result = new string[timeCount];
+            var result = new DateTimeOffset[timeCount];
             for (int i = 0; i < timeCount; i++)
             {
-                result[i] = ConvertUnixToIso8601(variablesWithTime.Value.Time + (i * variablesWithTime.Value.Interval));
+                result[i] = ConvertUnixToDateTimeOffset(variablesWithTime.Value.Time + (i * variablesWithTime.Value.Interval), timezoneId);
             }
             return result;
         }
 
-        public static string ConvertUnixToIso8601(long? epochSeconds)
+        public static DateTimeOffset ConvertUnixToDateTimeOffset(long epochSeconds, string timezoneId)
         {
-            if (epochSeconds == null) return string.Empty;
-            var dateTime = DateTimeOffset.FromUnixTimeSeconds(epochSeconds.Value).UtcDateTime;
-            return dateTime.ToString("yyyy-MM-dd'T'HH:mm");
+            var utcDateTime = DateTimeOffset.FromUnixTimeSeconds(epochSeconds);
+            var tzInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneId);
+            var localDateTime = TimeZoneInfo.ConvertTime(utcDateTime, tzInfo);
+            var offset = tzInfo.GetUtcOffset(localDateTime);
+            return new DateTimeOffset(localDateTime.DateTime, offset);
         }
     }
 }

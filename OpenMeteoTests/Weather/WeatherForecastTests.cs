@@ -71,7 +71,7 @@ namespace OpenMeteoTests.Weather
         [TestMethod]
         public async Task WeatherForecast_With_String_And_Options_Test()
         {
-            OpenMeteoClient client = new();
+            OpenMeteoClient client = new() { RethrowExceptions = true };
             var options = new WeatherForecastOptions(
                 0f, 
                 0f, 

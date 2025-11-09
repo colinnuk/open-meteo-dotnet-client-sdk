@@ -15,12 +15,15 @@ namespace OpenMeteo.Weather.ResponseModel
     {
         private readonly JsonSerializerOptions _jsonSerializerOptions = jsonSerializerOptions;
 
-        public async Task<WeatherForecast?> DeserializeJsonAsync(HttpResponseMessage response)
+        public async Task<WeatherForecast?> DeserializeJsonAsync(HttpResponseMessage response, WeatherForecastOptions options)
         {
             if (response == null || !response.IsSuccessStatusCode)
                 return null;
 
-            return await JsonSerializer.DeserializeAsync<WeatherForecast>(await response.Content.ReadAsStreamAsync(), _jsonSerializerOptions);
+            var customOptions = new JsonSerializerOptions(_jsonSerializerOptions);
+            customOptions.Converters.Add(new DateTimeOffsetWithTimezoneConverter(options.Timezone));
+
+            return await JsonSerializer.DeserializeAsync<WeatherForecast>(await response.Content.ReadAsStreamAsync(), customOptions);
         }
 
         public async Task<WeatherForecast?> ConvertFlatBuffersAsync(HttpResponseMessage response,
@@ -70,10 +73,10 @@ namespace OpenMeteo.Weather.ResponseModel
                 UtcOffset = fbResponse.UtcOffsetSeconds,
                 Timezone = fbResponse.Timezone,
                 TimezoneAbbreviation = fbResponse.TimezoneAbbreviation,
-                Current = CurrentConversion.ConvertCurrent(fbResponse.Current, options?.Current),
-                Hourly = HourlyConversion.ConvertHourly(fbResponse.Hourly, options?.Hourly),
-                Daily = DailyConversion.ConvertDaily(fbResponse.Daily, options?.Daily),
-                Minutely15 = Minutely15Conversion.ConvertMinutely15(fbResponse.Minutely15, options?.Minutely_15)
+                Current = CurrentConversion.ConvertCurrent(fbResponse.Current, options),
+                Hourly = HourlyConversion.ConvertHourly(fbResponse.Hourly, options),
+                Daily = DailyConversion.ConvertDaily(fbResponse.Daily, options),
+                Minutely15 = Minutely15Conversion.ConvertMinutely15(fbResponse.Minutely15, options)
             };
         }
     }

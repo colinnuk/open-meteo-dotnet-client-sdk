@@ -279,7 +279,7 @@ namespace OpenMeteo
                 {
                     return UseFlatbuffers
                         ? await _weatherForecastParser.ConvertFlatBuffersAsync(response, options)
-                        : await _weatherForecastParser.DeserializeJsonAsync(response);
+                        : await _weatherForecastParser.DeserializeJsonAsync(response, options);
                 }
 
                 ErrorResponse? error = await ParseErrorResponseAsync(response);

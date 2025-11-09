@@ -1,8 +1,11 @@
-﻿namespace OpenMeteo.Weather.ResponseModel
+﻿using System;
+using System.Text.Json.Serialization;
+
+namespace OpenMeteo.Weather.ResponseModel
 {
     public class Minutely15
     {
-        public string[]? time { get; set; }
+        public DateTimeOffset[]? time { get; set; }
         public float[]? temperature_2m { get; set; }
         public int[]? relativehumidity_2m { get; set; }
         public float[]? dewpoint_2m { get; set; }
