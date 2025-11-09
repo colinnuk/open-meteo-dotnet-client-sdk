@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenMeteo;
@@ -10,7 +9,7 @@ using OpenMeteo.Weather.ResponseModel;
 namespace OpenMeteoTests.Weather
 {
     [TestClass]
-    public class WeatherForecastTests
+    public class WeatherForecastApiTests
     {
         [TestMethod]
         [Ignore] // Ignored to reduce the number of API calls during testing
@@ -97,25 +96,6 @@ namespace OpenMeteoTests.Weather
         }
 
         [TestMethod]
-        public void WeatherForecast_With_All_Options_Test()
-        {
-            WeatherForecastOptions options = new()
-            {
-                Hourly = HourlyOptions.All,
-                Daily = DailyOptions.All,
-                Models = WeatherModelOptions.All,
-                Current = CurrentOptions.All,
-                Minutely_15 = Minutely15Options.All
-            };
-
-            Assert.IsTrue(HourlyOptions.All.Parameter.All(p => options.Hourly.Parameter.Contains(p)));
-            Assert.IsTrue(DailyOptions.All.Parameter.All(p => options.Daily.Parameter.Contains(p)));
-            Assert.IsTrue(WeatherModelOptions.All.Parameter.All(p => options.Models.Parameter.Contains(p)));
-            Assert.IsTrue(CurrentOptions.All.Parameter.All(p => options.Current.Parameter.Contains(p)));
-            Assert.IsTrue(Minutely15Options.All.Parameter.All(p => options.Minutely_15.Parameter.Contains(p)));
-        }
-
-        [TestMethod]
         public async Task Latitude_Longitude_No_Data_For_Selected_Forecast_Rethrows_Test()
         {
             OpenMeteoClient client = new()
@@ -165,6 +145,32 @@ namespace OpenMeteoTests.Weather
             Assert.IsNotNull(result);
             Assert.AreEqual(52.52f, result.Latitude, 0.01f);
             Assert.AreEqual(13.41f, result.Longitude, 0.01f);
+            Assert.IsNotNull(result.Hourly);
+            Assert.IsNotNull(result.Daily);
+            Assert.IsNotNull(result.Current);
+            Assert.IsNotNull(result.Minutely15);
+        }
+
+        [TestMethod]
+        [Ignore]
+        public async Task FlatBuffers_ComplexOptions_WithTimeZone_Returns_WeatherForecast()
+        {
+            var client = new OpenMeteoClient() { UseFlatbuffers = true };
+            var options = new WeatherForecastOptions
+            {
+                Latitude = 49.1f,
+                Longitude = -122.6f,
+                Timezone = "America/Vancouver",
+                Hourly = HourlyOptions.All,
+                Daily = DailyOptions.All,
+                Current = CurrentOptions.All,
+                Minutely_15 = Minutely15Options.All,
+                Models = new WeatherModelOptions(WeatherModelOptionsParameter.best_match)
+            };
+            var result = await client.QueryWeatherApiAsync(options);
+            Assert.IsNotNull(result);
+            Assert.AreEqual(49.1f, result.Latitude, 0.01f);
+            Assert.AreEqual(-122.6f, result.Longitude, 0.01f);
             Assert.IsNotNull(result.Hourly);
             Assert.IsNotNull(result.Daily);
             Assert.IsNotNull(result.Current);
