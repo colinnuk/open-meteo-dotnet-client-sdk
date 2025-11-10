@@ -47,11 +47,5 @@ namespace OpenMeteo.Helpers
                 property.SetValue(target, (int)variable.Values(0));
             }
         }
-
-        private static string ConvertParameterNameToPropertyName(string parameterName)
-        {
-            if (string.IsNullOrEmpty(parameterName)) return parameterName;
-            return char.ToUpper(parameterName[0]) + parameterName.Substring(1);
-        }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 
 namespace OpenMeteo.Helpers;
-internal static class ArrayExtensions
+public static class ArrayExtensions
 {
     public static int[] ToIntArray(this long[] longArray)
     {
@@ -18,7 +18,7 @@ internal static class ArrayExtensions
     public static float?[] ToNullableFloatArray(this float[] floatArray)
     {
         if (floatArray == null) return [];
-        return floatArray.Select(f => (float?)f).ToArray();
+        return floatArray.Select(f => float.IsNaN(f) ? (float?)null : f).ToArray();
     }
 
     public static int?[] ToNullableIntArray(this long[] longArray)
