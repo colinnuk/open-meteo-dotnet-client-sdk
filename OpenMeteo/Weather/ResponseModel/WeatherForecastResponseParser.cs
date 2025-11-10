@@ -15,6 +15,12 @@ namespace OpenMeteo.Weather.ResponseModel
     {
         private readonly JsonSerializerOptions _jsonSerializerOptions = jsonSerializerOptions;
 
+        /// <summary>
+        /// Deserializes a JSON response into a WeatherForecast object, using the timezone from options for datetime parsing.
+        /// </summary>
+        /// <param name="response">HttpResponseMessage containing the JSON response</param>
+        /// <param name="options">WeatherForecastOptions object containing the options for the request</param>
+        /// <returns></returns>
         public async Task<WeatherForecast?> DeserializeJsonAsync(HttpResponseMessage response, WeatherForecastOptions options)
         {
             if (response == null || !response.IsSuccessStatusCode)
@@ -26,6 +32,13 @@ namespace OpenMeteo.Weather.ResponseModel
             return await JsonSerializer.DeserializeAsync<WeatherForecast>(await response.Content.ReadAsStreamAsync(), customOptions);
         }
 
+        /// <summary>
+        /// Converts a FlatBuffers response into a WeatherForecast object.
+        /// </summary>
+        /// <param name="response"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public async Task<WeatherForecast?> ConvertFlatBuffersAsync(HttpResponseMessage response,
             WeatherForecastOptions? options)
         {

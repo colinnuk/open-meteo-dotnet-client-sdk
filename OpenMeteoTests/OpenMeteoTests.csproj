@@ -20,4 +20,19 @@
     <ProjectReference Include="..\OpenMeteo\OpenMeteo.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Weather\ExampleResponses\FlatbuffersResponse_NonUTC">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Weather\ExampleResponses\FlatbuffersResponse_UTC">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Weather\ExampleResponses\JsonResponse_UTC.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Weather\ExampleResponses\JsonResponse_NonUTC.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
