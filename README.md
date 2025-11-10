@@ -14,7 +14,10 @@ Support for:
 - Using OpenMeteo with an API key
 - Using custom URLs for self-hosted OpenMeteo instances
 - dotnet 8 (and above)
+- OpenMeteo Flatbuffers support - makes for much faster parsing of large datasets
 - Specific client library Exceptions optionally thrown for detailed error handling
+
+Pretty much all the library's classes are public, so you can extend the library as needed in your own code.
 
 ## 🔨 Installation/Build
 
