@@ -28,9 +28,8 @@ public static class WeatherForecastComparer
         if (a.Longitude != b.Longitude) unequalFields.Add(nameof(a.Longitude));
         if (a.Elevation != b.Elevation) unequalFields.Add(nameof(a.Elevation));
         if (a.UtcOffset != b.UtcOffset) unequalFields.Add(nameof(a.UtcOffset));
-        // These should match but for some reason OM returns null for both in the FB version
-        //if (a.Timezone != b.Timezone) unequalFields.Add(nameof(a.Timezone));
-        //if (a.TimezoneAbbreviation != b.TimezoneAbbreviation) unequalFields.Add(nameof(a.TimezoneAbbreviation));
+        if (a.Timezone != b.Timezone) unequalFields.Add(nameof(a.Timezone));
+        if (a.TimezoneAbbreviation != b.TimezoneAbbreviation) unequalFields.Add(nameof(a.TimezoneAbbreviation));
         unequalFields.AddRange(CurrentMetricsUnequalFields(a.Current, b.Current));
         unequalFields.AddRange(HourlyMetricsUnequalFields(a.Hourly, b.Hourly));
         unequalFields.AddRange(DailyMetricsUnequalFields(a.Daily, b.Daily));
