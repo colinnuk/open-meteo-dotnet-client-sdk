@@ -291,7 +291,6 @@ namespace OpenMeteo
                     throw;
                 return null;
             }
-
         }
 
         private async Task<GeocodingApiResponse?> GetGeocodingDataAsync(GeocodingOptions options)
