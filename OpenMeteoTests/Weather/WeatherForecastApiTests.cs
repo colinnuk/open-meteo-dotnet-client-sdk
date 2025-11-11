@@ -17,7 +17,7 @@ namespace OpenMeteoTests.Weather
         {
             OpenMeteoClient client = new();
             string location = "Tokyo";
-            WeatherForecast weatherData = await client.QueryWeatherApiAsync(location);
+            var weatherData = await client.QueryWeatherApiAsync(location);
 
             Assert.IsNotNull(weatherData);
             Assert.IsNotNull(weatherData.Longitude);
@@ -30,7 +30,7 @@ namespace OpenMeteoTests.Weather
         {
             OpenMeteoClient client = new();
             
-            WeatherForecast weatherData = await client.QueryWeatherApiAsync(1.125f, 2.25f);
+            var weatherData = await client.QueryWeatherApiAsync(1.125f, 2.25f);
 
             Assert.IsNotNull(weatherData);
             Assert.IsNotNull(weatherData.Longitude);
@@ -46,7 +46,7 @@ namespace OpenMeteoTests.Weather
         {
             OpenMeteoClient client = new();
             GeocodingOptions options = new("Tokyo");
-            WeatherForecast weatherData = await client.QueryWeatherApiAsync(options);
+            var weatherData = await client.QueryWeatherApiAsync(options);
 
             Assert.IsNotNull(weatherData);
             Assert.IsNotNull(weatherData.Longitude);
@@ -78,15 +78,15 @@ namespace OpenMeteoTests.Weather
                 WindspeedUnitType.kmh, 
                 PrecipitationUnitType.mm, 
                 "GMT", 
-                null, 
-                null, 
-                null,
-                null,
+                null!, 
+                null!, 
+                null!,
+                null!,
                 TimeformatType.iso8601, 
                 0,
                 DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-2),
                 DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-1),
-                null,
+                null!,
                 CellSelectionType.nearest
                 );
 

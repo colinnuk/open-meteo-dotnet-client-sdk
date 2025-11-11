@@ -95,7 +95,7 @@ namespace OpenMeteoTests.Weather
             var json = JsonSerializer.Serialize(options);
 
             var deserialized = JsonSerializer.Deserialize<WeatherForecastOptions>(json);
-            Assert.AreEqual(new DateOnly(2024, 6, 1), deserialized.Start_date);
+            Assert.AreEqual(new DateOnly(2024, 6, 1), deserialized!.Start_date);
             Assert.AreEqual(new DateOnly(2024, 6, 2), deserialized.End_date);
         }
     }

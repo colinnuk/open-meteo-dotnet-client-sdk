@@ -157,7 +157,15 @@ namespace OpenMeteoTests.Weather
 
             Assert.IsNotNull(jsonForecast);
             Assert.IsNotNull(flatbufferForecast);
-            Assert.IsTrue(WeatherForecastComparer.WeatherForecastsAreEqual(jsonForecast, flatbufferForecast));
+
+            var result = WeatherForecastComparer.Compare(jsonForecast, flatbufferForecast);
+            if (!result.IsEqual)
+            {
+                Console.WriteLine("Unequal fields:");
+                foreach (var field in result.UnequalFields)
+                    Console.WriteLine(field);
+            }
+            Assert.IsTrue(result.IsEqual);
         }
     }
 }

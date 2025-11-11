@@ -1,6 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenMeteo.Helpers;
-using System;
 
 namespace OpenMeteoTests.Helpers
 {
@@ -10,7 +9,7 @@ namespace OpenMeteoTests.Helpers
         [TestMethod]
         public void ToIntArray_ReturnsEmptyForNullInput()
         {
-            long[] input = null;
+            long[] input = null!;
             var result = input.ToIntArray();
             Assert.AreEqual(0, result.Length);
         }
@@ -26,7 +25,7 @@ namespace OpenMeteoTests.Helpers
         [TestMethod]
         public void ToNullableIntArray_FromIntArray_ReturnsEmptyForNullInput()
         {
-            int[] input = null;
+            int[] input = null!;
             var result = input.ToNullableIntArray();
             Assert.AreEqual(0, result.Length);
         }
@@ -42,7 +41,7 @@ namespace OpenMeteoTests.Helpers
         [TestMethod]
         public void ToNullableFloatArray_ReturnsEmptyForNullInput()
         {
-            float[] input = null;
+            float[] input = null!;
             var result = input.ToNullableFloatArray();
             Assert.AreEqual(0, result.Length);
         }
@@ -58,7 +57,7 @@ namespace OpenMeteoTests.Helpers
         [TestMethod]
         public void ToNullableIntArray_FromLongArray_ReturnsEmptyForNullInput()
         {
-            long[] input = null;
+            long[] input = null!;
             var result = input.ToNullableIntArray();
             Assert.AreEqual(0, result.Length);
         }

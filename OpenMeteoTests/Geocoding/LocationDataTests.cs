@@ -18,7 +18,7 @@ namespace OpenMeteoTests.Geocoding
             Assert.IsNotNull(res);
             Assert.IsNotNull(res.Locations);
 
-            Assert.AreEqual("japan", res.Locations[0].Country.ToLower());
+            Assert.AreEqual("japan", res.Locations[0].Country!.ToLower());
         }
 
         [TestMethod]
@@ -30,7 +30,7 @@ namespace OpenMeteoTests.Geocoding
 
             Assert.IsNotNull(res);
             Assert.IsNotNull(res.Locations);
-            Assert.AreEqual("japan", res.Locations[0].Country.ToLower());
+            Assert.AreEqual("japan", res.Locations[0].Country!.ToLower());
         }
     }
 }

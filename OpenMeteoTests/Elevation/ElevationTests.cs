@@ -17,7 +17,7 @@ namespace OpenMeteoTests.Elevation
             var res = await client.QueryElevationAsync(Latitude, Longitude);
 
             Assert.IsNotNull(res);
-            Assert.AreEqual(res.Elevation.Length, 1);
+            Assert.AreEqual(res.Elevation!.Length, 1);
         }
     }
 }
