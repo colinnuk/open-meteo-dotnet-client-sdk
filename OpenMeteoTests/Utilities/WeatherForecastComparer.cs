@@ -31,8 +31,43 @@ public static class WeatherForecastComparer
         // These should match but for some reason OM returns null for both in the FB version
         //if (a.Timezone != b.Timezone) unequalFields.Add(nameof(a.Timezone));
         //if (a.TimezoneAbbreviation != b.TimezoneAbbreviation) unequalFields.Add(nameof(a.TimezoneAbbreviation));
+        unequalFields.AddRange(CurrentMetricsUnequalFields(a.Current, b.Current));
         unequalFields.AddRange(HourlyMetricsUnequalFields(a.Hourly, b.Hourly));
+        unequalFields.AddRange(DailyMetricsUnequalFields(a.Daily, b.Daily));
+        unequalFields.AddRange(Minutely15MetricsUnequalFields(a.Minutely15, b.Minutely15));
         return new WeatherForecastComparisonResult(unequalFields);
+    }
+
+    private static List<string> CurrentMetricsUnequalFields(Current? a, Current? b)
+    {
+        var fields = new List<string>();
+        if (a == null || b == null)
+        {
+            if (a != b) fields.Add("Current (null)");
+            return fields;
+        }
+        var props = typeof(Current).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+        foreach (var prop in props)
+        {
+            var aValue = prop.GetValue(a);
+            var bValue = prop.GetValue(b);
+            var type = prop.PropertyType;
+            if (type == typeof(float?))
+            {
+                var fa = (float?)aValue;
+                var fb = (float?)bValue;
+                if (!NullableFloatEqual(fa, fb))
+                    fields.Add($"Current.{prop.Name}");
+            }
+            else if (type == typeof(int?))
+            {
+                var ia = (int?)aValue;
+                var ib = (int?)bValue;
+                if (ia != ib)
+                    fields.Add($"Current.{prop.Name}");
+            }
+        }
+        return fields;
     }
 
     private static List<string> HourlyMetricsUnequalFields(Hourly? a, Hourly? b)
@@ -48,29 +83,67 @@ public static class WeatherForecastComparer
         {
             var aValue = prop.GetValue(a);
             var bValue = prop.GetValue(b);
-            if (!CompareArraysByType(prop.PropertyType, aValue, bValue, prop.Name))
+            if (!CompareArraysByType(prop.PropertyType, aValue, bValue, prop.Name, "Hourly."))
                 fields.Add($"Hourly.{prop.Name}");
         }
         return fields;
     }
 
-    private static bool CompareArraysByType(Type type, object? a, object? b, string propertyName)
+    private static List<string> DailyMetricsUnequalFields(Daily? a, Daily? b)
     {
-        if (type == typeof(int[])) return IntArrayEqual((int[]?)a, (int[]?)b, propertyName);
-        if (type == typeof(float[])) return FloatArrayEqual((float[]?)a, (float[]?)b, propertyName);
-        if (type == typeof(int?[])) return NullableIntArrayEqual((int?[]?)a, (int?[]?)b, propertyName);
-        if (type == typeof(float?[])) return NullableFloatArrayEqual((float?[]?)a, (float?[]?)b, propertyName);
-        if (type == typeof(DateTimeOffset[])) return DateTimeOffsetArrayEqual((DateTimeOffset[]?)a, (DateTimeOffset[]?)b, propertyName);
+        var fields = new List<string>();
+        if (a == null || b == null)
+        {
+            if (a != b) fields.Add("Daily (null)");
+            return fields;
+        }
+        var props = typeof(Daily).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+        foreach (var prop in props)
+        {
+            var aValue = prop.GetValue(a);
+            var bValue = prop.GetValue(b);
+            if (!CompareArraysByType(prop.PropertyType, aValue, bValue, prop.Name, "Daily."))
+                fields.Add($"Daily.{prop.Name}");
+        }
+        return fields;
+    }
+
+    private static List<string> Minutely15MetricsUnequalFields(Minutely15? a, Minutely15? b)
+    {
+        var fields = new List<string>();
+        if (a == null || b == null)
+        {
+            if (a != b) fields.Add("Minutely15 (null)");
+            return fields;
+        }
+        var props = typeof(Minutely15).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+        foreach (var prop in props)
+        {
+            var aValue = prop.GetValue(a);
+            var bValue = prop.GetValue(b);
+            if (!CompareArraysByType(prop.PropertyType, aValue, bValue, prop.Name, "Minutely15."))
+                fields.Add($"Minutely15.{prop.Name}");
+        }
+        return fields;
+    }
+
+    private static bool CompareArraysByType(Type type, object? a, object? b, string propertyName, string sectionName = "")
+    {
+        if (type == typeof(int[])) return IntArrayEqual((int[]?)a, (int[]?)b, propertyName, sectionName);
+        if (type == typeof(float[])) return FloatArrayEqual((float[]?)a, (float[]?)b, propertyName, sectionName);
+        if (type == typeof(int?[])) return NullableIntArrayEqual((int?[]?)a, (int?[]?)b, propertyName, sectionName);
+        if (type == typeof(float?[])) return NullableFloatArrayEqual((float?[]?)a, (float?[]?)b, propertyName, sectionName);
+        if (type == typeof(DateTimeOffset[])) return DateTimeOffsetArrayEqual((DateTimeOffset[]?)a, (DateTimeOffset[]?)b, propertyName, sectionName);
 
         return true;
     }
 
-    private static bool IntArrayEqual(int[]? a, int[]? b, string propertyName)
+    private static bool IntArrayEqual(int[]? a, int[]? b, string propertyName, string sectionName = "")
     {
         if (a == null || b == null) return a == b;
         if (a.Length != b.Length)
         {
-            Console.WriteLine($"  {propertyName}: Length mismatch - JSON: {a.Length}, FlatBuffers: {b.Length}");
+            Console.WriteLine($"  {sectionName}{propertyName}: Length mismatch - JSON: {a.Length}, FlatBuffers: {b.Length}");
             return false;
         }
         for (int i = 0; i < a.Length; i++)
@@ -78,12 +151,12 @@ public static class WeatherForecastComparer
         return true;
     }
 
-    private static bool FloatArrayEqual(float[]? a, float[]? b, string propertyName)
+    private static bool FloatArrayEqual(float[]? a, float[]? b, string propertyName, string sectionName = "")
     {
         if (a == null || b == null) return a == b;
         if (a.Length != b.Length)
         {
-            Console.WriteLine($"  {propertyName}: Length mismatch - JSON: {a.Length}, FlatBuffers: {b.Length}");
+            Console.WriteLine($"  {sectionName}{propertyName}: Length mismatch - JSON: {a.Length}, FlatBuffers: {b.Length}");
             return false;
         }
         for (int i = 0; i < a.Length; i++)
@@ -91,12 +164,12 @@ public static class WeatherForecastComparer
         return true;
     }
 
-    private static bool NullableIntArrayEqual(int?[]? a, int?[]? b, string propertyName)
+    private static bool NullableIntArrayEqual(int?[]? a, int?[]? b, string propertyName, string sectionName = "")
     {
         if (a == null || b == null) return a == b;
         if (a.Length != b.Length)
         {
-            Console.WriteLine($"  {propertyName}: Length mismatch - JSON: {a.Length}, FlatBuffers: {b.Length}");
+            Console.WriteLine($"  {sectionName}{propertyName}: Length mismatch - JSON: {a.Length}, FlatBuffers: {b.Length}");
             return false;
         }
         for (int i = 0; i < a.Length; i++)
@@ -104,19 +177,19 @@ public static class WeatherForecastComparer
         return true;
     }
 
-    private static bool NullableFloatArrayEqual(float?[]? a, float?[]? b, string propertyName)
+    private static bool NullableFloatArrayEqual(float?[]? a, float?[]? b, string propertyName, string sectionName = "")
     {
         if (a == null || b == null)
         {
             if (a != b)
             {
-                Console.WriteLine($"  {propertyName}: Null mismatch - JSON: {a == null}, FlatBuffers: {b == null}");
+                Console.WriteLine($"  {sectionName}{propertyName}: Null mismatch - JSON: {a == null}, FlatBuffers: {b == null}");
             }
             return a == b;
         }
         if (a.Length != b.Length)
         {
-            Console.WriteLine($"  {propertyName}: Length mismatch - JSON: {a.Length}, FlatBuffers: {b.Length}");
+            Console.WriteLine($"  {sectionName}{propertyName}: Length mismatch - JSON: {a.Length}, FlatBuffers: {b.Length}");
             return false;
         }
 
@@ -127,32 +200,32 @@ public static class WeatherForecastComparer
             if (a[i] == null || b[i] == null)
             {
                 if (diffCount < 5)
-                    Console.WriteLine($"  {propertyName}[{i}]: Null mismatch - JSON: {a[i]}, FlatBuffers: {b[i]}");
+                    Console.WriteLine($"  {sectionName}{propertyName}[{i}]: Null mismatch - JSON: {a[i]}, FlatBuffers: {b[i]}");
                 diffCount++;
                 continue;
             }
             if (!FloatsEqual(a[i]!.Value, b[i]!.Value))
             {
                 if (diffCount < 5)
-                    Console.WriteLine($"  {propertyName}[{i}]: Value mismatch - JSON: {a[i]!.Value}, FlatBuffers: {b[i]!.Value}, Diff: {Math.Abs(a[i]!.Value - b[i]!.Value)}");
+                    Console.WriteLine($"  {sectionName}{propertyName}[{i}]: Value mismatch - JSON: {a[i]!.Value}, FlatBuffers: {b[i]!.Value}, Diff: {Math.Abs(a[i]!.Value - b[i]!.Value)}");
                 diffCount++;
             }
         }
 
         if (diffCount > 0)
         {
-            Console.WriteLine($"  {propertyName}: Total differences: {diffCount} out of {a.Length} elements");
+            Console.WriteLine($"  {sectionName}{propertyName}: Total differences: {diffCount} out of {a.Length} elements");
             return false;
         }
         return true;
     }
 
-    private static bool DateTimeOffsetArrayEqual(DateTimeOffset[]? a, DateTimeOffset[]? b, string propertyName)
+    private static bool DateTimeOffsetArrayEqual(DateTimeOffset[]? a, DateTimeOffset[]? b, string propertyName, string sectionName = "")
     {
         if (a == null || b == null) return a == b;
         if (a.Length != b.Length)
         {
-            Console.WriteLine($"  {propertyName}: Length mismatch - JSON: {a.Length}, FlatBuffers: {b.Length}");
+            Console.WriteLine($"  {sectionName}{propertyName}: Length mismatch - JSON: {a.Length}, FlatBuffers: {b.Length}");
             return false;
         }
         for (int i = 0; i < a.Length; i++)
@@ -171,6 +244,22 @@ public static class WeatherForecastComparer
         if (float.IsInfinity(a) || float.IsInfinity(b)) return false;
 
         // Compare with tolerance
-        return Math.Abs(a - b) <= FloatTolerance;
+        if (Math.Abs(a - b) <= FloatTolerance)
+            return true;
+
+        // If one is integer, try rounding the other - this covers the case where the JSON is an int but the FB is a float
+        if (a == MathF.Round(a))
+            return (int)a == (int)MathF.Round(b);
+        if (b == MathF.Round(b))
+            return (int)MathF.Round(a) == (int)b;
+
+        return false;
+    }
+
+    private static bool NullableFloatEqual(float? a, float? b)
+    {
+        if (a == null && b == null) return true;
+        if (a == null || b == null) return false;
+        return FloatsEqual(a.Value, b.Value);
     }
 }

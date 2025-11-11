@@ -27,7 +27,7 @@ namespace OpenMeteo.Weather.ResponseModel.Conversion
 
         private static void MapCurrentVariableByParameter(Current current, CurrentOptionsParameter parameter, VariableWithValues? variable)
         {
-            if (!variable.HasValue || variable.Value.ValuesLength == 0) return;
+            if (!variable.HasValue) return;
             PropertyMappingHelper.MapVariableToProperty(current, parameter.ToString(), variable.Value);
         }
     }

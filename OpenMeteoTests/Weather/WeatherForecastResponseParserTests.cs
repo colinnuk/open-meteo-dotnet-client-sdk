@@ -75,9 +75,9 @@ namespace OpenMeteoTests.Weather
         }
 
         [DataTestMethod]
-        [DataRow("forecast_hrrr_nyc_20251111_021159.json", "forecast_hrrr_nyc_20251111_021158.bin")]
-        [DataRow("forecast_hrrr_nyc_all_20251111_032924.json", "forecast_hrrr_nyc_all_20251111_032915.bin")]
-        public async Task FlatbufferAndJsonProduceIdenticalWeatherForecastObjects(string jsonFile, string binFile)
+        [DataRow("forecast_hrrr_nyc_20251111_021159.json", "forecast_hrrr_nyc_20251111_021158.bin", false)]
+        [DataRow("forecast_hrrr_nyc_all_20251111_032924.json", "forecast_hrrr_nyc_all_20251111_032915.bin", true)]
+        public async Task FlatbufferAndJsonProduceIdenticalWeatherForecastObjects(string jsonFile, string binFile, bool isAllOptions)
         {
             var jsonPath = Path.Combine("Weather", "ExampleResponses", jsonFile);
             var binPath = Path.Combine("Weather", "ExampleResponses", binFile);
@@ -94,7 +94,9 @@ namespace OpenMeteoTests.Weather
                 Content = new ByteArrayContent(bin)
             };
 
-            var options = ForecastOptionsHelper.GetOptions(40.7128f, -74.0060f);
+            var options = isAllOptions ? 
+                  ForecastOptionsHelper.GetAllOptions(40.7128f, -74.0060f)
+                : ForecastOptionsHelper.GetOptions(40.7128f, -74.0060f);
             var parser = new WeatherForecastResponseParser(new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
             var swJson = System.Diagnostics.Stopwatch.StartNew();

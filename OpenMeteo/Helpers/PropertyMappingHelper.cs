@@ -34,6 +34,12 @@ namespace OpenMeteo.Helpers
                 case Type t when t == typeof(int):
                     MapInt(target, property, variable);
                     break;
+                case Type t when t == typeof(float?):
+                    MapNullableFloat(target, property, variable);
+                    break;
+                case Type t when t == typeof(int?):
+                    MapNullableInt(target, property, variable);
+                    break;
             }
         }
 
@@ -99,6 +105,18 @@ namespace OpenMeteo.Helpers
         private static void MapInt<TTarget>(TTarget target, PropertyInfo property, VariableWithValues variable)
         {
             property.SetValue(target, (int)variable.Values(0));
+        }
+
+        private static void MapNullableFloat<TTarget>(TTarget target, PropertyInfo property, VariableWithValues variable)
+        {
+            var value = variable.Value;
+            property.SetValue(target, float.IsNaN(value) ? (float?)null : (float?)value);
+        }
+
+        private static void MapNullableInt<TTarget>(TTarget target, PropertyInfo property, VariableWithValues variable)
+        {
+            var value = variable.Value;
+            property.SetValue(target, float.IsNaN(value) ? (int?)null : (int?)Math.Round(value));
         }
     }
 }
