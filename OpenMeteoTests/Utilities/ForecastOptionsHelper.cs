@@ -27,6 +27,31 @@ namespace OpenMeteoTests.Utilities
             return options;
         }
 
+        public static WeatherForecastOptions GetAllOptions(float latitude, float longitude)
+        {
+            var utcDateNow = DateOnly.FromDateTime(DateTime.UtcNow);
+            var utcDateEnd = utcDateNow.AddDays(2);
+            var options = new WeatherForecastOptions()
+            {
+                Latitude = latitude,
+                Longitude = longitude,
+                Hourly = HourlyOptions.All,
+                Current = CurrentOptions.All,
+                Minutely_15 = Minutely15Options.All,
+                Daily = DailyOptions.All,
+                Models = new WeatherModelOptions(WeatherModelOptionsParameter.gfs_hrrr),
+                Temperature_Unit = TemperatureUnitType.celsius,
+                Windspeed_Unit = WindspeedUnitType.kmh,
+                Precipitation_Unit = PrecipitationUnitType.mm,
+                Timeformat = TimeformatType.iso8601,
+                Cell_Selection = CellSelectionType.land,
+                Timezone = "GMT",
+                Start_date = utcDateNow,
+                End_date = utcDateEnd
+            };
+            return options;
+        }
+
         private static HourlyOptions GetHourlyOptions()
         {
             var detailedPressureLevelMetrics = new HourlyOptionsParameter[]

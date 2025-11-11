@@ -16,10 +16,12 @@ namespace OpenMeteoTests.Weather
     {
         private readonly JsonSerializerOptions _jsonSerializerOptions = new() { PropertyNameCaseInsensitive = true };
 
-        [TestMethod]
-        public async Task DeserializeJsonAsync_UTCJsonFile_ProducesCorrectHourlyTime()
+        [DataTestMethod]
+        [DataRow("JsonResponse_UTC.json", "GMT", 0)]
+        [DataRow("JsonResponse_NonUTC.json", "America/Vancouver", -8)]
+        public async Task DeserializeJsonAsync_JsonFile_ProducesCorrectHourlyTime(string fileName, string timezone, int expectedOffsetHours)
         {
-            var filePath = Path.Combine("Weather", "ExampleResponses", "JsonResponse_UTC.json");
+            var filePath = Path.Combine("Weather", "ExampleResponses", fileName);
             var json = await File.ReadAllTextAsync(filePath);
             var response = new HttpResponseMessage(HttpStatusCode.OK)
             {
@@ -27,7 +29,7 @@ namespace OpenMeteoTests.Weather
             };
             var options = new WeatherForecastOptions
             {
-                Timezone = "GMT",
+                Timezone = timezone,
                 Hourly = new HourlyOptions(HourlyOptionsParameter.temperature_2m)
             };
             var parser = new WeatherForecastResponseParser(_jsonSerializerOptions);
@@ -39,41 +41,16 @@ namespace OpenMeteoTests.Weather
             Assert.IsNotNull(forecast.Hourly.Time);
             foreach (var dt in forecast.Hourly.Time)
             {
-                Assert.AreEqual(TimeSpan.Zero, dt.Offset); // GMT offset is zero
+                Assert.AreEqual(TimeSpan.FromHours(expectedOffsetHours), dt.Offset);
             }
         }
 
-        [TestMethod]
-        public async Task DeserializeJsonAsync_NonUTCJsonFile_ProducesCorrectHourlyTime()
+        [DataTestMethod]
+        [DataRow("FlatbuffersResponse_UTC", "GMT", 0)]
+        [DataRow("FlatbuffersResponse_NonUTC", "America/Vancouver", -8)]
+        public async Task ConvertFlatBuffersAsync_FlatBuffersFile_ProducesCorrectHourlyTime(string fileName, string timezone, int expectedOffsetHours)
         {
-            var filePath = Path.Combine("Weather", "ExampleResponses", "JsonResponse_NonUTC.json");
-            var json = await File.ReadAllTextAsync(filePath);
-            var response = new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new StringContent(json)
-            };
-            var options = new WeatherForecastOptions
-            {
-                Timezone = "America/Vancouver",
-                Hourly = new HourlyOptions(HourlyOptionsParameter.temperature_2m)
-            };
-            var parser = new WeatherForecastResponseParser(_jsonSerializerOptions);
-
-            var forecast = await parser.DeserializeJsonAsync(response, options);
-
-            Assert.IsNotNull(forecast);
-            Assert.IsNotNull(forecast.Hourly);
-            Assert.IsNotNull(forecast.Hourly.Time);
-            foreach (var dt in forecast.Hourly.Time)
-            {
-                Assert.IsTrue(dt.Offset.Hours <= -7 && dt.Offset.Hours >= -8);
-            }
-        }
-
-        [TestMethod]
-        public async Task ConvertFlatBuffersAsync_UTCFlatBuffersFile_ProducesCorrectHourlyTime()
-        {
-            var filePath = Path.Combine("Weather", "ExampleResponses", "FlatbuffersResponse_UTC");
+            var filePath = Path.Combine("Weather", "ExampleResponses", fileName);
             var bytes = await File.ReadAllBytesAsync(filePath);
             var response = new HttpResponseMessage(HttpStatusCode.OK)
             {
@@ -81,7 +58,7 @@ namespace OpenMeteoTests.Weather
             };
             var options = new WeatherForecastOptions
             {
-                Timezone = "GMT",
+                Timezone = timezone,
                 Hourly = new HourlyOptions(HourlyOptionsParameter.temperature_2m)
             };
             var parser = new WeatherForecastResponseParser(_jsonSerializerOptions);
@@ -93,42 +70,17 @@ namespace OpenMeteoTests.Weather
             Assert.IsNotNull(forecast.Hourly.Time);
             foreach (var dt in forecast.Hourly.Time)
             {
-                Assert.AreEqual(TimeSpan.Zero, dt.Offset); // GMT offset is zero
+                Assert.AreEqual(TimeSpan.FromHours(expectedOffsetHours), dt.Offset);
             }
         }
 
-        [TestMethod]
-        public async Task ConvertFlatBuffersAsync_NonUTCFlatBuffersFile_ProducesCorrectHourlyTime()
+        [DataTestMethod]
+        [DataRow("forecast_hrrr_nyc_20251111_021159.json", "forecast_hrrr_nyc_20251111_021158.bin")]
+        [DataRow("forecast_hrrr_nyc_all_20251111_032924.json", "forecast_hrrr_nyc_all_20251111_032915.bin")]
+        public async Task FlatbufferAndJsonProduceIdenticalWeatherForecastObjects(string jsonFile, string binFile)
         {
-            var filePath = Path.Combine("Weather", "ExampleResponses", "FlatbuffersResponse_NonUTC");
-            var bytes = await File.ReadAllBytesAsync(filePath);
-            var response = new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new ByteArrayContent(bytes)
-            };
-            var options = new WeatherForecastOptions
-            {
-                Timezone = "America/Vancouver",
-                Hourly = new HourlyOptions(HourlyOptionsParameter.temperature_2m)
-            };
-            var parser = new WeatherForecastResponseParser(_jsonSerializerOptions);
-
-            var forecast = await parser.ConvertFlatBuffersAsync(response, options);
-
-            Assert.IsNotNull(forecast);
-            Assert.IsNotNull(forecast.Hourly);
-            Assert.IsNotNull(forecast.Hourly.Time);
-            foreach (var dt in forecast.Hourly.Time)
-            {
-                Assert.IsTrue(dt.Offset.Hours <= -7 && dt.Offset.Hours >= -8);
-            }
-        }
-
-        [TestMethod]
-        public async Task FlatbufferAndJsonProduceIdenticalWeatherForecastObjects()
-        {
-            var jsonPath = Path.Combine("Weather", "ExampleResponses", "forecast_hrrr_nyc_20251111_021159.json");
-            var binPath = Path.Combine("Weather", "ExampleResponses", "forecast_hrrr_nyc_20251111_021158.bin");
+            var jsonPath = Path.Combine("Weather", "ExampleResponses", jsonFile);
+            var binPath = Path.Combine("Weather", "ExampleResponses", binFile);
 
             var json = await File.ReadAllTextAsync(jsonPath);
             var bin = await File.ReadAllBytesAsync(binPath);

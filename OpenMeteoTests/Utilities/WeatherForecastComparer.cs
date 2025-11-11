@@ -28,6 +28,7 @@ public static class WeatherForecastComparer
         if (a.Longitude != b.Longitude) unequalFields.Add(nameof(a.Longitude));
         if (a.Elevation != b.Elevation) unequalFields.Add(nameof(a.Elevation));
         if (a.UtcOffset != b.UtcOffset) unequalFields.Add(nameof(a.UtcOffset));
+        // These should match but for some reason OM returns null for both in the FB version
         //if (a.Timezone != b.Timezone) unequalFields.Add(nameof(a.Timezone));
         //if (a.TimezoneAbbreviation != b.TimezoneAbbreviation) unequalFields.Add(nameof(a.TimezoneAbbreviation));
         unequalFields.AddRange(HourlyMetricsUnequalFields(a.Hourly, b.Hourly));
@@ -60,7 +61,7 @@ public static class WeatherForecastComparer
         if (type == typeof(int?[])) return NullableIntArrayEqual((int?[]?)a, (int?[]?)b, propertyName);
         if (type == typeof(float?[])) return NullableFloatArrayEqual((float?[]?)a, (float?[]?)b, propertyName);
         if (type == typeof(DateTimeOffset[])) return DateTimeOffsetArrayEqual((DateTimeOffset[]?)a, (DateTimeOffset[]?)b, propertyName);
-        // If not an array, treat as equal (or add more types as needed)
+
         return true;
     }
 
@@ -133,7 +134,7 @@ public static class WeatherForecastComparer
             if (!FloatsEqual(a[i]!.Value, b[i]!.Value))
             {
                 if (diffCount < 5)
-                    Console.WriteLine($"  {propertyName}[{i}]: Value mismatch - JSON: {a[i].Value}, FlatBuffers: {b[i].Value}, Diff: {Math.Abs(a[i].Value - b[i].Value)}");
+                    Console.WriteLine($"  {propertyName}[{i}]: Value mismatch - JSON: {a[i]!.Value}, FlatBuffers: {b[i]!.Value}, Diff: {Math.Abs(a[i]!.Value - b[i]!.Value)}");
                 diffCount++;
             }
         }

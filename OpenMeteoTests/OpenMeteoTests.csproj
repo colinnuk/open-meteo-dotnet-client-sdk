@@ -33,6 +33,12 @@
     <None Update="Weather\ExampleResponses\forecast_hrrr_nyc_20251111_021159.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Weather\ExampleResponses\forecast_hrrr_nyc_all_20251111_032915.bin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Weather\ExampleResponses\forecast_hrrr_nyc_all_20251111_032924.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Weather\ExampleResponses\JsonResponse_UTC.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
