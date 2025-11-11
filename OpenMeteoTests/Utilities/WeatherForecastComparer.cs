@@ -244,16 +244,7 @@ public static class WeatherForecastComparer
         if (float.IsInfinity(a) || float.IsInfinity(b)) return false;
 
         // Compare with tolerance
-        if (Math.Abs(a - b) <= FloatTolerance)
-            return true;
-
-        // If one is integer, try rounding the other - this covers the case where the JSON is an int but the FB is a float
-        if (a == MathF.Round(a))
-            return (int)a == (int)MathF.Round(b);
-        if (b == MathF.Round(b))
-            return (int)MathF.Round(a) == (int)b;
-
-        return false;
+        return Math.Abs(a - b) <= FloatTolerance;
     }
 
     private static bool NullableFloatEqual(float? a, float? b)

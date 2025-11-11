@@ -96,7 +96,7 @@ namespace OpenMeteo.Weather.ResponseModel
         /// Dominant daily wind direction at 10 meters above ground
         /// </summary>
         /// <value></value>
-        public float?[]? Winddirection_10m_dominant { get; set; }
+        public int?[]? Winddirection_10m_dominant { get; set; }
 
         /// <summary>
         /// Sum of daily solar radiation
