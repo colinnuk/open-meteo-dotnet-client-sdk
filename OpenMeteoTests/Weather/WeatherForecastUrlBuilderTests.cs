@@ -13,8 +13,8 @@ namespace OpenMeteoTests.Weather
         {
             var options = GetWeatherForecastOptions();
             options.Past_Days = null;
-            options.Start_date = "2023-01-01";
-            options.End_date = "2023-01-02";
+            options.Start_date = DateOnly.Parse("2023-01-01");
+            options.End_date = DateOnly.Parse("2023-01-02");
             var url = new WeatherForecastUrlBuilder()
                 .WithOptions(options)
                 .Build();

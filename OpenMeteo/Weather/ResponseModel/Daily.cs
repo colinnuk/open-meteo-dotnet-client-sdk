@@ -1,8 +1,12 @@
-﻿namespace OpenMeteo.Weather.ResponseModel
+﻿using OpenMeteo.Weather.Options;
+using System;
+using System.Text.Json.Serialization;
+
+namespace OpenMeteo.Weather.ResponseModel
 {
     public class Daily
     {
-        public string[]? Time { get; set; }
+        public DateOnly[]? Time { get; set; }
 
         /// <summary>
         /// The most severe daily weather condition
@@ -92,7 +96,7 @@
         /// Dominant daily wind direction at 10 meters above ground
         /// </summary>
         /// <value></value>
-        public float?[]? Winddirection_10m_dominant { get; set; }
+        public int?[]? Winddirection_10m_dominant { get; set; }
 
         /// <summary>
         /// Sum of daily solar radiation

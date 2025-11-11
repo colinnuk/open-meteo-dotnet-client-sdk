@@ -1,4 +1,5 @@
-﻿using OpenMeteo.Weather.Options;
+﻿using System;
+using OpenMeteo.Weather.Options;
 
 namespace OpenMeteo.Weather.ResponseModel
 {
@@ -7,7 +8,7 @@ namespace OpenMeteo.Weather.ResponseModel
     /// </summary>
     public class Current
     {
-        public string? Time { get; set; }
+        public DateTimeOffset? Time { get; set; }
 
         public int? Interval { get; set; }
 

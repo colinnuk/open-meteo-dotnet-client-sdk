@@ -1,35 +1,37 @@
-﻿namespace OpenMeteo.Weather.ResponseModel
+﻿using System;
+
+namespace OpenMeteo.Weather.ResponseModel
 {
     public class Minutely15
     {
-        public string[]? time { get; set; }
-        public float[]? temperature_2m { get; set; }
-        public int[]? relativehumidity_2m { get; set; }
-        public float[]? dewpoint_2m { get; set; }
-        public float[]? apparent_temperature { get; set; }
-        public float[]? precipitation { get; set; }
-        public float[]? rain { get; set; }
-        public float[]? snowfall { get; set; }
-        public float?[]? snowfall_height { get; set; }
-        public float[]? freezing_level_height { get; set; }
-        public int[]? weathercode { get; set; }
-        public float[]? windspeed_10m { get; set; }
-        public float[]? windspeed_80m { get; set; }
-        public int[]? winddirection_10m { get; set; }
-        public int[]? winddirection_80m { get; set; }
-        public float[]? windgusts_10m { get; set; }
-        public float[]? visibility { get; set; }
-        public float[]? cape { get; set; }
-        public float?[]? lightning_potential { get; set; }
-        public float[]? shortwave_radiation { get; set; }
-        public float[]? direct_radiation { get; set; }
-        public float[]? diffuse_radiation { get; set; }
-        public float[]? direct_normal_irradiance { get; set; }
-        public float[]? terrestrial_radiation { get; set; }
-        public float[]? shortwave_radiation_instant { get; set; }
-        public float[]? direct_radiation_instant { get; set; }
-        public float[]? diffuse_radiation_instant { get; set; }
-        public float[]? direct_normal_irradiance_instant { get; set; }
-        public float[]? terrestrial_radiation_instant { get; set; }
+        public DateTimeOffset[]? Time { get; set; }
+        public float?[]? Temperature2m { get; set; }
+        public int?[]? RelativeHumidity2m { get; set; }
+        public float?[]? DewPoint2m { get; set; }
+        public float?[]? ApparentTemperature { get; set; }
+        public float?[]? Precipitation { get; set; }
+        public float?[]? Rain { get; set; }
+        public float?[]? Snowfall { get; set; }
+        public float?[]? SnowfallHeight { get; set; }
+        public float?[]? FreezingLevelHeight { get; set; }
+        public int?[]? WeatherCode { get; set; }
+        public float?[]? WindSpeed10m { get; set; }
+        public float?[]? WindSpeed80m { get; set; }
+        public int?[]? WindDirection10m { get; set; }
+        public int?[]? WindDirection80m { get; set; }
+        public float?[]? WindGusts10m { get; set; }
+        public float?[]? Visibility { get; set; }
+        public float?[]? Cape { get; set; }
+        public float?[]? LightningPotential { get; set; }
+        public float?[]? ShortwaveRadiation { get; set; }
+        public float?[]? DirectRadiation { get; set; }
+        public float?[]? DiffuseRadiation { get; set; }
+        public float?[]? DirectNormalIrradiance { get; set; }
+        public float?[]? TerrestrialRadiation { get; set; }
+        public float?[]? ShortwaveRadiationInstant { get; set; }
+        public float?[]? DirectRadiationInstant { get; set; }
+        public float?[]? DiffuseRadiationInstant { get; set; }
+        public float?[]? DirectNormalIrradianceInstant { get; set; }
+        public float?[]? TerrestrialRadiationInstant { get; set; }
     }
 }

@@ -37,8 +37,8 @@ namespace OpenMeteo.Weather
             _urlBuilder.AddParameter(nameof(options.Timezone).ToLower(), options.Timezone);
             _urlBuilder.AddParameter(nameof(options.Timeformat).ToLower(), options.Timeformat.ToString());
             _urlBuilder.AddParameter(nameof(options.Past_Days).ToLower(), options.Past_Days.ToString());
-            _urlBuilder.AddParameter(nameof(options.Start_date).ToLower(), options.Start_date);
-            _urlBuilder.AddParameter(nameof(options.End_date).ToLower(), options.End_date);
+            _urlBuilder.AddParameter(nameof(options.Start_date).ToLower(), options.Start_date?.ToString(DateOnlyConverter.Format));
+            _urlBuilder.AddParameter(nameof(options.End_date).ToLower(), options.End_date?.ToString(DateOnlyConverter.Format));
             _urlBuilder.AddParameter(nameof(options.Cell_Selection).ToLower(), options.Cell_Selection.ToString());
 
             if (options.Hourly.Count > 0)
@@ -52,6 +52,12 @@ namespace OpenMeteo.Weather
             if (options.Minutely_15.Count > 0)
                 _urlBuilder.AddCollection(nameof(options.Minutely_15).ToLower(), options.Minutely_15.Parameter.Select(x => x.ToString()));
 
+            return this;
+        }
+
+        public WeatherForecastUrlBuilder WithFlatbuffers(bool useFlatbuffers)
+        {
+            _urlBuilder.WithFlatbuffers(useFlatbuffers);
             return this;
         }
     }
