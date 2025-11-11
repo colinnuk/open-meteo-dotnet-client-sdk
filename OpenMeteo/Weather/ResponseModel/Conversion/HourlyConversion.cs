@@ -16,9 +16,9 @@ namespace OpenMeteo.Weather.ResponseModel.Conversion
                 Time = WeatherConversionHelpers.BuildTimeArray(fbHourly, forecastOptions.Timezone)
             };
 
-            for (int i =0; i < fbHourly?.VariablesLength && i < forecastOptions.Hourly.Parameter.Count; i++)
+            for (int i = 0; i < fbHourly.Value.VariablesLength && i < forecastOptions.Hourly.Parameter.Count; i++)
             {
-                MapHourlyVariableByParameter(hourly, forecastOptions.Hourly.Parameter[i], fbHourly?.Variables(i));
+                MapHourlyVariableByParameter(hourly, forecastOptions.Hourly.Parameter[i], fbHourly.Value.Variables(i));
             }
 
             return hourly;

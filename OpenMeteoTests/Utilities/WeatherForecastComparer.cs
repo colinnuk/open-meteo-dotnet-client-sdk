@@ -12,6 +12,10 @@ public record WeatherForecastComparisonResult(List<string> UnequalFields)
 
 public static class WeatherForecastComparer
 {
+    // JSON values are often rounded to 1 decimal place, while FlatBuffers preserves more precision
+    // Allow 0.1 difference to account for this (negligible for weather data)
+    private const float FloatTolerance = 0.1f;
+
     public static WeatherForecastComparisonResult Compare(WeatherForecast a, WeatherForecast b)
     {
         var unequalFields = new List<string>();
@@ -43,65 +47,129 @@ public static class WeatherForecastComparer
         {
             var aValue = prop.GetValue(a);
             var bValue = prop.GetValue(b);
-            if (!CompareArraysByType(prop.PropertyType, aValue, bValue))
+            if (!CompareArraysByType(prop.PropertyType, aValue, bValue, prop.Name))
                 fields.Add($"Hourly.{prop.Name}");
         }
         return fields;
     }
 
-    private static bool CompareArraysByType(Type type, object? a, object? b)
+    private static bool CompareArraysByType(Type type, object? a, object? b, string propertyName)
     {
-        if (type == typeof(int[])) return IntArrayEqual((int[]?)a, (int[]?)b);
-        if (type == typeof(float[])) return FloatArrayEqual((float[]?)a, (float[]?)b);
-        if (type == typeof(int?[])) return NullableIntArrayEqual((int?[]?)a, (int?[]?)b);
-        if (type == typeof(float?[])) return NullableFloatArrayEqual((float?[]?)a, (float?[]?)b);
-        if (type == typeof(DateTimeOffset[])) return DateTimeOffsetArrayEqual((DateTimeOffset[]?)a, (DateTimeOffset[]?)b);
+        if (type == typeof(int[])) return IntArrayEqual((int[]?)a, (int[]?)b, propertyName);
+        if (type == typeof(float[])) return FloatArrayEqual((float[]?)a, (float[]?)b, propertyName);
+        if (type == typeof(int?[])) return NullableIntArrayEqual((int?[]?)a, (int?[]?)b, propertyName);
+        if (type == typeof(float?[])) return NullableFloatArrayEqual((float?[]?)a, (float?[]?)b, propertyName);
+        if (type == typeof(DateTimeOffset[])) return DateTimeOffsetArrayEqual((DateTimeOffset[]?)a, (DateTimeOffset[]?)b, propertyName);
         // If not an array, treat as equal (or add more types as needed)
         return true;
     }
 
-    private static bool IntArrayEqual(int[]? a, int[]? b)
+    private static bool IntArrayEqual(int[]? a, int[]? b, string propertyName)
     {
         if (a == null || b == null) return a == b;
-        if (a.Length != b.Length) return false;
+        if (a.Length != b.Length)
+        {
+            Console.WriteLine($"  {propertyName}: Length mismatch - JSON: {a.Length}, FlatBuffers: {b.Length}");
+            return false;
+        }
         for (int i = 0; i < a.Length; i++)
             if (a[i] != b[i]) return false;
         return true;
     }
 
-    private static bool FloatArrayEqual(float[]? a, float[]? b)
+    private static bool FloatArrayEqual(float[]? a, float[]? b, string propertyName)
     {
         if (a == null || b == null) return a == b;
-        if (a.Length != b.Length) return false;
+        if (a.Length != b.Length)
+        {
+            Console.WriteLine($"  {propertyName}: Length mismatch - JSON: {a.Length}, FlatBuffers: {b.Length}");
+            return false;
+        }
         for (int i = 0; i < a.Length; i++)
-            if (!a[i].Equals(b[i])) return false;
+            if (!FloatsEqual(a[i], b[i])) return false;
         return true;
     }
 
-    private static bool NullableIntArrayEqual(int?[]? a, int?[]? b)
+    private static bool NullableIntArrayEqual(int?[]? a, int?[]? b, string propertyName)
     {
         if (a == null || b == null) return a == b;
-        if (a.Length != b.Length) return false;
+        if (a.Length != b.Length)
+        {
+            Console.WriteLine($"  {propertyName}: Length mismatch - JSON: {a.Length}, FlatBuffers: {b.Length}");
+            return false;
+        }
         for (int i = 0; i < a.Length; i++)
             if (a[i] != b[i]) return false;
         return true;
     }
 
-    private static bool NullableFloatArrayEqual(float?[]? a, float?[]? b)
+    private static bool NullableFloatArrayEqual(float?[]? a, float?[]? b, string propertyName)
     {
-        if (a == null || b == null) return a == b;
-        if (a.Length != b.Length) return false;
+        if (a == null || b == null)
+        {
+            if (a != b)
+            {
+                Console.WriteLine($"  {propertyName}: Null mismatch - JSON: {a == null}, FlatBuffers: {b == null}");
+            }
+            return a == b;
+        }
+        if (a.Length != b.Length)
+        {
+            Console.WriteLine($"  {propertyName}: Length mismatch - JSON: {a.Length}, FlatBuffers: {b.Length}");
+            return false;
+        }
+
+        int diffCount = 0;
         for (int i = 0; i < a.Length; i++)
-            if (!Nullable.Equals(a[i], b[i])) return false;
+        {
+            if (a[i] == null && b[i] == null) continue;
+            if (a[i] == null || b[i] == null)
+            {
+                if (diffCount < 5)
+                    Console.WriteLine($"  {propertyName}[{i}]: Null mismatch - JSON: {a[i]}, FlatBuffers: {b[i]}");
+                diffCount++;
+                continue;
+            }
+            if (!FloatsEqual(a[i]!.Value, b[i]!.Value))
+            {
+                if (diffCount < 5)
+                    Console.WriteLine($"  {propertyName}[{i}]: Value mismatch - JSON: {a[i].Value}, FlatBuffers: {b[i].Value}, Diff: {Math.Abs(a[i].Value - b[i].Value)}");
+                diffCount++;
+            }
+        }
+
+        if (diffCount > 0)
+        {
+            Console.WriteLine($"  {propertyName}: Total differences: {diffCount} out of {a.Length} elements");
+            return false;
+        }
         return true;
     }
 
-    private static bool DateTimeOffsetArrayEqual(DateTimeOffset[]? a, DateTimeOffset[]? b)
+    private static bool DateTimeOffsetArrayEqual(DateTimeOffset[]? a, DateTimeOffset[]? b, string propertyName)
     {
         if (a == null || b == null) return a == b;
-        if (a.Length != b.Length) return false;
+        if (a.Length != b.Length)
+        {
+            Console.WriteLine($"  {propertyName}: Length mismatch - JSON: {a.Length}, FlatBuffers: {b.Length}");
+            return false;
+        }
         for (int i = 0; i < a.Length; i++)
             if (a[i] != b[i]) return false;
         return true;
+    }
+
+    private static bool FloatsEqual(float a, float b)
+    {
+        // Handle NaN comparisons
+        if (float.IsNaN(a) && float.IsNaN(b)) return true;
+        if (float.IsNaN(a) || float.IsNaN(b)) return false;
+
+        // Handle infinity comparisons
+        if (float.IsInfinity(a) && float.IsInfinity(b)) return true;
+        if (float.IsInfinity(a) || float.IsInfinity(b)) return false;
+
+        // Compare with tolerance
+        return Math.Abs(a - b) <= FloatTolerance;
     }
 }
