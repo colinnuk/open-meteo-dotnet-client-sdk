@@ -1,7 +1,7 @@
-using OpenMeteo.Weather.ResponseModel;
 using System;
 using System.Reflection;
 using System.Collections.Generic;
+using OpenMeteo.Weather.Forecast.ResponseModel;
 
 namespace OpenMeteoTests.Utilities;
 

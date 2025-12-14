@@ -4,6 +4,7 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using OpenMeteo.Url;
+using OpenMeteo.Weather.Forecast;
 
 namespace OpenMeteoTests.Utilities
 {
@@ -19,7 +20,7 @@ namespace OpenMeteoTests.Utilities
         {
             // Arrange
             var options = ForecastOptionsHelper.GetOptions(_latitude, _longitude);
-            var url = UrlBuilderFactory.Create<OpenMeteo.Weather.WeatherForecastUrlBuilder>()
+            var url = UrlBuilderFactory.Create<WeatherForecastUrlBuilder>()
                 .WithOptions(options)
                 .WithFlatbuffers(true)
                 .Build();
@@ -45,7 +46,7 @@ namespace OpenMeteoTests.Utilities
         {
             // Arrange
             var options = ForecastOptionsHelper.GetOptions(_latitude, _longitude);
-            var url = UrlBuilderFactory.Create<OpenMeteo.Weather.WeatherForecastUrlBuilder>()
+            var url = UrlBuilderFactory.Create<WeatherForecastUrlBuilder>()
                 .WithOptions(options)
                 .Build();
 
@@ -70,7 +71,7 @@ namespace OpenMeteoTests.Utilities
         {
             // Arrange
             var options = ForecastOptionsHelper.GetAllOptions(_latitude, _longitude);
-            var url = UrlBuilderFactory.Create<OpenMeteo.Weather.WeatherForecastUrlBuilder>()
+            var url = UrlBuilderFactory.Create<WeatherForecastUrlBuilder>()
                 .WithOptions(options)
                 .WithFlatbuffers(true)
                 .Build();
@@ -96,7 +97,7 @@ namespace OpenMeteoTests.Utilities
         {
             // Arrange
             var options = ForecastOptionsHelper.GetAllOptions(_latitude, _longitude);
-            var url = UrlBuilderFactory.Create<OpenMeteo.Weather.WeatherForecastUrlBuilder>()
+            var url = UrlBuilderFactory.Create<WeatherForecastUrlBuilder>()
                 .WithOptions(options)
                 .Build();
 
