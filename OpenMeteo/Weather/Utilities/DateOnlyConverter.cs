@@ -2,7 +2,7 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace OpenMeteo.Weather.Forecast.Options
+namespace OpenMeteo.Weather.Utilities
 {
     public class DateOnlyConverter : JsonConverter<DateOnly?>
     {

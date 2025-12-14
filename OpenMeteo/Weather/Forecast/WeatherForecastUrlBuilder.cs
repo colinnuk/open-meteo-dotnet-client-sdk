@@ -1,5 +1,6 @@
 using OpenMeteo.Url;
 using OpenMeteo.Weather.Forecast.Options;
+using OpenMeteo.Weather.Utilities;
 using System;
 using System.Globalization;
 using System.Linq;
