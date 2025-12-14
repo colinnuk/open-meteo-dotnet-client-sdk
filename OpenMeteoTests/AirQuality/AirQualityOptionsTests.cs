@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenMeteo.AirQuality;
 using System;
 namespace OpenMeteoTests.AirQuality

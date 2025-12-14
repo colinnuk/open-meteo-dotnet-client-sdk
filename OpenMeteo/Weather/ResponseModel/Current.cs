@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OpenMeteo.Weather.Options;
 
 namespace OpenMeteo.Weather.ResponseModel

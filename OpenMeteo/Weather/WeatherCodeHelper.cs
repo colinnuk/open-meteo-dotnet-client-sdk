@@ -1,4 +1,4 @@
-﻿namespace OpenMeteo.Weather;
+namespace OpenMeteo.Weather;
 public static class WeatherCodeHelper
 {
     /// <summary>
