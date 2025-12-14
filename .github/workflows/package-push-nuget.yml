@@ -1,12 +1,7 @@
-name: Package, Deploy and create new release
+name: Package, create new release and push to Nuget
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ master ]
-    paths:
-      - '**/*.cs'
-      - '**/*.csproj'
 
 jobs:
   build:
