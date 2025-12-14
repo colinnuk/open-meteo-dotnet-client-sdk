@@ -1,4 +1,4 @@
-﻿namespace OpenMeteo.Elevation
+namespace OpenMeteo.Elevation
 {
     /// <summary>
     /// Elevation API response

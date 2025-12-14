@@ -1,4 +1,4 @@
-﻿namespace OpenMeteo.Weather.Units
+namespace OpenMeteo.Weather.Units
 {
     public class Minutely15Units
     {

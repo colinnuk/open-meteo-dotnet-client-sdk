@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 
 namespace OpenMeteo.Helpers;
 public static class ArrayExtensions

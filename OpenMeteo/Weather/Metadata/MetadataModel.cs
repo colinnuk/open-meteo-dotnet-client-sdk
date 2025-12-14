@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace OpenMeteo.Weather.Metadata;
 public record MetadataModel(

@@ -1,4 +1,4 @@
-﻿using OpenMeteo.Weather.Options;
+using OpenMeteo.Weather.Options;
 using System;
 using System.Text.Json.Serialization;
 

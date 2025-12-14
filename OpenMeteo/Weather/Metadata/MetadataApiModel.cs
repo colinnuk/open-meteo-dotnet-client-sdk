@@ -1,4 +1,4 @@
-﻿namespace OpenMeteo.Weather.Metadata;
+namespace OpenMeteo.Weather.Metadata;
 
 public record MetadataApiModel
 {
