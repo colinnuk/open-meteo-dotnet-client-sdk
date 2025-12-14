@@ -21,28 +21,28 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Weather\ExampleResponses\FlatbuffersResponse_NonUTC">
+    <None Update="Weather\Forecast\ExampleResponses\FlatbuffersResponse_NonUTC">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Weather\ExampleResponses\FlatbuffersResponse_UTC">
+    <None Update="Weather\Forecast\ExampleResponses\FlatbuffersResponse_UTC">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Weather\ExampleResponses\forecast_hrrr_nyc_20251111_021158.bin">
+    <None Update="Weather\Forecast\ExampleResponses\forecast_hrrr_nyc_20251111_021158.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Weather\ExampleResponses\forecast_hrrr_nyc_20251111_021159.json">
+    <None Update="Weather\Forecast\ExampleResponses\forecast_hrrr_nyc_20251111_021159.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Weather\ExampleResponses\forecast_hrrr_nyc_all_20251111_032915.bin">
+    <None Update="Weather\Forecast\ExampleResponses\forecast_hrrr_nyc_all_20251111_032915.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Weather\ExampleResponses\forecast_hrrr_nyc_all_20251111_032924.json">
+    <None Update="Weather\Forecast\ExampleResponses\forecast_hrrr_nyc_all_20251111_032924.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Weather\ExampleResponses\JsonResponse_UTC.json">
+    <None Update="Weather\Forecast\ExampleResponses\JsonResponse_UTC.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Weather\ExampleResponses\JsonResponse_NonUTC.json">
+    <None Update="Weather\Forecast\ExampleResponses\JsonResponse_NonUTC.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

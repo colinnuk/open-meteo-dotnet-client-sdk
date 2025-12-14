@@ -3,13 +3,13 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Text.Json;
 using OpenMeteo.AirQuality;
-using OpenMeteo.Weather.Options;
-using OpenMeteo.Weather.ResponseModel;
-using OpenMeteo.Weather.Metadata;
 using OpenMeteo.Elevation;
 using OpenMeteo.Geocoding;
-using OpenMeteo.Weather;
 using OpenMeteo.Url;
+using OpenMeteo.Weather.Forecast;
+using OpenMeteo.Weather.Forecast.Metadata;
+using OpenMeteo.Weather.Forecast.Options;
+using OpenMeteo.Weather.Forecast.ResponseModel;
 
 namespace OpenMeteo
 {

@@ -1,4 +1,4 @@
-using OpenMeteo.Weather.Options;
+using OpenMeteo.Weather.Forecast.Options;
 using System;
 
 namespace OpenMeteoTests.Utilities
