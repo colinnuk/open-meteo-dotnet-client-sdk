@@ -4,6 +4,7 @@ using System.Linq;
 using System;
 using OpenMeteo.Weather.Forecast.Options;
 using OpenMeteo.Weather.Forecast.ResponseModel;
+using OpenMeteo.Weather.Utilities;
 
 namespace OpenMeteo.Weather.Forecast.ResponseModel.Conversion
 {
