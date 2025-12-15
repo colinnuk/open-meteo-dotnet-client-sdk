@@ -1,5 +1,4 @@
 using OpenMeteo.Weather.Ensemble.Units;
-using System.Text.Json.Serialization;
 
 namespace OpenMeteo.Weather.Ensemble.ResponseModel;
 
@@ -28,13 +27,11 @@ public class WeatherEnsemble
     /// <summary>
     /// Generation time of the weather forecast in milliseconds.
     /// </summary>
-    [JsonPropertyName("generationtime_ms")]
     public float GenerationTime { get; set; }
 
     /// <summary>
     /// Applied timezone offset from the timezone parameter.
     /// </summary>
-    [JsonPropertyName("utc_offset_seconds")]
     public int UtcOffset { get; set; }
 
     /// <summary>
@@ -47,34 +44,27 @@ public class WeatherEnsemble
     /// Timezone abbreviation
     /// </summary>
     /// <example>CEST</example>
-    [JsonPropertyName("timezone_abbreviation")]
     public string? TimezoneAbbreviation { get; set; }
 
     /// <summary>
     /// For each selected hourly ensemble weather variable, the unit will be listed here
     /// </summary>
-    [JsonPropertyName("hourly_units")]
     public WeatherEnsembleHourlyUnits? HourlyUnits { get; set; }
 
     /// <summary>
     /// For each selected hourly ensemble weather variable, data will be returned as arrays. 
     /// Additionally a time array will be returned with ISO8601 timestamps.
-    /// Each ensemble member has a separate array (e.g., temperature_2m_member01, temperature_2m_member02, etc.)
     /// </summary>
-    [JsonPropertyName("hourly")]
-    public WeatherEnsembleHourly? Hourly { get; set; }
+    public EnsembleHourly? Hourly { get; set; }
 
     /// <summary>
     /// For each selected daily ensemble weather variable, the unit will be listed here
     /// </summary>
-    [JsonPropertyName("daily_units")]
     public WeatherEnsembleDailyUnits? DailyUnits { get; set; }
 
     /// <summary>
     /// For each selected daily ensemble weather variable, data will be returned as arrays. 
     /// Additionally a time array will be returned with date values.
-    /// Each ensemble member has a separate array (e.g., temperature_2m_max_member01, temperature_2m_max_member02, etc.)
     /// </summary>
-    [JsonPropertyName("daily")]
-    public WeatherEnsembleDaily? Daily { get; set; }
+    public EnsembleDaily? Daily { get; set; }
 }

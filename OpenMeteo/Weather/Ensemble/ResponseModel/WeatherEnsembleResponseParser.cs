@@ -26,7 +26,11 @@ public class WeatherEnsembleResponseParser(JsonSerializerOptions jsonSerializerO
         if (response == null || !response.IsSuccessStatusCode)
             return null;
 
-        return await JsonSerializer.DeserializeAsync<WeatherEnsemble>(await response.Content.ReadAsStreamAsync(), _jsonSerializerOptions);
+        var dto = await JsonSerializer.DeserializeAsync<WeatherEnsembleDto>(
+            await response.Content.ReadAsStreamAsync(), 
+            _jsonSerializerOptions);
+
+        return ConvertDtoToPublicModel(dto, options);
     }
 
     /// <summary>
@@ -87,6 +91,26 @@ public class WeatherEnsembleResponseParser(JsonSerializerOptions jsonSerializerO
             HourlyUnits = WeatherEnsembleHourlyUnitsConversion.ConvertHourlyUnits(fbResponse.Hourly, options),
             Daily = WeatherEnsembleDailyConversion.ConvertDaily(fbResponse.Daily, options),
             DailyUnits = WeatherEnsembleDailyUnitsConversion.ConvertDailyUnits(fbResponse.Daily, options)
+        };
+    }
+
+    private static WeatherEnsemble? ConvertDtoToPublicModel(WeatherEnsembleDto? dto, WeatherEnsembleOptions? options)
+    {
+        if (dto == null) return null;
+
+        return new WeatherEnsemble
+        {
+            Latitude = dto.Latitude,
+            Longitude = dto.Longitude,
+            Elevation = dto.Elevation,
+            GenerationTime = dto.GenerationTime,
+            UtcOffset = dto.UtcOffset,
+            Timezone = dto.Timezone,
+            TimezoneAbbreviation = dto.TimezoneAbbreviation,
+            Hourly = EnsembleHourlyConverter.ToPublicModel(dto.Hourly, options?.Timezone),
+            HourlyUnits = dto.HourlyUnits,
+            Daily = EnsembleDailyConverter.ToPublicModel(dto.Daily),
+            DailyUnits = dto.DailyUnits
         };
     }
 }

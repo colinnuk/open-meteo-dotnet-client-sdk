@@ -149,11 +149,30 @@ public class WeatherEnsembleResponseParserTests
 
         Assert.IsNotNull(ensemble);
         Assert.IsNotNull(ensemble.Hourly);
-        Assert.IsNotNull(ensemble.Hourly.AdditionalData);
-        Assert.IsTrue(ensemble.Hourly.AdditionalData.ContainsKey("temperature_2m"));
-        Assert.IsTrue(ensemble.Hourly.AdditionalData.ContainsKey("temperature_2m_member01"));
-        Assert.IsTrue(ensemble.Hourly.AdditionalData.ContainsKey("temperature_2m_member02"));
-        Assert.IsTrue(ensemble.Hourly.AdditionalData.ContainsKey("temperature_2m_member03"));
+        Assert.IsNotNull(ensemble.Hourly.Temperature_2m);
+        
+        // Should have 4 members: 0, 1, 2, and 3
+        Assert.AreEqual(4, ensemble.Hourly.Temperature_2m.Count, "Should have 4 members (0, 1, 2, 3)");
+        
+        // Verify member 0 (base variable without suffix)
+        Assert.IsTrue(ensemble.Hourly.Temperature_2m.ContainsKey(0), "Should contain member 0");
+        Assert.IsNotNull(ensemble.Hourly.Temperature_2m[0]);
+        Assert.AreEqual(0.9f, ensemble.Hourly.Temperature_2m[0]![0], "Member 0 value should be 0.9");
+        
+        // Verify member 1
+        Assert.IsTrue(ensemble.Hourly.Temperature_2m.ContainsKey(1), "Should contain member 1");
+        Assert.IsNotNull(ensemble.Hourly.Temperature_2m[1]);
+        Assert.AreEqual(0.9f, ensemble.Hourly.Temperature_2m[1]![0], "Member 1 value should be 0.9");
+        
+        // Verify member 2
+        Assert.IsTrue(ensemble.Hourly.Temperature_2m.ContainsKey(2), "Should contain member 2");
+        Assert.IsNotNull(ensemble.Hourly.Temperature_2m[2]);
+        Assert.AreEqual(0.8f, ensemble.Hourly.Temperature_2m[2]![0], "Member 2 value should be 0.8");
+        
+        // Verify member 3
+        Assert.IsTrue(ensemble.Hourly.Temperature_2m.ContainsKey(3), "Should contain member 3");
+        Assert.IsNotNull(ensemble.Hourly.Temperature_2m[3]);
+        Assert.AreEqual(1.0f, ensemble.Hourly.Temperature_2m[3]![0], "Member 3 value should be 1.0");
     }
 
     [TestMethod]
@@ -325,9 +344,11 @@ public class WeatherEnsembleResponseParserTests
         Assert.AreEqual(jsonEnsemble.Hourly.Time!.Length, flatbufferEnsemble.Hourly.Time!.Length);
 
         // Compare ensemble members count
-        Assert.AreEqual(jsonEnsemble.Hourly.AdditionalData!.Count, flatbufferEnsemble.Hourly.AdditionalData!.Count);
+        Assert.IsNotNull(jsonEnsemble.Hourly.Temperature_2m);
+        Assert.IsNotNull(flatbufferEnsemble.Hourly.Temperature_2m);
+        Assert.AreEqual(jsonEnsemble.Hourly.Temperature_2m.Count, flatbufferEnsemble.Hourly.Temperature_2m.Count);
 
-        Console.WriteLine($"JSON ensemble members: {jsonEnsemble.Hourly.AdditionalData.Count}");
-        Console.WriteLine($"FlatBuffer ensemble members: {flatbufferEnsemble.Hourly.AdditionalData.Count}");
+        Console.WriteLine($"JSON temperature members: {jsonEnsemble.Hourly.Temperature_2m.Count}");
+        Console.WriteLine($"FlatBuffer temperature members: {flatbufferEnsemble.Hourly.Temperature_2m.Count}");
     }
 }
