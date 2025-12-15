@@ -44,14 +44,14 @@ internal static class WeatherEnsembleDailyConversion
             {
                 var intValues = EnsembleMemberParser.ToNullableIntArray(variable.Value);
                 if (!intMembers.ContainsKey(propertyName))
-                    intMembers[propertyName] = new Dictionary<int, int?[]>();
+                    intMembers[propertyName] = [];
                 intMembers[propertyName][memberNumber] = intValues;
             }
             else
             {
                 var floatValues = EnsembleMemberParser.ToNullableFloatArray(variable.Value);
                 if (!floatMembers.ContainsKey(propertyName))
-                    floatMembers[propertyName] = new Dictionary<int, float?[]>();
+                    floatMembers[propertyName] = [];
                 floatMembers[propertyName][memberNumber] = floatValues;
             }
         }

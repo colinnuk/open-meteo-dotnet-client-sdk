@@ -11,8 +11,10 @@ using OpenMeteo.Weather.Forecast.Metadata;
 using OpenMeteo.Weather.Forecast.Options;
 using OpenMeteo.Weather.Forecast.ResponseModel;
 using OpenMeteo.Weather.Ensemble;
+using OpenMeteo.Weather.Ensemble.Metadata;
 using OpenMeteo.Weather.Ensemble.Options;
 using OpenMeteo.Weather.Ensemble.ResponseModel;
+using OpenMeteo.Weather.Metadata;
 
 namespace OpenMeteo
 {
@@ -258,6 +260,26 @@ namespace OpenMeteo
             try
             {
                 var url = UrlBuilderFactory.Create<WeatherForecastMetadataUrlBuilder>(_customBaseUri, _apiKey)
+                    .WithModel(weatherModel)
+                    .Build();
+
+                HttpResponseMessage response = await httpController.Client.GetAsync(url);
+                response.EnsureSuccessStatusCode();
+
+                MetadataApiModel? meta = await JsonSerializer.DeserializeAsync<MetadataApiModel>(await response.Content.ReadAsStreamAsync(), _jsonSerializerOptions);
+                return ConvertMetadataModel(meta ?? throw new OpenMeteoClientException("No metadata found", response.StatusCode));
+            }
+            catch (HttpRequestException)
+            {
+                throw;
+            }
+        }
+
+        public async Task<MetadataModel> QueryWeatherEnsembleMetadata(EnsembleModelOptionsParameter weatherModel)
+        {
+            try
+            {
+                var url = UrlBuilderFactory.Create<WeatherEnsembleMetadataUrlBuilder>(_customBaseUri, _apiKey)
                     .WithModel(weatherModel)
                     .Build();
 
