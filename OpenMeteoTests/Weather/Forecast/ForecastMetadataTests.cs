@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 namespace OpenMeteoTests.Weather.Forecast;
 
 [TestClass]
+[TestCategory(TestCategoryConstants.Integration)]
 public class ForecastMetadataTests
 {
     [DataTestMethod]

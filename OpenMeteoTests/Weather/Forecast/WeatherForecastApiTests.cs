@@ -8,6 +8,7 @@ using OpenMeteo.Weather.Forecast.Options;
 namespace OpenMeteoTests.Weather.Forecast
 {
     [TestClass]
+    [TestCategory(TestCategoryConstants.Integration)]
     public class WeatherForecastApiTests
     {
         [TestMethod]

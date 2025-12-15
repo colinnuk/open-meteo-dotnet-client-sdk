@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 namespace OpenMeteoTests.Elevation
 {
     [TestClass]
+    [TestCategory(TestCategoryConstants.Integration)]
     public class ElevationTests
     {
         private static readonly float Latitude = 52.5235f;

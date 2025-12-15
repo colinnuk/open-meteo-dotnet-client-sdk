@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 namespace OpenMeteoTests.Weather.Ensemble;
 
 [TestClass]
+[TestCategory(TestCategoryConstants.Integration)]
 public class EnsembleMetadataTests
 {
     [DataTestMethod]
