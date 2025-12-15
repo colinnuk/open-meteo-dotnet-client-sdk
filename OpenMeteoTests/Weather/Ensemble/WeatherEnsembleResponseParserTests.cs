@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
@@ -161,7 +162,7 @@ public class WeatherEnsembleResponseParserTests
         var parser = new WeatherEnsembleResponseParser(_jsonSerializerOptions);
         var options = new WeatherEnsembleOptions();
 
-        var result = await parser.DeserializeJsonAsync(null, options);
+        var result = await parser.DeserializeJsonAsync(null!, options);
 
         Assert.IsNull(result);
     }
@@ -184,7 +185,7 @@ public class WeatherEnsembleResponseParserTests
         var parser = new WeatherEnsembleResponseParser(_jsonSerializerOptions);
         var options = new WeatherEnsembleOptions();
 
-        var result = await parser.ConvertFlatBuffersAsync(null, options);
+        var result = await parser.ConvertFlatBuffersAsync(null!, options);
 
         Assert.IsNull(result);
     }
@@ -206,7 +207,7 @@ public class WeatherEnsembleResponseParserTests
     {
         var response = new HttpResponseMessage(HttpStatusCode.OK)
         {
-            Content = new ByteArrayContent([])
+            Content = new ByteArrayContent(Array.Empty<byte>())
         };
         var parser = new WeatherEnsembleResponseParser(_jsonSerializerOptions);
         var options = new WeatherEnsembleOptions();
@@ -229,5 +230,104 @@ public class WeatherEnsembleResponseParserTests
 
         await Assert.ThrowsExceptionAsync<InvalidOperationException>(
             async () => await parser.ConvertFlatBuffersAsync(response, options));
+    }
+
+    [TestMethod]
+    public async Task ConvertFlatBuffersAsync_RealData_Success()
+    {
+        var filePath = Path.Combine("Weather", "Ensemble", "ExampleResponses", "Gem_GEPS_Whistler_20251214");
+        var bytes = await File.ReadAllBytesAsync(filePath);
+        var response = new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = new ByteArrayContent(bytes)
+        };
+        var options = new WeatherEnsembleOptions
+        {
+            Latitude = 50.0f,
+            Longitude = -123.0f,
+            Timezone = "GMT",
+            Hourly = new WeatherEnsembleHourlyOptions([
+                WeatherEnsembleHourlyOptionsParameter.temperature_2m,
+                WeatherEnsembleHourlyOptionsParameter.precipitation,
+                WeatherEnsembleHourlyOptionsParameter.rain,
+                WeatherEnsembleHourlyOptionsParameter.snowfall
+            ])
+        };
+        var parser = new WeatherEnsembleResponseParser(_jsonSerializerOptions);
+
+        var ensemble = await parser.ConvertFlatBuffersAsync(response, options);
+
+        Assert.IsNotNull(ensemble);
+        Assert.AreEqual(50.0f, ensemble.Latitude);
+        Assert.AreEqual(-123.0f, ensemble.Longitude);
+        Assert.AreEqual(1643.0f, ensemble.Elevation);
+        Assert.AreEqual("GMT", ensemble.Timezone);
+        Assert.IsNotNull(ensemble.Hourly);
+        Assert.IsNotNull(ensemble.Hourly.Time);
+        Assert.IsTrue(ensemble.Hourly.Time.Length > 0);
+    }
+
+    [TestMethod]
+    public async Task FlatbufferAndJsonProduceIdenticalWeatherEnsembleObjects()
+    {
+        var jsonPath = Path.Combine("Weather", "Ensemble", "ExampleResponses", "GEM_GEPS_Whistler_20251214.json");
+        var binPath = Path.Combine("Weather", "Ensemble", "ExampleResponses", "Gem_GEPS_Whistler_20251214");
+
+        var json = await File.ReadAllTextAsync(jsonPath);
+        var bin = await File.ReadAllBytesAsync(binPath);
+
+        var jsonResponse = new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = new StringContent(json)
+        };
+        var binResponse = new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = new ByteArrayContent(bin)
+        };
+
+        var options = new WeatherEnsembleOptions
+        {
+            Latitude = 50.0f,
+            Longitude = -123.0f,
+            Timezone = "GMT",
+            Hourly = new WeatherEnsembleHourlyOptions([
+                WeatherEnsembleHourlyOptionsParameter.temperature_2m,
+                WeatherEnsembleHourlyOptionsParameter.precipitation,
+                WeatherEnsembleHourlyOptionsParameter.rain,
+                WeatherEnsembleHourlyOptionsParameter.snowfall
+            ])
+        };
+        var parser = new WeatherEnsembleResponseParser(new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+        var swJson = System.Diagnostics.Stopwatch.StartNew();
+        var jsonEnsemble = await parser.DeserializeJsonAsync(jsonResponse, options);
+        swJson.Stop();
+        Console.WriteLine($"JSON parse time: {swJson.ElapsedMilliseconds} ms");
+
+        var swFlat = System.Diagnostics.Stopwatch.StartNew();
+        var flatbufferEnsemble = await parser.ConvertFlatBuffersAsync(binResponse, options);
+        swFlat.Stop();
+        Console.WriteLine($"FlatBuffer parse time: {swFlat.ElapsedMilliseconds} ms");
+
+        Assert.IsNotNull(jsonEnsemble);
+        Assert.IsNotNull(flatbufferEnsemble);
+
+        // Compare basic properties
+        Assert.AreEqual(jsonEnsemble.Latitude, flatbufferEnsemble.Latitude);
+        Assert.AreEqual(jsonEnsemble.Longitude, flatbufferEnsemble.Longitude);
+        Assert.AreEqual(jsonEnsemble.Elevation, flatbufferEnsemble.Elevation);
+        Assert.AreEqual(jsonEnsemble.Timezone, flatbufferEnsemble.Timezone);
+        Assert.AreEqual(jsonEnsemble.TimezoneAbbreviation, flatbufferEnsemble.TimezoneAbbreviation);
+
+        // Compare hourly data
+        Assert.IsNotNull(jsonEnsemble.Hourly);
+        Assert.IsNotNull(flatbufferEnsemble.Hourly);
+        Assert.AreEqual(jsonEnsemble.Hourly.Time!.Length, flatbufferEnsemble.Hourly.Time!.Length);
+
+        // Compare ensemble members count
+        Assert.AreEqual(jsonEnsemble.Hourly.AdditionalData!.Count, flatbufferEnsemble.Hourly.AdditionalData!.Count);
+
+        Console.WriteLine($"JSON ensemble members: {jsonEnsemble.Hourly.AdditionalData.Count}");
+        Console.WriteLine($"FlatBuffer ensemble members: {flatbufferEnsemble.Hourly.AdditionalData.Count}");
     }
 }
