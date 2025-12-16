@@ -1,4 +1,4 @@
-name: build and test
+﻿name: build and test
 
 on:
   push:
@@ -33,14 +33,6 @@ jobs:
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
-
-    - name: Caching dependencies
-      uses: actions/cache@v3
-      with:
-        path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-nuget
 
     - name: Install dependencies
       run: dotnet restore
