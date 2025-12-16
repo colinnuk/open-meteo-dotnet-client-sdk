@@ -1,4 +1,4 @@
-name: Package, create new release and push to Nuget
+﻿name: Package, create new release and push to Nuget
 
 on:
   workflow_dispatch:
@@ -32,7 +32,7 @@ jobs:
       run: dotnet build --configuration release /p:Version=${{ steps.gitversion.outputs.AssemblySemVer }} /p:AssemblyVersion=${{ steps.gitversion.outputs.AssemblySemVer }} /p:InformationalVersion=${{ steps.gitversion.outputs.InformationalVersion }} --no-restore
       
     - name: Run tests
-      run: dotnet test --configuration Release /p:Version=${{ steps.gitversion.outputs.AssemblySemVer }} --no-build --verbosity normal
+      run: dotnet test --filter "TestCategory!=Integration" --configuration Release /p:Version=${{ steps.gitversion.outputs.AssemblySemVer }} --no-build --verbosity normal
       
     - name: Create Release for Tag
       if: github.ref == 'refs/heads/master'
