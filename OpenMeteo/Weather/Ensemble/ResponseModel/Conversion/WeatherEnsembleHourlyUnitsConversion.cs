@@ -1,7 +1,6 @@
-using openmeteo_sdk;
+﻿using openmeteo_sdk;
 using OpenMeteo.Weather.Ensemble.Options;
 using OpenMeteo.Weather.Ensemble.Units;
-using System.Collections.Generic;
 
 namespace OpenMeteo.Weather.Ensemble.ResponseModel.Conversion;
 
@@ -14,8 +13,8 @@ internal static class WeatherEnsembleHourlyUnitsConversion
 
         var hourlyUnits = new WeatherEnsembleHourlyUnits
         {
-            Time = "iso8601",
-            AdditionalData = new Dictionary<string, object>()
+            Time = EnsembleConversionConstants.Iso8601TimeFormat,
+            AdditionalData = []
         };
 
         // Extract units for all variables
@@ -26,7 +25,7 @@ internal static class WeatherEnsembleHourlyUnitsConversion
 
             var variableName = i < ensembleOptions.Hourly.Parameter.Count
                 ? ensembleOptions.Hourly.Parameter[i].ToString()
-                : $"variable_{i}";
+                : string.Format(EnsembleConversionConstants.VariableNameFormat, i);
 
             hourlyUnits.AdditionalData[variableName] = variable.Value.Unit;
         }
