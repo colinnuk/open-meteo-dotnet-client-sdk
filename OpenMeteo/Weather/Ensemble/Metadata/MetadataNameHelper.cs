@@ -28,12 +28,12 @@ internal static class MetadataNameHelper
         EnsembleModelOptionsParameter.bom_access_global_ensemble => "bom_access_global_ensemble",
         
         // UK Met Office Ensemble Models
-        EnsembleModelOptionsParameter.ukmo_global_deterministic_10km => "ukmo_global_ensemble_20km",
-        EnsembleModelOptionsParameter.ukmo_uk_deterministic_2km => "ukmo_uk_ensemble_2km",
+        EnsembleModelOptionsParameter.ukmo_global_ensemble_20km => "ukmo_global_ensemble_20km",
+        EnsembleModelOptionsParameter.ukmo_uk_ensemble_2km => "ukmo_uk_ensemble_2km",
         
         // MeteoSwiss ICON Ensemble Models
-        EnsembleModelOptionsParameter.meteoswiss_icon_ch1_eps => "meteoswiss_icon_ch1_ensemble",
-        EnsembleModelOptionsParameter.meteoswiss_icon_ch2_eps => "meteoswiss_icon_ch2_ensemble",
+        EnsembleModelOptionsParameter.meteoswiss_icon_ch1 => "meteoswiss_icon_ch1_ensemble",
+        EnsembleModelOptionsParameter.meteoswiss_icon_ch2 => "meteoswiss_icon_ch2_ensemble",
 
         _ => throw new ArgumentOutOfRangeException(nameof(weatherModel), weatherModel, "No mapping specified for weather model name to the metadata URL operation. Unable to get metadata for this model.")
     };

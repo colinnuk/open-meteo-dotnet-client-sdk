@@ -94,7 +94,7 @@ public class WeatherEnsembleMetadataUrlBuilderTests
     public void Build_DefaultConstructor_WithModel_UkmoGlobal_Test()
     {
         var url = new WeatherEnsembleMetadataUrlBuilder()
-            .WithModel(EnsembleModelOptionsParameter.ukmo_global_deterministic_10km)
+            .WithModel(EnsembleModelOptionsParameter.ukmo_global_ensemble_20km)
             .Build();
         var expectedUrl = "https://ensemble-api.open-meteo.com/data/ukmo_global_ensemble_20km/static/meta.json";
         Assert.AreEqual(expectedUrl, url);
@@ -104,7 +104,7 @@ public class WeatherEnsembleMetadataUrlBuilderTests
     public void Build_DefaultConstructor_WithModel_MeteoSwissIconCh1_Test()
     {
         var url = new WeatherEnsembleMetadataUrlBuilder()
-            .WithModel(EnsembleModelOptionsParameter.meteoswiss_icon_ch1_eps)
+            .WithModel(EnsembleModelOptionsParameter.meteoswiss_icon_ch1)
             .Build();
         var expectedUrl = "https://ensemble-api.open-meteo.com/data/meteoswiss_icon_ch1_ensemble/static/meta.json";
         Assert.AreEqual(expectedUrl, url);
@@ -164,7 +164,7 @@ public class WeatherEnsembleMetadataUrlBuilderTests
     public void Build_DefaultConstructor_WithModel_UkmoUk_Test()
     {
         var url = new WeatherEnsembleMetadataUrlBuilder()
-            .WithModel(EnsembleModelOptionsParameter.ukmo_uk_deterministic_2km)
+            .WithModel(EnsembleModelOptionsParameter.ukmo_uk_ensemble_2km)
             .Build();
         var expectedUrl = "https://ensemble-api.open-meteo.com/data/ukmo_uk_ensemble_2km/static/meta.json";
         Assert.AreEqual(expectedUrl, url);
@@ -174,7 +174,7 @@ public class WeatherEnsembleMetadataUrlBuilderTests
     public void Build_DefaultConstructor_WithModel_MeteoSwissIconCh2_Test()
     {
         var url = new WeatherEnsembleMetadataUrlBuilder()
-            .WithModel(EnsembleModelOptionsParameter.meteoswiss_icon_ch2_eps)
+            .WithModel(EnsembleModelOptionsParameter.meteoswiss_icon_ch2)
             .Build();
         var expectedUrl = "https://ensemble-api.open-meteo.com/data/meteoswiss_icon_ch2_ensemble/static/meta.json";
         Assert.AreEqual(expectedUrl, url);

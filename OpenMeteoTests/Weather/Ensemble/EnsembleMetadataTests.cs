@@ -14,8 +14,8 @@ public class EnsembleMetadataTests
     [DataRow(EnsembleModelOptionsParameter.gfs025)]
     [DataRow(EnsembleModelOptionsParameter.ecmwf_ifs025)]
     [DataRow(EnsembleModelOptionsParameter.gem_global)]
-    [DataRow(EnsembleModelOptionsParameter.ukmo_global_deterministic_10km)]
-    [DataRow(EnsembleModelOptionsParameter.meteoswiss_icon_ch1_eps)]
+    [DataRow(EnsembleModelOptionsParameter.ukmo_global_ensemble_20km)]
+    [DataRow(EnsembleModelOptionsParameter.meteoswiss_icon_ch1)]
     public async Task EnsembleMetadata_Async_Test(EnsembleModelOptionsParameter model)
     {
         OpenMeteoClient client = new();

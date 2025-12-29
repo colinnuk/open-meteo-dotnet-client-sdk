@@ -6,10 +6,10 @@ using OpenMeteo.Weather.Ensemble.Options;
 namespace OpenMeteoTests.Weather.Ensemble;
 
 [TestClass]
+[TestCategory(TestCategoryConstants.Integration)]
 public class EnsembleApiIntegrationTests
 {
     [TestMethod]
-    [Ignore] // Ignored to reduce the number of API calls during testing
     public async Task QueryEnsembleApiAsync_WithLatitudeLongitude_ReturnsEnsembleData()
     {
         var client = new OpenMeteoClient();
@@ -22,7 +22,6 @@ public class EnsembleApiIntegrationTests
     }
 
     [TestMethod]
-    [Ignore] // Ignored to reduce the number of API calls during testing
     public async Task QueryEnsembleApiAsync_WithOptions_ReturnsEnsembleData()
     {
         var client = new OpenMeteoClient();
@@ -34,7 +33,7 @@ public class EnsembleApiIntegrationTests
                 WeatherEnsembleHourlyOptionsParameter.temperature_2m,
                 WeatherEnsembleHourlyOptionsParameter.precipitation
             ]),
-            Models = new EnsembleModelOptions(EnsembleModelOptionsParameter.gem_global)
+            Models = new EnsembleModelOptions(EnsembleModelOptionsParameter.ukmo_global_ensemble_20km)
         };
         
         var result = await client.QueryEnsembleApiAsync(options);
@@ -46,7 +45,6 @@ public class EnsembleApiIntegrationTests
     }
 
     [TestMethod]
-    [Ignore] // Ignored to reduce the number of API calls during testing
     public async Task QueryEnsembleApiAsync_WithLocation_ReturnsEnsembleData()
     {
         var client = new OpenMeteoClient();
@@ -66,7 +64,6 @@ public class EnsembleApiIntegrationTests
     }
 
     [TestMethod]
-    [Ignore] // Ignored to reduce the number of API calls during testing
     public async Task QueryEnsembleApiAsync_WithFlatbuffers_ReturnsEnsembleData()
     {
         var client = new OpenMeteoClient { UseFlatbuffers = true };

@@ -109,8 +109,8 @@ public enum EnsembleModelOptionsParameter
     ecmwf_aifs025,
     gem_global,
     bom_access_global_ensemble,
-    ukmo_global_deterministic_10km,
-    ukmo_uk_deterministic_2km,
-    meteoswiss_icon_ch1_eps,
-    meteoswiss_icon_ch2_eps
+    ukmo_global_ensemble_20km,
+    ukmo_uk_ensemble_2km,
+    meteoswiss_icon_ch1,
+    meteoswiss_icon_ch2
 }
