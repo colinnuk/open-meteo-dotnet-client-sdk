@@ -1,34 +1,34 @@
 using OpenMeteo.Url;
-using OpenMeteo.Weather.Forecast.Options;
+using OpenMeteo.Weather.Ensemble.Options;
 using OpenMeteo.Weather.Utilities;
 using System;
 using System.Globalization;
 using System.Linq;
 
-namespace OpenMeteo.Weather.Forecast
+namespace OpenMeteo.Weather.Ensemble
 {
-    public class WeatherForecastUrlBuilder : ApiUrlBuilder
+    public class WeatherEnsembleUrlBuilder : ApiUrlBuilder
     {
-        protected override string DefaultSubdomain => "api";
-        protected override string ApiPath => "/v1/forecast";
+        protected override string DefaultSubdomain => "ensemble-api";
+        protected override string ApiPath => "/v1/ensemble";
 
-        public WeatherForecastUrlBuilder() : base()
+        public WeatherEnsembleUrlBuilder() : base()
         {
         }
 
-        public WeatherForecastUrlBuilder(Uri customBaseUri) : base(customBaseUri)
+        public WeatherEnsembleUrlBuilder(Uri customBaseUri) : base(customBaseUri)
         {
         }
 
-        public WeatherForecastUrlBuilder(string apiKey) : base(apiKey)
+        public WeatherEnsembleUrlBuilder(string apiKey) : base(apiKey)
         {
         }
 
-        public WeatherForecastUrlBuilder(Uri customBaseUri, string apiKey) : base(customBaseUri, apiKey)
+        public WeatherEnsembleUrlBuilder(Uri customBaseUri, string apiKey) : base(customBaseUri, apiKey)
         {
         }
 
-        public WeatherForecastUrlBuilder WithOptions(WeatherForecastOptions options)
+        public WeatherEnsembleUrlBuilder WithOptions(WeatherEnsembleOptions options)
         {
             _urlBuilder.AddParameter(nameof(options.Latitude).ToLower(), options.Latitude.ToString(CultureInfo.InvariantCulture));
             _urlBuilder.AddParameter(nameof(options.Longitude).ToLower(), options.Longitude.ToString(CultureInfo.InvariantCulture));
@@ -37,7 +37,8 @@ namespace OpenMeteo.Weather.Forecast
             _urlBuilder.AddParameter(nameof(options.Precipitation_Unit).ToLower(), options.Precipitation_Unit.ToString());
             _urlBuilder.AddParameter(nameof(options.Timezone).ToLower(), options.Timezone);
             _urlBuilder.AddParameter(nameof(options.Timeformat).ToLower(), options.Timeformat.ToString());
-            _urlBuilder.AddParameter(nameof(options.Past_Days).ToLower(), options.Past_Days.ToString());
+            _urlBuilder.AddParameter(nameof(options.Past_Days).ToLower(), options.Past_Days?.ToString());
+            _urlBuilder.AddParameter(nameof(options.Forecast_Days).ToLower(), options.Forecast_Days?.ToString());
             _urlBuilder.AddParameter(nameof(options.Start_date).ToLower(), options.Start_date?.ToString(DateOnlyConverter.Format));
             _urlBuilder.AddParameter(nameof(options.End_date).ToLower(), options.End_date?.ToString(DateOnlyConverter.Format));
             _urlBuilder.AddParameter(nameof(options.Cell_Selection).ToLower(), options.Cell_Selection.ToString());
@@ -48,15 +49,11 @@ namespace OpenMeteo.Weather.Forecast
                 _urlBuilder.AddCollection(nameof(options.Daily).ToLower(), options.Daily.Parameter.Select(x => x.ToString()));
             if (options.Models.Count > 0)
                 _urlBuilder.AddCollection(nameof(options.Models).ToLower(), options.Models.Parameter.Select(x => x.ToString()));
-            if (options.Current.Count > 0)
-                _urlBuilder.AddCollection(nameof(options.Current).ToLower(), options.Current.Parameter.Select(x => x.ToString()));
-            if (options.Minutely_15.Count > 0)
-                _urlBuilder.AddCollection(nameof(options.Minutely_15).ToLower(), options.Minutely_15.Parameter.Select(x => x.ToString()));
 
             return this;
         }
 
-        public WeatherForecastUrlBuilder WithFlatbuffers(bool useFlatbuffers)
+        public WeatherEnsembleUrlBuilder WithFlatbuffers(bool useFlatbuffers)
         {
             _urlBuilder.WithFlatbuffers(useFlatbuffers);
             return this;

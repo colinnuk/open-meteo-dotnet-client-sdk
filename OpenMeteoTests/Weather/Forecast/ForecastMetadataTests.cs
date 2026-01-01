@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 namespace OpenMeteoTests.Weather.Forecast;
 
 [TestClass]
-public class MetadataTests
+[TestCategory(TestCategoryConstants.Integration)]
+public class ForecastMetadataTests
 {
     [DataTestMethod]
     [DataRow(WeatherModelOptionsParameter.ecmwf_ifs)]

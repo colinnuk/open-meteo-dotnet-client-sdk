@@ -2,6 +2,7 @@ using openmeteo_sdk;
 using OpenMeteo.Helpers;
 using OpenMeteo.Weather.Forecast.Options;
 using OpenMeteo.Weather.Forecast.ResponseModel;
+using OpenMeteo.Weather.Utilities;
 
 namespace OpenMeteo.Weather.Forecast.ResponseModel.Conversion
 {

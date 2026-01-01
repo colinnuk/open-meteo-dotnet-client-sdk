@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 namespace OpenMeteoTests.AirQuality
 {
     [TestClass]
+    [TestCategory(TestCategoryConstants.Integration)]
     public class AirQualityTests
     {
         [TestMethod]

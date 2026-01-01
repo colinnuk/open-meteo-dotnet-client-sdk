@@ -1,6 +1,6 @@
 using System;
 
-namespace OpenMeteo.Weather.Forecast.Metadata;
+namespace OpenMeteo.Weather.Metadata;
 public record MetadataModel(
     DateTime DataEndTime,
     DateTime LastRunAvailabilityTime,

@@ -21,6 +21,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Weather\Ensemble\ExampleResponses\Gem_GEPS_Whistler_20251214">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Weather\Ensemble\ExampleResponses\GEM_GEPS_Whistler_20251214.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Weather\Forecast\ExampleResponses\FlatbuffersResponse_NonUTC">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
