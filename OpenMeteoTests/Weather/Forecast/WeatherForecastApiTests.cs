@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenMeteo;
@@ -12,7 +12,6 @@ namespace OpenMeteoTests.Weather.Forecast
     public class WeatherForecastApiTests
     {
         [TestMethod]
-        [Ignore] // Ignored to reduce the number of API calls during testing
         public async Task Only_Location_Name_Test()
         {
             OpenMeteoClient client = new();
@@ -25,7 +24,6 @@ namespace OpenMeteoTests.Weather.Forecast
         }
 
         [TestMethod]
-        [Ignore] // Ignored to reduce the number of API calls during testing
         public async Task Latitude_Longitude_Test()
         {
             OpenMeteoClient client = new();
@@ -41,7 +39,6 @@ namespace OpenMeteoTests.Weather.Forecast
         }
 
         [TestMethod]
-        [Ignore] // Ignored to reduce the number of API calls during testing
         public async Task GeocodingOptions_Test()
         {
             OpenMeteoClient client = new();
@@ -54,7 +51,6 @@ namespace OpenMeteoTests.Weather.Forecast
         }
 
         [TestMethod]
-        [Ignore] // Ignored to reduce the number of API calls during testing
         public async Task WeatherForecast_With_WeatherForecastOptions_Test()
         {
             OpenMeteoClient client = new();
@@ -127,7 +123,6 @@ namespace OpenMeteoTests.Weather.Forecast
         }
 
         [TestMethod]
-        [Ignore]
         public async Task FlatBuffers_ComplexOptions_Returns_WeatherForecast()
         {
             var client = new OpenMeteoClient() { UseFlatbuffers = true };
@@ -152,7 +147,6 @@ namespace OpenMeteoTests.Weather.Forecast
         }
 
         [TestMethod]
-        [Ignore]
         public async Task FlatBuffers_ComplexOptions_WithTimeZone_Returns_WeatherForecast()
         {
             var client = new OpenMeteoClient() { UseFlatbuffers = true };
