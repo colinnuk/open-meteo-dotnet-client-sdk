@@ -1,4 +1,4 @@
-using OpenMeteo.Weather.Ensemble.Options;
+﻿using OpenMeteo.Weather.Ensemble.Options;
 using System;
 
 namespace OpenMeteo.Weather.Ensemble.Metadata;
@@ -16,6 +16,9 @@ internal static class MetadataNameHelper
         EnsembleModelOptionsParameter.gfs_seamless => "ncep_gefs05",
         EnsembleModelOptionsParameter.gfs025 => "ncep_gefs025",
         EnsembleModelOptionsParameter.gfs05 => "ncep_gefs05",
+        
+        // NOAA AI-based Ensemble Model
+        EnsembleModelOptionsParameter.ncep_aigefs025 => "ncep_aigefs025",
         
         // ECMWF Ensemble Models
         EnsembleModelOptionsParameter.ecmwf_ifs025 => "ecmwf_ifs025_ensemble",

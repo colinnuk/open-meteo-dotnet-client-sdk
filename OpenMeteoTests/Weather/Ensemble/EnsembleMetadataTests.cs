@@ -1,4 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenMeteo;
 using OpenMeteo.Weather.Ensemble.Options;
 using System.Threading.Tasks;
@@ -16,6 +16,7 @@ public class EnsembleMetadataTests
     [DataRow(EnsembleModelOptionsParameter.gem_global)]
     [DataRow(EnsembleModelOptionsParameter.ukmo_global_ensemble_20km)]
     [DataRow(EnsembleModelOptionsParameter.meteoswiss_icon_ch1)]
+    [DataRow(EnsembleModelOptionsParameter.ncep_aigefs025)]
     public async Task EnsembleMetadata_Async_Test(EnsembleModelOptionsParameter model)
     {
         OpenMeteoClient client = new();

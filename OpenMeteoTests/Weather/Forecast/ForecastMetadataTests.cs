@@ -1,4 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenMeteo;
 using OpenMeteo.Weather.Forecast.Options;
 using System.Threading.Tasks;
@@ -21,6 +21,8 @@ public class ForecastMetadataTests
     [DataRow(WeatherModelOptionsParameter.bom_access_global)]
     [DataRow(WeatherModelOptionsParameter.italia_meteo_arpae_icon_2i)]
     [DataRow(WeatherModelOptionsParameter.meteoswiss_icon_ch1)]
+    [DataRow(WeatherModelOptionsParameter.ncep_aigfs025)]
+    [DataRow(WeatherModelOptionsParameter.ncep_hgefs025_stats)]
     public async Task Metadata_Async_Test(WeatherModelOptionsParameter model)
     {
         OpenMeteoClient client = new();
