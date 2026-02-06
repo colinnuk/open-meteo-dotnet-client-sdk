@@ -22,7 +22,7 @@ public class ForecastMetadataTests
     [DataRow(WeatherModelOptionsParameter.italia_meteo_arpae_icon_2i)]
     [DataRow(WeatherModelOptionsParameter.meteoswiss_icon_ch1)]
     [DataRow(WeatherModelOptionsParameter.ncep_aigfs025)]
-    [DataRow(WeatherModelOptionsParameter.ncep_hgefs025_stats)]
+    [DataRow(WeatherModelOptionsParameter.ncep_hgefs025_ensemble_mean)]
     public async Task Metadata_Async_Test(WeatherModelOptionsParameter model)
     {
         OpenMeteoClient client = new();

@@ -187,7 +187,7 @@ namespace OpenMeteoTests.Weather.Forecast
         [DataRow(WeatherModelOptionsParameter.bom_access_global, -33.8688, 151.2093)] // Sydney
         [DataRow(WeatherModelOptionsParameter.ukmo_global_deterministic_10km, 51.5074, -0.1278)] // London
         [DataRow(WeatherModelOptionsParameter.ncep_aigfs025, 40.7128, -74.0060)] // New York
-        [DataRow(WeatherModelOptionsParameter.ncep_hgefs025_stats, 40.7128, -74.0060)] // New York
+        [DataRow(WeatherModelOptionsParameter.ncep_hgefs025_ensemble_mean, 40.7128, -74.0060)] // New York
         [DataRow(WeatherModelOptionsParameter.ncep_nam_conus, 40.7128, -74.0060)] // New York
         public async Task QueryWeatherApiAsync_WithModel_ReturnsWeatherForecast(WeatherModelOptionsParameter model, double lat, double lon)
         {

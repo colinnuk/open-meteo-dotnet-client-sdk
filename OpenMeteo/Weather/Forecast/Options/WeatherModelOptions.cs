@@ -108,7 +108,7 @@ namespace OpenMeteo.Weather.Forecast.Options
         gfs_hrrr,
         gfs_graphcast025,
         ncep_aigfs025,
-        ncep_hgefs025_stats,
+        ncep_hgefs025_ensemble_mean,
         ncep_nbm_conus,
         ncep_nam_conus,
         jma_seamless,

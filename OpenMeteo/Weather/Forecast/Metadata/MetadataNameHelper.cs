@@ -22,7 +22,7 @@ internal static class MetadataNameHelper
         WeatherModelOptionsParameter.gfs_graphcast025 => "ncep_gfs_graphcast025",
         WeatherModelOptionsParameter.gfs_hrrr => "ncep_hrrr_conus",
         WeatherModelOptionsParameter.ncep_aigfs025 => "ncep_aigfs025",
-        WeatherModelOptionsParameter.ncep_hgefs025_stats => "ncep_hgefs025_stats",
+        WeatherModelOptionsParameter.ncep_hgefs025_ensemble_mean => "ncep_hgefs025_ensemble_mean",
         WeatherModelOptionsParameter.ncep_nbm_conus => "ncep_nbm_conus",
         WeatherModelOptionsParameter.ncep_nam_conus => "ncep_nam_conus",
         WeatherModelOptionsParameter.gem_global => "cmc_gem_gdps",
