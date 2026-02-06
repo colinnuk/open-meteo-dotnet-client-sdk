@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenMeteo;
 using OpenMeteo.Weather.Ensemble.Options;
@@ -32,6 +32,7 @@ public class EnsembleApiIntegrationTests
     [DataRow(EnsembleModelOptionsParameter.gfs_seamless, 40.7128, -74.0060)] // New York
     [DataRow(EnsembleModelOptionsParameter.gfs025, 40.7128, -74.0060)] // New York
     [DataRow(EnsembleModelOptionsParameter.gfs05, 40.7128, -74.0060)] // New York
+    [DataRow(EnsembleModelOptionsParameter.ncep_aigefs025, 40.7128, -74.0060)] // New York
     [DataRow(EnsembleModelOptionsParameter.ecmwf_ifs025, 48.8566, 2.3522)] // Paris
     [DataRow(EnsembleModelOptionsParameter.ecmwf_aifs025, 48.8566, 2.3522)] // Paris
     [DataRow(EnsembleModelOptionsParameter.gem_global, 45.4215, -75.6997)] // Ottawa

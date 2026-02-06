@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenMeteo;
@@ -12,7 +12,6 @@ namespace OpenMeteoTests.Weather.Forecast
     public class WeatherForecastApiTests
     {
         [TestMethod]
-        [Ignore] // Ignored to reduce the number of API calls during testing
         public async Task Only_Location_Name_Test()
         {
             OpenMeteoClient client = new();
@@ -25,7 +24,6 @@ namespace OpenMeteoTests.Weather.Forecast
         }
 
         [TestMethod]
-        [Ignore] // Ignored to reduce the number of API calls during testing
         public async Task Latitude_Longitude_Test()
         {
             OpenMeteoClient client = new();
@@ -41,7 +39,6 @@ namespace OpenMeteoTests.Weather.Forecast
         }
 
         [TestMethod]
-        [Ignore] // Ignored to reduce the number of API calls during testing
         public async Task GeocodingOptions_Test()
         {
             OpenMeteoClient client = new();
@@ -54,7 +51,6 @@ namespace OpenMeteoTests.Weather.Forecast
         }
 
         [TestMethod]
-        [Ignore] // Ignored to reduce the number of API calls during testing
         public async Task WeatherForecast_With_WeatherForecastOptions_Test()
         {
             OpenMeteoClient client = new();
@@ -127,7 +123,6 @@ namespace OpenMeteoTests.Weather.Forecast
         }
 
         [TestMethod]
-        [Ignore]
         public async Task FlatBuffers_ComplexOptions_Returns_WeatherForecast()
         {
             var client = new OpenMeteoClient() { UseFlatbuffers = true };
@@ -152,7 +147,6 @@ namespace OpenMeteoTests.Weather.Forecast
         }
 
         [TestMethod]
-        [Ignore]
         public async Task FlatBuffers_ComplexOptions_WithTimeZone_Returns_WeatherForecast()
         {
             var client = new OpenMeteoClient() { UseFlatbuffers = true };
@@ -175,6 +169,46 @@ namespace OpenMeteoTests.Weather.Forecast
             Assert.IsNotNull(result.Daily);
             Assert.IsNotNull(result.Current);
             Assert.IsNotNull(result.Minutely15);
+        }
+
+        [DataTestMethod]
+        [DataRow(WeatherModelOptionsParameter.best_match, 52.52, 13.405)]
+        [DataRow(WeatherModelOptionsParameter.ecmwf_ifs, 48.8566, 2.3522)] // Paris
+        [DataRow(WeatherModelOptionsParameter.ecmwf_ifs025, 48.8566, 2.3522)] // Paris
+        [DataRow(WeatherModelOptionsParameter.icon_global, 52.52, 13.405)] // Berlin
+        [DataRow(WeatherModelOptionsParameter.icon_eu, 52.52, 13.405)] // Berlin
+        [DataRow(WeatherModelOptionsParameter.icon_d2, 51.5074, -0.1278)] // London
+        [DataRow(WeatherModelOptionsParameter.gfs_seamless, 40.7128, -74.0060)] // New York
+        [DataRow(WeatherModelOptionsParameter.gfs_global, 40.7128, -74.0060)] // New York
+        [DataRow(WeatherModelOptionsParameter.gfs_graphcast025, 52.52, 13.405)] // Berlin
+        [DataRow(WeatherModelOptionsParameter.gem_global, 45.4215, -75.6997)] // Ottawa
+        [DataRow(WeatherModelOptionsParameter.metno_nordic, 59.9139, 10.7522)] // Oslo
+        [DataRow(WeatherModelOptionsParameter.jma_gsm, 35.6762, 139.6503)] // Tokyo
+        [DataRow(WeatherModelOptionsParameter.bom_access_global, -33.8688, 151.2093)] // Sydney
+        [DataRow(WeatherModelOptionsParameter.ukmo_global_deterministic_10km, 51.5074, -0.1278)] // London
+        [DataRow(WeatherModelOptionsParameter.ncep_aigfs025, 40.7128, -74.0060)] // New York
+        [DataRow(WeatherModelOptionsParameter.ncep_hgefs025_ensemble_mean, 40.7128, -74.0060)] // New York
+        [DataRow(WeatherModelOptionsParameter.ncep_nam_conus, 40.7128, -74.0060)] // New York
+        public async Task QueryWeatherApiAsync_WithModel_ReturnsWeatherForecast(WeatherModelOptionsParameter model, double lat, double lon)
+        {
+            var client = new OpenMeteoClient();
+            var options = new WeatherForecastOptions
+            {
+                Latitude = (float)lat,
+                Longitude = (float)lon,
+                Hourly = new HourlyOptions([
+                    HourlyOptionsParameter.temperature_2m,
+                    HourlyOptionsParameter.precipitation
+                ]),
+                Models = new WeatherModelOptions(model)
+            };
+            
+            var result = await client.QueryWeatherApiAsync(options);
+            
+            Assert.IsNotNull(result);
+            Assert.AreEqual((float)lat, result.Latitude, 0.5f);
+            Assert.AreEqual((float)lon, result.Longitude, 0.5f);
+            Assert.IsNotNull(result.Hourly);
         }
     }
 }

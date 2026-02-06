@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -112,5 +112,6 @@ public enum EnsembleModelOptionsParameter
     ukmo_global_ensemble_20km,
     ukmo_uk_ensemble_2km,
     meteoswiss_icon_ch1,
-    meteoswiss_icon_ch2
+    meteoswiss_icon_ch2,
+    ncep_aigefs025
 }

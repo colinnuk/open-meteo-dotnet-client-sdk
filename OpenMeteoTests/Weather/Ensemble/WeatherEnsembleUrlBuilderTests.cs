@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenMeteo.Weather.Ensemble;
 using OpenMeteo.Weather.Ensemble.Options;
