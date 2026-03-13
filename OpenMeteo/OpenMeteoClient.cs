@@ -51,12 +51,36 @@ namespace OpenMeteo
         }
 
         /// <summary>
+        /// Creates a new <seealso cref="OpenMeteoClient"/> object to connect to the public OpenMeteo API using a custom <see cref="HttpClient"/>
+        /// </summary>
+        /// <param name="httpClient">A pre-configured <see cref="HttpClient"/> instance</param>
+        public OpenMeteoClient(HttpClient httpClient)
+        {
+            httpController = new HttpController(httpClient);
+            _weatherForecastParser = new WeatherForecastResponseParser(_jsonSerializerOptions);
+            _weatherEnsembleParser = new WeatherEnsembleResponseParser(_jsonSerializerOptions);
+        }
+
+        /// <summary>
         /// Creates a new <seealso cref="OpenMeteoClient"/> object with an API key
         /// </summary>
         /// <param name="apiKey">The API key to use the customer OpenMeteo URLs such as https://customer-api.open-meteo.com</param>
         public OpenMeteoClient(string apiKey)
         {
             httpController = new HttpController();
+            _apiKey = apiKey;
+            _weatherForecastParser = new WeatherForecastResponseParser(_jsonSerializerOptions);
+            _weatherEnsembleParser = new WeatherEnsembleResponseParser(_jsonSerializerOptions);
+        }
+
+        /// <summary>
+        /// Creates a new <seealso cref="OpenMeteoClient"/> object with an API key using a custom <see cref="HttpClient"/>
+        /// </summary>
+        /// <param name="apiKey">The API key to use the customer OpenMeteo URLs such as https://customer-api.open-meteo.com</param>
+        /// <param name="httpClient">A pre-configured <see cref="HttpClient"/> instance</param>
+        public OpenMeteoClient(string apiKey, HttpClient httpClient)
+        {
+            httpController = new HttpController(httpClient);
             _apiKey = apiKey;
             _weatherForecastParser = new WeatherForecastResponseParser(_jsonSerializerOptions);
             _weatherEnsembleParser = new WeatherEnsembleResponseParser(_jsonSerializerOptions);
@@ -77,12 +101,40 @@ namespace OpenMeteo
         }
 
         /// <summary>
+        /// Creates a new <seealso cref="OpenMeteoClient"/> object with an API key and a custom base URL to connect to your own instance of OpenMeteo API using a custom <see cref="HttpClient"/>
+        /// </summary>
+        /// <param name="apiKey">API key</param>
+        /// <param name="customBaseUri">Custom base Uri for the OpenMeteo API</param>
+        /// <param name="httpClient">A pre-configured <see cref="HttpClient"/> instance</param>
+        public OpenMeteoClient(string apiKey, Uri customBaseUri, HttpClient httpClient)
+        {
+            httpController = new HttpController(httpClient);
+            _apiKey = apiKey;
+            _customBaseUri = customBaseUri;
+            _weatherForecastParser = new WeatherForecastResponseParser(_jsonSerializerOptions);
+            _weatherEnsembleParser = new WeatherEnsembleResponseParser(_jsonSerializerOptions);
+        }
+
+        /// <summary>
         /// Creates a new <seealso cref="OpenMeteoClient"/> object with a custom base URL to connect to your own instance of OpenMeteo API
         /// </summary>
         /// <param name="customBaseUri">Custom base Uri for the OpenMeteo API</param>
         public OpenMeteoClient(Uri customBaseUri)
         {
             httpController = new HttpController();
+            _customBaseUri = customBaseUri;
+            _weatherForecastParser = new WeatherForecastResponseParser(_jsonSerializerOptions);
+            _weatherEnsembleParser = new WeatherEnsembleResponseParser(_jsonSerializerOptions);
+        }
+
+        /// <summary>
+        /// Creates a new <seealso cref="OpenMeteoClient"/> object with a custom base URL to connect to your own instance of OpenMeteo API using a custom <see cref="HttpClient"/>
+        /// </summary>
+        /// <param name="customBaseUri">Custom base Uri for the OpenMeteo API</param>
+        /// <param name="httpClient">A pre-configured <see cref="HttpClient"/> instance</param>
+        public OpenMeteoClient(Uri customBaseUri, HttpClient httpClient)
+        {
+            httpController = new HttpController(httpClient);
             _customBaseUri = customBaseUri;
             _weatherForecastParser = new WeatherForecastResponseParser(_jsonSerializerOptions);
             _weatherEnsembleParser = new WeatherEnsembleResponseParser(_jsonSerializerOptions);
