@@ -16,9 +16,9 @@ public static partial class CrsWktParser
             return null;
 
         return new BoundingBox(
-            double.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture),
-            double.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture),
-            double.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture),
-            double.Parse(match.Groups[4].Value, CultureInfo.InvariantCulture));
+            decimal.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture),
+            decimal.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture),
+            decimal.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture),
+            decimal.Parse(match.Groups[4].Value, CultureInfo.InvariantCulture));
     }
 }

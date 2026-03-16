@@ -25,10 +25,10 @@ public class CrsWktParserTests
         var result = CrsWktParser.ParseBoundingBox(wkt);
 
         Assert.IsNotNull(result);
-        Assert.AreEqual(-90.0, result.South);
-        Assert.AreEqual(-180.0, result.West);
-        Assert.AreEqual(90.0, result.North);
-        Assert.AreEqual(179.75, result.East);
+        Assert.AreEqual(-90.0m, result.South);
+        Assert.AreEqual(-180.0m, result.West);
+        Assert.AreEqual(90.0m, result.North);
+        Assert.AreEqual(179.75m, result.East);
     }
 
     [TestMethod]
@@ -56,10 +56,10 @@ public class CrsWktParserTests
         var result = CrsWktParser.ParseBoundingBox(wkt);
 
         Assert.IsNotNull(result);
-        Assert.AreEqual(45.92686, result.South);
-        Assert.AreEqual(-126.25641, result.West);
-        Assert.AreEqual(60.2894, result.North);
-        Assert.AreEqual(-114.45587, result.East);
+        Assert.AreEqual(45.92686m, result.South);
+        Assert.AreEqual(-126.25641m, result.West);
+        Assert.AreEqual(60.2894m, result.North);
+        Assert.AreEqual(-114.45587m, result.East);
     }
 
     [TestMethod]
@@ -89,10 +89,10 @@ public class CrsWktParserTests
         var result = CrsWktParser.ParseBoundingBox(wkt);
 
         Assert.IsNotNull(result);
-        Assert.AreEqual(18.145027, result.South);
-        Assert.AreEqual(-142.89252, result.West);
-        Assert.AreEqual(45.40545, result.North);
-        Assert.AreEqual(-10.174438, result.East);
+        Assert.AreEqual(18.145027m, result.South);
+        Assert.AreEqual(-142.89252m, result.West);
+        Assert.AreEqual(45.40545m, result.North);
+        Assert.AreEqual(-10.174438m, result.East);
     }
 
     [TestMethod]

@@ -1,8 +1,8 @@
 namespace OpenMeteo.Weather.Metadata;
 
 public record BoundingBox(
-    double South,
-    double West,
-    double North,
-    double East
+    decimal South,
+    decimal West,
+    decimal North,
+    decimal East
 );
