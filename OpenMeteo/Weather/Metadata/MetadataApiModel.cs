@@ -8,5 +8,6 @@ public record MetadataApiModel
     public long last_run_modification_time { get; init; }
     public int temporal_resolution_seconds { get; init; }
     public int update_interval_seconds { get; init; }
+    public string crs_wkt { get; init; } = string.Empty;
 }
 
