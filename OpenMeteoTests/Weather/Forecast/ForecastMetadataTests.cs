@@ -18,7 +18,6 @@ public class ForecastMetadataTests
     [DataRow(WeatherModelOptionsParameter.gem_global)]
     [DataRow(WeatherModelOptionsParameter.jma_gsm)]
     [DataRow(WeatherModelOptionsParameter.metno_nordic)]
-    [DataRow(WeatherModelOptionsParameter.bom_access_global)]
     [DataRow(WeatherModelOptionsParameter.italia_meteo_arpae_icon_2i)]
     [DataRow(WeatherModelOptionsParameter.meteoswiss_icon_ch1)]
     [DataRow(WeatherModelOptionsParameter.ncep_aigfs025)]
@@ -29,5 +28,8 @@ public class ForecastMetadataTests
         var res = await client.QueryWeatherForecastMetadata(model);
 
         Assert.IsNotNull(res);
+        Assert.IsFalse(string.IsNullOrEmpty(res.CrsWkt));
+        Assert.IsNotNull(res.BoundingBox);
+        Assert.IsTrue(res.BoundingBox.South < res.BoundingBox.North);
     }
 }

@@ -25,5 +25,8 @@ public class EnsembleMetadataTests
         Assert.IsNotNull(res);
         Assert.IsTrue(res.TemporalResolutionSeconds > 0);
         Assert.IsTrue(res.UpdateIntervalSeconds > 0);
+        Assert.IsFalse(string.IsNullOrEmpty(res.CrsWkt));
+        Assert.IsNotNull(res.BoundingBox);
+        Assert.IsTrue(res.BoundingBox.South < res.BoundingBox.North);
     }
 }
