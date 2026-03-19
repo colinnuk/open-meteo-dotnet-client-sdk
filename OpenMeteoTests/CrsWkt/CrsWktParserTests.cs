@@ -1,7 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OpenMeteo.Helpers;
+using OpenMeteo.CrsWkt;
 
-namespace OpenMeteoTests.Helpers;
+namespace OpenMeteoTests.CrsWkt;
 
 [TestClass]
 public class CrsWktParserTests
