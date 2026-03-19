@@ -355,8 +355,7 @@ namespace OpenMeteo
             DateTimeOffset.FromUnixTimeSeconds(apiModel.last_run_modification_time).UtcDateTime,
             apiModel.temporal_resolution_seconds,
             apiModel.update_interval_seconds,
-            apiModel.crs_wkt,
-            CrsWktParser.ParseBoundingBox(apiModel.crs_wkt));
+            apiModel.crs_wkt);
 
         private async Task<AirQualityResponse?> GetAirQualityAsync(AirQualityOptions options)
         {

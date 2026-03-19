@@ -7,6 +7,8 @@ namespace OpenMeteoTests.CrsWkt;
 [TestClass]
 public class RegularGridTests
 {
+    private readonly CrsWktParser _parser = new();
+
     private const string Wgs84Wkt = """
         GEOGCRS["WGS 84",
             DATUM["World Geodetic System 1984",
@@ -44,7 +46,7 @@ public class RegularGridTests
     [TestMethod]
     public void Constructor_GeographicCrs_SetsShapeCorrectly()
     {
-        var grid = new RegularGrid(Wgs84Wkt, (721, 1440));
+        var grid = new RegularGrid(_parser, Wgs84Wkt, (721, 1440));
 
         Assert.AreEqual((721, 1440), grid.Shape);
     }
@@ -52,13 +54,13 @@ public class RegularGridTests
     [TestMethod]
     public void Constructor_InvalidShape_Throws()
     {
-        Assert.ThrowsException<ArgumentException>(() => new RegularGrid(Wgs84Wkt, (1, 1)));
+        Assert.ThrowsException<ArgumentException>(() => new RegularGrid(_parser, Wgs84Wkt, (1, 1)));
     }
 
     [TestMethod]
     public void GetCoordinates_GeographicCrs_Origin_ReturnsSouthWest()
     {
-        var grid = new RegularGrid(Wgs84Wkt, (721, 1441));
+        var grid = new RegularGrid(_parser, Wgs84Wkt, (721, 1441));
 
         var origin = grid.GetCoordinates(0, 0);
 
@@ -69,7 +71,7 @@ public class RegularGridTests
     [TestMethod]
     public void GetCoordinates_GeographicCrs_LastPoint_ReturnsNorthEast()
     {
-        var grid = new RegularGrid(Wgs84Wkt, (721, 1441));
+        var grid = new RegularGrid(_parser, Wgs84Wkt, (721, 1441));
 
         var last = grid.GetCoordinates(1440, 720);
 
@@ -80,7 +82,7 @@ public class RegularGridTests
     [TestMethod]
     public void FindPointXY_GeographicCrs_CenterPoint_ReturnsCorrectIndices()
     {
-        var grid = new RegularGrid(Wgs84Wkt, (721, 1441));
+        var grid = new RegularGrid(_parser, Wgs84Wkt, (721, 1441));
 
         var idx = grid.FindPointXY(0.0, 0.0);
 
@@ -92,7 +94,7 @@ public class RegularGridTests
     [TestMethod]
     public void FindPointXY_GeographicCrs_OutOfBounds_ReturnsNull()
     {
-        var grid = new RegularGrid(Wgs84Wkt, (721, 1441));
+        var grid = new RegularGrid(_parser, Wgs84Wkt, (721, 1441));
 
         var idx = grid.FindPointXY(95.0, 0.0);
 
@@ -102,7 +104,7 @@ public class RegularGridTests
     [TestMethod]
     public void Latitude_GeographicCrs_HasCorrectShape()
     {
-        var grid = new RegularGrid(Wgs84Wkt, (3, 5));
+        var grid = new RegularGrid(_parser, Wgs84Wkt, (3, 5));
 
         var lats = grid.Latitude;
 
@@ -113,7 +115,7 @@ public class RegularGridTests
     [TestMethod]
     public void Longitude_GeographicCrs_HasCorrectShape()
     {
-        var grid = new RegularGrid(Wgs84Wkt, (3, 5));
+        var grid = new RegularGrid(_parser, Wgs84Wkt, (3, 5));
 
         var lons = grid.Longitude;
 
@@ -124,7 +126,7 @@ public class RegularGridTests
     [TestMethod]
     public void Constructor_StereographicCrs_SetsShapeCorrectly()
     {
-        var grid = new RegularGrid(StereographicWkt, (10, 20));
+        var grid = new RegularGrid(_parser, StereographicWkt, (10, 20));
 
         Assert.AreEqual((10, 20), grid.Shape);
     }
@@ -132,7 +134,7 @@ public class RegularGridTests
     [TestMethod]
     public void FindPointXY_StereographicCrs_PointInBounds_ReturnsIndex()
     {
-        var grid = new RegularGrid(StereographicWkt, (100, 200));
+        var grid = new RegularGrid(_parser, StereographicWkt, (100, 200));
 
         var idx = grid.FindPointXY(30.0, -80.0);
 
@@ -144,7 +146,7 @@ public class RegularGridTests
     [TestMethod]
     public void GetCoordinates_StereographicCrs_RoundTrip()
     {
-        var grid = new RegularGrid(StereographicWkt, (100, 200));
+        var grid = new RegularGrid(_parser, StereographicWkt, (100, 200));
 
         var idx = grid.FindPointXY(30.0, -80.0);
         Assert.IsNotNull(idx);

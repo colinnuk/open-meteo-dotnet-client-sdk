@@ -6,8 +6,10 @@ namespace OpenMeteoTests.CrsWkt;
 [TestClass]
 public class CrsWktParserTests
 {
+    private readonly CrsWktParser _parser = new();
+
     [TestMethod]
-    public void ParseBoundingBox_RegularGeographic_ReturnsCorrectBbox()
+    public void ParseAreaOfUse_RegularGeographic_ReturnsCorrectBounds()
     {
         const string wkt = """
             GEOGCRS["WGS 84",
@@ -22,17 +24,17 @@ public class CrsWktParserTests
                     BBOX[-90.0,-180.0,90.0,179.75]]]
             """;
 
-        var result = CrsWktParser.ParseBoundingBox(wkt);
+        var result = _parser.ParseAreaOfUse(wkt);
 
         Assert.IsNotNull(result);
-        Assert.AreEqual(-90.0m, result.South);
-        Assert.AreEqual(-180.0m, result.West);
-        Assert.AreEqual(90.0m, result.North);
-        Assert.AreEqual(179.75m, result.East);
+        Assert.AreEqual(-90.0, result.Value.South);
+        Assert.AreEqual(-180.0, result.Value.West);
+        Assert.AreEqual(90.0, result.Value.North);
+        Assert.AreEqual(179.75, result.Value.East);
     }
 
     [TestMethod]
-    public void ParseBoundingBox_RotatedLatLon_ReturnsCorrectBbox()
+    public void ParseAreaOfUse_RotatedLatLon_ReturnsCorrectBounds()
     {
         const string wkt = """
             GEOGCRS["Rotated Lat/Lon",
@@ -53,17 +55,17 @@ public class CrsWktParserTests
                     BBOX[45.92686,-126.25641,60.2894,-114.45587]]]
             """;
 
-        var result = CrsWktParser.ParseBoundingBox(wkt);
+        var result = _parser.ParseAreaOfUse(wkt);
 
         Assert.IsNotNull(result);
-        Assert.AreEqual(45.92686m, result.South);
-        Assert.AreEqual(-126.25641m, result.West);
-        Assert.AreEqual(60.2894m, result.North);
-        Assert.AreEqual(-114.45587m, result.East);
+        Assert.AreEqual(45.92686, result.Value.South, 1e-6);
+        Assert.AreEqual(-126.25641, result.Value.West, 1e-6);
+        Assert.AreEqual(60.2894, result.Value.North, 1e-6);
+        Assert.AreEqual(-114.45587, result.Value.East, 1e-6);
     }
 
     [TestMethod]
-    public void ParseBoundingBox_Stereographic_ReturnsCorrectBbox()
+    public void ParseAreaOfUse_Stereographic_ReturnsCorrectBounds()
     {
         const string wkt = """
             PROJCRS["Stereographic",
@@ -86,29 +88,29 @@ public class CrsWktParserTests
                     BBOX[18.145027,-142.89252,45.40545,-10.174438]]]
             """;
 
-        var result = CrsWktParser.ParseBoundingBox(wkt);
+        var result = _parser.ParseAreaOfUse(wkt);
 
         Assert.IsNotNull(result);
-        Assert.AreEqual(18.145027m, result.South);
-        Assert.AreEqual(-142.89252m, result.West);
-        Assert.AreEqual(45.40545m, result.North);
-        Assert.AreEqual(-10.174438m, result.East);
+        Assert.AreEqual(18.145027, result.Value.South, 1e-6);
+        Assert.AreEqual(-142.89252, result.Value.West, 1e-6);
+        Assert.AreEqual(45.40545, result.Value.North, 1e-6);
+        Assert.AreEqual(-10.174438, result.Value.East, 1e-6);
     }
 
     [TestMethod]
-    public void ParseBoundingBox_EmptyString_ReturnsNull()
+    public void ParseAreaOfUse_EmptyString_ReturnsNull()
     {
-        var result = CrsWktParser.ParseBoundingBox(string.Empty);
+        var result = _parser.ParseAreaOfUse(string.Empty);
 
         Assert.IsNull(result);
     }
 
     [TestMethod]
-    public void ParseBoundingBox_NoBboxPresent_ReturnsNull()
+    public void ParseAreaOfUse_NoBboxPresent_ReturnsNull()
     {
         const string wkt = """GEOGCRS["WGS 84", DATUM["World Geodetic System 1984"]]""";
 
-        var result = CrsWktParser.ParseBoundingBox(wkt);
+        var result = _parser.ParseAreaOfUse(wkt);
 
         Assert.IsNull(result);
     }

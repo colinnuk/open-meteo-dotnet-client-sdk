@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using OpenMeteo.Weather.Metadata;
 using ProjNet.CoordinateSystems;
 
 namespace OpenMeteo.CrsWkt;
@@ -11,19 +10,23 @@ namespace OpenMeteo.CrsWkt;
 /// Parses OGC WKT2 coordinate reference system strings as used by the Open-Meteo API,
 /// and builds ProjNet <see cref="CoordinateSystem"/> objects for coordinate transformations.
 /// </summary>
-public static partial class CrsWktParser
+public class CrsWktParser : ICrsWktParser
 {
-    [GeneratedRegex(@"BBOX\[(-?[\d.]+),\s*(-?[\d.]+),\s*(-?[\d.]+),\s*(-?[\d.]+)\]", RegexOptions.IgnoreCase)]
-    private static partial Regex BboxRegex();
+    private static readonly Regex AreaOfUseRegex = new(
+        @"BBOX\[(-?[\d.]+),\s*(-?[\d.]+),\s*(-?[\d.]+),\s*(-?[\d.]+)\]",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
-    [GeneratedRegex(@"ELLIPSOID\[""([^""]+)"",\s*([\d.]+),\s*([\d.]+)", RegexOptions.IgnoreCase)]
-    private static partial Regex EllipsoidRegex();
+    private static readonly Regex EllipsoidRegex = new(
+        @"ELLIPSOID\[""([^""]+)"",\s*([\d.]+),\s*([\d.]+)",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
-    [GeneratedRegex(@"METHOD\[""([^""]+)""\]", RegexOptions.IgnoreCase)]
-    private static partial Regex MethodRegex();
+    private static readonly Regex MethodRegex = new(
+        @"METHOD\[""([^""]+)""\]",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
-    [GeneratedRegex(@"PARAMETER\[""([^""]+)"",\s*(-?[\d.]+)\]", RegexOptions.IgnoreCase)]
-    private static partial Regex ParameterRegex();
+    private static readonly Regex ParameterRegex = new(
+        @"PARAMETER\[""([^""]+)"",\s*(-?[\d.]+)\]",
+        RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
     private static readonly Dictionary<string, string> Wkt2ToProjNetParameterNames = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -51,31 +54,32 @@ public static partial class CrsWktParser
         ["Albers Equal Area"] = "Albers",
     };
 
-    public static BoundingBox? ParseBoundingBox(string wkt)
+    /// <inheritdoc />
+    public (double West, double South, double East, double North)? ParseAreaOfUse(string wkt)
     {
-        var match = BboxRegex().Match(wkt);
+        var match = AreaOfUseRegex.Match(wkt);
         if (!match.Success)
             return null;
 
-        return new BoundingBox(
-            decimal.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture),
-            decimal.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture),
-            decimal.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture),
-            decimal.Parse(match.Groups[4].Value, CultureInfo.InvariantCulture));
+        return (
+            double.Parse(match.Groups[2].Value, CultureInfo.InvariantCulture),
+            double.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture),
+            double.Parse(match.Groups[4].Value, CultureInfo.InvariantCulture),
+            double.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture));
     }
 
     /// <summary>
     /// Checks whether the WKT string represents a Gaussian grid
     /// (reduced or regular).
     /// </summary>
-    public static bool IsGaussianGrid(string wkt) =>
+    public bool IsGaussianGrid(string wkt) =>
         wkt.Contains("Reduced Gaussian Grid", StringComparison.OrdinalIgnoreCase) ||
         wkt.Contains("Gaussian Grid", StringComparison.OrdinalIgnoreCase);
 
     /// <summary>
     /// Checks whether the WKT string defines a projected CRS (PROJCRS).
     /// </summary>
-    public static bool IsProjectedCrs(string wkt) =>
+    public bool IsProjectedCrs(string wkt) =>
         wkt.TrimStart().StartsWith("PROJCRS", StringComparison.OrdinalIgnoreCase);
 
     /// <summary>
@@ -83,14 +87,14 @@ public static partial class CrsWktParser
     /// Returns a <see cref="ProjectedCoordinateSystem"/> for PROJCRS, or a
     /// <see cref="GeographicCoordinateSystem"/> for GEOGCRS.
     /// </summary>
-    public static CoordinateSystem? ParseCoordinateSystem(string wkt)
+    public CoordinateSystem? ParseCoordinateSystem(string wkt)
     {
         if (string.IsNullOrWhiteSpace(wkt))
             return null;
 
         var csFactory = new CoordinateSystemFactory();
 
-        var ellipsoidMatch = EllipsoidRegex().Match(wkt);
+        var ellipsoidMatch = EllipsoidRegex.Match(wkt);
         if (!ellipsoidMatch.Success)
             return null;
 
@@ -108,14 +112,14 @@ public static partial class CrsWktParser
         if (!IsProjectedCrs(wkt))
             return gcs;
 
-        var methodMatch = MethodRegex().Match(wkt);
+        var methodMatch = MethodRegex.Match(wkt);
         if (!methodMatch.Success)
             return gcs;
 
         var wkt2MethodName = methodMatch.Groups[1].Value;
 
         var parameters = new List<ProjectionParameter>();
-        foreach (Match paramMatch in ParameterRegex().Matches(wkt))
+        foreach (Match paramMatch in ParameterRegex.Matches(wkt))
         {
             var wkt2Name = paramMatch.Groups[1].Value;
             var value = double.Parse(paramMatch.Groups[2].Value, CultureInfo.InvariantCulture);

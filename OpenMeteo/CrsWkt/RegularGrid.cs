@@ -10,9 +10,8 @@ namespace OpenMeteo.CrsWkt;
 /// </summary>
 public class RegularGrid : IOmGrid
 {
-    private readonly MathTransform? _toProjection;
-    private readonly MathTransform? _toWgs84;
-    private readonly bool _isProjected;
+    private readonly MathTransform _toProjection;
+    private readonly MathTransform _toWgs84;
     private readonly double _xMin;
     private readonly double _yMin;
     private readonly double _xMax;
@@ -25,7 +24,7 @@ public class RegularGrid : IOmGrid
     private double[,]? _latitude;
     private double[,]? _longitude;
 
-    public RegularGrid(string crsWkt, (int Ny, int Nx) shape)
+    public RegularGrid(ICrsWktParser parser, string crsWkt, (int Ny, int Nx) shape)
     {
         _ny = shape.Ny;
         _nx = shape.Nx;
@@ -33,38 +32,26 @@ public class RegularGrid : IOmGrid
         if (_nx <= 1 || _ny <= 1)
             throw new ArgumentException("Invalid grid shape");
 
-        var bbox = CrsWktParser.ParseBoundingBox(crsWkt)
-            ?? throw new ArgumentException("WKT does not contain BBOX");
+        var crs = parser.ParseCoordinateSystem(crsWkt)
+            ?? throw new ArgumentException("Unable to parse CRS from WKT");
 
-        _isProjected = CrsWktParser.IsProjectedCrs(crsWkt);
+        var areaOfUse = parser.ParseAreaOfUse(crsWkt)
+            ?? throw new ArgumentException("CRS does not have an area of use defined");
 
-        if (_isProjected)
-        {
-            var crs = CrsWktParser.ParseCoordinateSystem(crsWkt)
-                ?? throw new ArgumentException("Unable to parse projected CRS from WKT");
+        var wgs84 = GeographicCoordinateSystem.WGS84;
+        var ctFactory = new CoordinateTransformationFactory();
 
-            var wgs84 = GeographicCoordinateSystem.WGS84;
-            var ctFactory = new CoordinateTransformationFactory();
+        _toProjection = ctFactory.CreateFromCoordinateSystems(wgs84, crs).MathTransform;
+        _toWgs84 = ctFactory.CreateFromCoordinateSystems(crs, wgs84).MathTransform;
 
-            _toProjection = ctFactory.CreateFromCoordinateSystems(wgs84, crs).MathTransform;
-            _toWgs84 = ctFactory.CreateFromCoordinateSystems(crs, wgs84).MathTransform;
+        // Transform WGS84 bounds to CRS space (matches Python: to_projection.transform(area.west, area.south))
+        var (pxMin, pyMin) = _toProjection.Transform(areaOfUse.West, areaOfUse.South);
+        var (pxMax, pyMax) = _toProjection.Transform(areaOfUse.East, areaOfUse.North);
 
-            var (pxMin, pyMin) = _toProjection.Transform((double)bbox.West, (double)bbox.South);
-            var (pxMax, pyMax) = _toProjection.Transform((double)bbox.East, (double)bbox.North);
-
-            _xMin = pxMin;
-            _yMin = pyMin;
-            _xMax = pxMax;
-            _yMax = pyMax;
-        }
-        else
-        {
-            // Geographic CRS – coordinates are in (lon, lat) = (x, y) convention
-            _xMin = (double)bbox.West;
-            _yMin = (double)bbox.South;
-            _xMax = (double)bbox.East;
-            _yMax = (double)bbox.North;
-        }
+        _xMin = pxMin;
+        _yMin = pyMin;
+        _xMax = pxMax;
+        _yMax = pyMax;
 
         _dx = (_xMax - _xMin) / (_nx - 1);
         _dy = (_yMax - _yMin) / (_ny - 1);
@@ -107,17 +94,9 @@ public class RegularGrid : IOmGrid
                 double xProj = _xMin + x * _dx;
                 double yProj = _yMin + y * _dy;
 
-                if (_isProjected && _toWgs84 is not null)
-                {
-                    var (lon, lat) = _toWgs84.Transform(xProj, yProj);
-                    lons[y, x] = lon;
-                    lats[y, x] = lat;
-                }
-                else
-                {
-                    lons[y, x] = xProj;
-                    lats[y, x] = yProj;
-                }
+                var (lon, lat) = _toWgs84.Transform(xProj, yProj);
+                lons[y, x] = lon;
+                lats[y, x] = lat;
             }
         }
 
@@ -128,17 +107,7 @@ public class RegularGrid : IOmGrid
     /// <inheritdoc />
     public XYIndex? FindPointXY(double lat, double lon)
     {
-        double xProj, yProj;
-
-        if (_isProjected && _toProjection is not null)
-        {
-            (xProj, yProj) = _toProjection.Transform(lon, lat);
-        }
-        else
-        {
-            xProj = lon;
-            yProj = lat;
-        }
+        var (xProj, yProj) = _toProjection.Transform(lon, lat);
 
         int xIdx = (int)Math.Round((xProj - _xMin) / _dx);
         int yIdx = (int)Math.Round((yProj - _yMin) / _dy);
@@ -155,12 +124,7 @@ public class RegularGrid : IOmGrid
         double xProj = _xMin + x * _dx;
         double yProj = _yMin + y * _dy;
 
-        if (_isProjected && _toWgs84 is not null)
-        {
-            var (lon, lat) = _toWgs84.Transform(xProj, yProj);
-            return new LatLon(lat, lon);
-        }
-
-        return new LatLon(yProj, xProj);
+        var (lon, lat) = _toWgs84.Transform(xProj, yProj);
+        return new LatLon(lat, lon);
     }
 }

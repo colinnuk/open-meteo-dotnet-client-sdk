@@ -7,6 +7,8 @@ namespace OpenMeteoTests.CrsWkt;
 [TestClass]
 public class OmGridTests
 {
+    private readonly CrsWktParser _parser = new();
+
     private const string Wgs84Wkt = """
         GEOGCRS["WGS 84",
             DATUM["World Geodetic System 1984",
@@ -34,7 +36,7 @@ public class OmGridTests
     [TestMethod]
     public void Constructor_RegularGrid_IsNotGaussian()
     {
-        var grid = new OmGrid(Wgs84Wkt, (721, 1441));
+        var grid = new OmGrid(_parser, Wgs84Wkt, (721, 1441));
 
         Assert.IsFalse(grid.IsGaussian);
     }
@@ -43,7 +45,7 @@ public class OmGridTests
     public void Constructor_GaussianGrid_IsGaussian()
     {
         int o320Points = 4 * 320 * (320 + 9);
-        var grid = new OmGrid(GaussianWkt, (1, o320Points));
+        var grid = new OmGrid(_parser, GaussianWkt, (1, o320Points));
 
         Assert.IsTrue(grid.IsGaussian);
     }
@@ -51,19 +53,19 @@ public class OmGridTests
     [TestMethod]
     public void IsGaussianGrid_RegularWkt_ReturnsFalse()
     {
-        Assert.IsFalse(CrsWktParser.IsGaussianGrid(Wgs84Wkt));
+        Assert.IsFalse(_parser.IsGaussianGrid(Wgs84Wkt));
     }
 
     [TestMethod]
     public void IsGaussianGrid_GaussianWkt_ReturnsTrue()
     {
-        Assert.IsTrue(CrsWktParser.IsGaussianGrid(GaussianWkt));
+        Assert.IsTrue(_parser.IsGaussianGrid(GaussianWkt));
     }
 
     [TestMethod]
     public void IsProjectedCrs_GeographicWkt_ReturnsFalse()
     {
-        Assert.IsFalse(CrsWktParser.IsProjectedCrs(Wgs84Wkt));
+        Assert.IsFalse(_parser.IsProjectedCrs(Wgs84Wkt));
     }
 
     [TestMethod]
@@ -90,13 +92,13 @@ public class OmGridTests
                     BBOX[18.145027,-142.89252,45.40545,-10.174438]]]
             """;
 
-        Assert.IsTrue(CrsWktParser.IsProjectedCrs(projectedWkt));
+        Assert.IsTrue(_parser.IsProjectedCrs(projectedWkt));
     }
 
     [TestMethod]
     public void ParseCoordinateSystem_GeographicWkt_ReturnsGeographicCrs()
     {
-        var crs = CrsWktParser.ParseCoordinateSystem(Wgs84Wkt);
+        var crs = _parser.ParseCoordinateSystem(Wgs84Wkt);
 
         Assert.IsNotNull(crs);
         Assert.IsInstanceOfType(crs,
@@ -127,7 +129,7 @@ public class OmGridTests
                     BBOX[18.145027,-142.89252,45.40545,-10.174438]]]
             """;
 
-        var crs = CrsWktParser.ParseCoordinateSystem(projectedWkt);
+        var crs = _parser.ParseCoordinateSystem(projectedWkt);
 
         Assert.IsNotNull(crs);
         Assert.IsInstanceOfType(crs,
@@ -137,7 +139,7 @@ public class OmGridTests
     [TestMethod]
     public void ParseCoordinateSystem_EmptyString_ReturnsNull()
     {
-        var crs = CrsWktParser.ParseCoordinateSystem(string.Empty);
+        var crs = _parser.ParseCoordinateSystem(string.Empty);
 
         Assert.IsNull(crs);
     }
@@ -145,7 +147,7 @@ public class OmGridTests
     [TestMethod]
     public void GetMeshgrid_ReturnsCoordinateArrays()
     {
-        var grid = new OmGrid(Wgs84Wkt, (3, 5));
+        var grid = new OmGrid(_parser, Wgs84Wkt, (3, 5));
 
         var (lons, lats) = grid.GetMeshgrid();
 
@@ -158,6 +160,6 @@ public class OmGridTests
     [TestMethod]
     public void Constructor_InvalidShape_Throws()
     {
-        Assert.ThrowsException<ArgumentException>(() => new OmGrid(Wgs84Wkt, (0, 10)));
+        Assert.ThrowsException<ArgumentException>(() => new OmGrid(_parser, Wgs84Wkt, (0, 10)));
     }
 }

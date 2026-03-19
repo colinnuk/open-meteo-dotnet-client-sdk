@@ -11,14 +11,14 @@ public class OmGrid : IOmGrid
 {
     private readonly IOmGrid _grid;
 
-    public OmGrid(string crsWkt, (int Ny, int Nx) shape)
+    public OmGrid(ICrsWktParser parser, string crsWkt, (int Ny, int Nx) shape)
     {
         if (!IsValidShape(shape))
             throw new ArgumentException("Shape must be a tuple of two positive integers");
 
-        _grid = CrsWktParser.IsGaussianGrid(crsWkt)
+        _grid = parser.IsGaussianGrid(crsWkt)
             ? new GaussianGrid(crsWkt, shape)
-            : new RegularGrid(crsWkt, shape);
+            : new RegularGrid(parser, crsWkt, shape);
     }
 
     /// <inheritdoc />
