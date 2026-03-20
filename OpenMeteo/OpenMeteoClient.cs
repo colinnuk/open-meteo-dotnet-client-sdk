@@ -14,7 +14,6 @@ using OpenMeteo.Weather.Ensemble;
 using OpenMeteo.Weather.Ensemble.Metadata;
 using OpenMeteo.Weather.Ensemble.Options;
 using OpenMeteo.Weather.Ensemble.ResponseModel;
-using OpenMeteo.CrsWkt;
 using OpenMeteo.Weather.Metadata;
 
 namespace OpenMeteo
