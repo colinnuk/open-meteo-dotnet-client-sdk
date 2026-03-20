@@ -8,6 +8,5 @@ public record MetadataModel(
     DateTime LastRunModificationTime,
     int TemporalResolutionSeconds,
     int UpdateIntervalSeconds,
-    string CrsWkt,
-    BoundingBox? BoundingBox
+    string CrsWkt
 );

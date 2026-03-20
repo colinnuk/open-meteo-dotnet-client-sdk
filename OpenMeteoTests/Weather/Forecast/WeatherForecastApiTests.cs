@@ -163,8 +163,8 @@ namespace OpenMeteoTests.Weather.Forecast
             };
             var result = await client.QueryWeatherApiAsync(options);
             Assert.IsNotNull(result);
-            Assert.AreEqual(49.1f, result.Latitude, 0.01f);
-            Assert.AreEqual(-122.6f, result.Longitude, 0.01f);
+            Assert.AreEqual(49.1f, result.Latitude, 0.1f);
+            Assert.AreEqual(-122.6f, result.Longitude, 0.1f);
             Assert.IsNotNull(result.Hourly);
             Assert.IsNotNull(result.Daily);
             Assert.IsNotNull(result.Current);

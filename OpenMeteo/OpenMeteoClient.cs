@@ -14,7 +14,6 @@ using OpenMeteo.Weather.Ensemble;
 using OpenMeteo.Weather.Ensemble.Metadata;
 using OpenMeteo.Weather.Ensemble.Options;
 using OpenMeteo.Weather.Ensemble.ResponseModel;
-using OpenMeteo.Helpers;
 using OpenMeteo.Weather.Metadata;
 
 namespace OpenMeteo
@@ -355,8 +354,7 @@ namespace OpenMeteo
             DateTimeOffset.FromUnixTimeSeconds(apiModel.last_run_modification_time).UtcDateTime,
             apiModel.temporal_resolution_seconds,
             apiModel.update_interval_seconds,
-            apiModel.crs_wkt,
-            CrsWktParser.ParseBoundingBox(apiModel.crs_wkt));
+            apiModel.crs_wkt);
 
         private async Task<AirQualityResponse?> GetAirQualityAsync(AirQualityOptions options)
         {
