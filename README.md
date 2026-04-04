@@ -65,6 +65,12 @@ var client = OpenMeteoClient("YourSecretApiKeyHere");
 
 The best place to look for more usage examples is the [tests](https://github.com/colinnuk/open-meteo-dotnet-client-sdk/tree/master/OpenMeteoTests).
 
+## 🗂️ Scripts
+
+| Script | Description |
+|--------|-------------|
+| [`Scripts/Generate-RegionalCoverageClasses.ps1`](Scripts/Generate-RegionalCoverageClasses.ps1) | Reads each `.geojson` boundary file under `OpenMeteo/Weather/Forecast/RegionalGeoJSON/` and regenerates the corresponding `*Coverage.cs` static C# class. Re-run this script and commit the output whenever a GeoJSON boundary file is added or updated. |
+
 ## License
 
 This project is open-source under the [MIT](https://github.com/colinnuk/open-meteo-dotnet-client/blob/master/LICENSE) license.
