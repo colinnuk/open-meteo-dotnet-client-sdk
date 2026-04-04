@@ -48,4 +48,59 @@
     <PackageReference Include="System.Text.Json" Version="9.0.10" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Weather\Forecast\RegionalGeoJSON\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Weather\Forecast\RegionalGeoJSON\cmc_gem_hrdps.geojson">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Weather\Forecast\RegionalGeoJSON\cmc_gem_hrdps_west.geojson">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Weather\Forecast\RegionalGeoJSON\cmc_gem_rdps.geojson">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Weather\Forecast\RegionalGeoJSON\dwd_icon_d2.geojson">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Weather\Forecast\RegionalGeoJSON\dwd_icon_eu.geojson">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Weather\Forecast\RegionalGeoJSON\italia_meteo_arpae_icon_2i.geojson">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Weather\Forecast\RegionalGeoJSON\jma_msm.geojson">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Weather\Forecast\RegionalGeoJSON\meteofrance_arome_france_hd.geojson">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Weather\Forecast\RegionalGeoJSON\meteofrance_arpege_europe.geojson">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Weather\Forecast\RegionalGeoJSON\meteoswiss_icon_ch1.geojson">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Weather\Forecast\RegionalGeoJSON\meteoswiss_icon_ch2.geojson">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Weather\Forecast\RegionalGeoJSON\metno_nordic_pp.geojson">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Weather\Forecast\RegionalGeoJSON\ncep_hrrr_conus.geojson">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Weather\Forecast\RegionalGeoJSON\ncep_nam_conus.geojson">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Weather\Forecast\RegionalGeoJSON\ncep_nbm_conus.geojson">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Weather\Forecast\RegionalGeoJSON\ukmo_uk_deterministic_2km.geojson">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
