@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace OpenMeteo.Weather.Forecast.RegionalGeoJSON;
+namespace OpenMeteo.Weather.Forecast.RegionalModelCoverage;
 
 internal static class RegionalModelPolygons
 {

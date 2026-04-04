@@ -2,7 +2,7 @@ using OpenMeteo.Weather.Forecast.Metadata;
 using OpenMeteo.Weather.Forecast.Options;
 using System;
 
-namespace OpenMeteo.Weather.Forecast.RegionalGeoJSON;
+namespace OpenMeteo.Weather.Forecast.RegionalModelCoverage;
 
 public class RegionalModelCoverageHelper : IRegionalModelCoverageHelper
 {

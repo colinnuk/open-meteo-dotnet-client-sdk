@@ -69,7 +69,7 @@ The best place to look for more usage examples is the [tests](https://github.com
 
 | Script | Description |
 |--------|-------------|
-| [`Scripts/Generate-RegionalCoverageClasses.ps1`](Scripts/Generate-RegionalCoverageClasses.ps1) | Reads each `.geojson` boundary file under `OpenMeteo/Weather/Forecast/RegionalGeoJSON/` and regenerates the corresponding `*Coverage.cs` static C# class. Re-run this script and commit the output whenever a GeoJSON boundary file is added or updated. |
+| [`Scripts/Generate-RegionalCoverageClasses.ps1`](Scripts/Generate-RegionalCoverageClasses.ps1) | Reads each `.geojson` boundary file under `OpenMeteo/Weather/Forecast/RegionalModelCoverage/` and regenerates the corresponding `*Coverage.cs` static C# class. Re-run this script and commit the output whenever a GeoJSON boundary file is added or updated. |
 
 ## License
 

@@ -1,4 +1,4 @@
-﻿namespace OpenMeteo.Weather.Forecast.RegionalGeoJSON;
+﻿namespace OpenMeteo.Weather.Forecast.RegionalModelCoverage;
 
 internal static class CmcGemHrdpsWestCoverage
 {

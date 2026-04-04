@@ -1,6 +1,6 @@
-﻿namespace OpenMeteo.Weather.Forecast.RegionalGeoJSON;
+﻿namespace OpenMeteo.Weather.Forecast.RegionalModelCoverage;
 
-internal static class NcepNamConusCoverage
+internal static class NcepHrrrConusCoverage
 {
     internal static readonly (double Longitude, double Latitude)[] ExteriorRing =
     [

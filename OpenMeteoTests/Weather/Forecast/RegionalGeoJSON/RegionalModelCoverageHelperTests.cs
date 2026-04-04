@@ -1,8 +1,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenMeteo.Weather.Forecast.Options;
-using OpenMeteo.Weather.Forecast.RegionalGeoJSON;
+using OpenMeteo.Weather.Forecast.RegionalModelCoverage;
 
-namespace OpenMeteoTests.Weather.Forecast.RegionalGeoJSON;
+namespace OpenMeteoTests.Weather.Forecast.RegionalModelCoverage;
 
 [TestClass]
 public class RegionalModelCoverageHelperTests
