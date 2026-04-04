@@ -49,12 +49,4 @@
     <PackageReference Include="System.Text.Json" Version="9.0.10" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Include="Weather\Forecast\RegionalGeoJSON\*.geojson">
-      <Pack>true</Pack>
-      <PackagePath>contentFiles/any/any/Weather/Forecast/RegionalGeoJSON/</PackagePath>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-</Project>
+  </Project>
