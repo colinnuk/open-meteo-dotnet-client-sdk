@@ -43,13 +43,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="GeoJSON.Text" Version="1.1.0" />
     <PackageReference Include="openmeteo_sdk" Version="1.26.0" />
     <PackageReference Include="ProjNET" Version="2.1.0" />
     <PackageReference Include="System.Text.Json" Version="9.0.10" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Weather\Forecast\RegionalGeoJSON\" />
   </ItemGroup>
 
   <ItemGroup>
