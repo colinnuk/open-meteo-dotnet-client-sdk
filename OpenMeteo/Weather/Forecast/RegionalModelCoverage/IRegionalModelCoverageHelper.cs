@@ -1,6 +1,6 @@
 using OpenMeteo.Weather.Forecast.Options;
 
-namespace OpenMeteo.Weather.Forecast.RegionalGeoJSON;
+namespace OpenMeteo.Weather.Forecast.RegionalModelCoverage;
 
 public interface IRegionalModelCoverageHelper
 {
