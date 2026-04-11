@@ -1,4 +1,4 @@
-mode: Mainline
+mode: ManualDeployment
 branches:
   develop:
     regex: ^dev(elop)?(ment)?$
