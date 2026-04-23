@@ -26,6 +26,7 @@ public class RegionalModelCoverageHelperTests
     [DataRow(WeatherModelOptionsParameter.gem_hrdps_continental, 45.42f, -75.69f)]     // Ottawa, Canada
     [DataRow(WeatherModelOptionsParameter.gem_regional, 45.42f, -75.69f)]              // Ottawa, Canada
     [DataRow(WeatherModelOptionsParameter.italia_meteo_arpae_icon_2i, 41.90f, 12.50f)] // Rome, Italy
+    [DataRow(WeatherModelOptionsParameter.geosphere_arome_austria, 47.38f, 8.54f)]         // Zurich, Switzerland
     public void IsLocationInModelCoverage_PointInsideCoverage_ReturnsTrue(
         WeatherModelOptionsParameter model, float latitude, float longitude)
     {

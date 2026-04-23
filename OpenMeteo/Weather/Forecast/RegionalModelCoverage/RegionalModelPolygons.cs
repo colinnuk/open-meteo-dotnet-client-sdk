@@ -24,6 +24,7 @@ internal static class RegionalModelPolygons
         [WeatherModelOptionsParameter.ncep_nam_conus] = NcepNamConusCoverage.ExteriorRing,
         [WeatherModelOptionsParameter.ncep_nbm_conus] = NcepNbmConusCoverage.ExteriorRing,
         [WeatherModelOptionsParameter.ukmo_uk_deterministic_2km] = UkmoUkDeterministic2kmCoverage.ExteriorRing,
+        [WeatherModelOptionsParameter.geosphere_arome_austria] = GeosphereAromeAustriaCoverage.ExteriorRing
     };
 
     internal static (double Longitude, double Latitude)[]? GetExteriorRing(WeatherModelOptionsParameter weatherModel)
