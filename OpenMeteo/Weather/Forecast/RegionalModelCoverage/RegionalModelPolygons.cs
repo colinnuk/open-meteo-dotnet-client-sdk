@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace OpenMeteo.Weather.Forecast.RegionalModelCoverage;
 
@@ -13,6 +13,7 @@ internal static class RegionalModelPolygons
         ["dwd_icon_eu"] = DwdIconEuCoverage.ExteriorRing,
         ["italia_meteo_arpae_icon_2i"] = ItaliaMeteoArpaeIcon2iCoverage.ExteriorRing,
         ["jma_msm"] = JmaMsmCoverage.ExteriorRing,
+        ["meteofrance_arome_france0025"] = MeteofranceAromeFranceHdCoverage.ExteriorRing,
         ["meteofrance_arome_france_hd"] = MeteofranceAromeFranceHdCoverage.ExteriorRing,
         ["meteofrance_arpege_europe"] = MeteofranceArpegeEuropeCoverage.ExteriorRing,
         ["meteoswiss_icon_ch1"] = MeteoswissIconCh1Coverage.ExteriorRing,
