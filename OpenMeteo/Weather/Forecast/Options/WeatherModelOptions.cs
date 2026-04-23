@@ -133,6 +133,7 @@ namespace OpenMeteo.Weather.Forecast.Options
         ukmo_global_deterministic_10km,
         ukmo_uk_deterministic_2km,
         meteoswiss_icon_ch1,
-        meteoswiss_icon_ch2
+        meteoswiss_icon_ch2,
+        geosphere_arome_austria
     }
 }
