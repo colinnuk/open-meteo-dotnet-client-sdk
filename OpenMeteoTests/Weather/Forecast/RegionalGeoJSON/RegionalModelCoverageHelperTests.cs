@@ -1,4 +1,4 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenMeteo.Weather.Forecast.Options;
 using OpenMeteo.Weather.Forecast.RegionalModelCoverage;
 
@@ -15,6 +15,7 @@ public class RegionalModelCoverageHelperTests
     [DataRow(WeatherModelOptionsParameter.gfs_hrrr, 39.73f, -104.99f)]                 // Denver, CO
     [DataRow(WeatherModelOptionsParameter.ncep_nam_conus, 39.73f, -104.99f)]           // Denver, CO
     [DataRow(WeatherModelOptionsParameter.ncep_nbm_conus, 39.73f, -104.99f)]           // Denver, CO
+    [DataRow(WeatherModelOptionsParameter.meteofrance_arome_france, 48.85f, 2.35f)]    // Paris, France
     [DataRow(WeatherModelOptionsParameter.meteofrance_arome_france_hd, 48.85f, 2.35f)] // Paris, France
     [DataRow(WeatherModelOptionsParameter.meteofrance_arpege_europe, 48.85f, 2.35f)]   // Paris, France
     [DataRow(WeatherModelOptionsParameter.metno_nordic, 59.91f, 10.75f)]               // Oslo, Norway
@@ -39,6 +40,7 @@ public class RegionalModelCoverageHelperTests
     [DataRow(WeatherModelOptionsParameter.gfs_hrrr, 51.51f, -0.13f)]                    // London, UK
     [DataRow(WeatherModelOptionsParameter.ncep_nam_conus, 51.51f, -0.13f)]              // London, UK
     [DataRow(WeatherModelOptionsParameter.ncep_nbm_conus, 51.51f, -0.13f)]              // London, UK
+    [DataRow(WeatherModelOptionsParameter.meteofrance_arome_france, 55.75f, 37.62f)]    // Moscow, Russia
     [DataRow(WeatherModelOptionsParameter.meteofrance_arome_france_hd, 55.75f, 37.62f)] // Moscow, Russia
     [DataRow(WeatherModelOptionsParameter.meteofrance_arpege_europe, 35.69f, 139.69f)]  // Tokyo, Japan
     [DataRow(WeatherModelOptionsParameter.metno_nordic, 41.90f, 12.50f)]                // Rome, Italy
