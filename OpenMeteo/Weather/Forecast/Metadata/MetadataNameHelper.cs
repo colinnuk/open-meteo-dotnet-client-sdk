@@ -36,6 +36,7 @@ internal static class MetadataNameHelper
         WeatherModelOptionsParameter.italia_meteo_arpae_icon_2i => "italia_meteo_arpae_icon_2i",
         WeatherModelOptionsParameter.meteoswiss_icon_ch1 => "meteoswiss_icon_ch1",
         WeatherModelOptionsParameter.meteoswiss_icon_ch2 => "meteoswiss_icon_ch2",
+        WeatherModelOptionsParameter.geosphere_arome_austria => "geosphere_arome_austria",
         _ => throw new ArgumentOutOfRangeException(nameof(weatherModel), weatherModel, "No mapping specified for weather model name to the metadata URL operation. Unable to get metadata for this model.")
     };
 }
