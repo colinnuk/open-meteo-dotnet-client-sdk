@@ -176,6 +176,7 @@ namespace OpenMeteoTests.Weather.Forecast
         [DataRow(WeatherModelOptionsParameter.ecmwf_ifs, 48.8566, 2.3522)] // Paris
         [DataRow(WeatherModelOptionsParameter.ecmwf_ifs025, 48.8566, 2.3522)] // Paris
         [DataRow(WeatherModelOptionsParameter.icon_global, 52.52, 13.405)] // Berlin
+        [DataRow(WeatherModelOptionsParameter.geosphere_arome_austria, 48.201, 16.362)] // Vienna
         [DataRow(WeatherModelOptionsParameter.icon_eu, 52.52, 13.405)] // Berlin
         [DataRow(WeatherModelOptionsParameter.icon_d2, 51.5074, -0.1278)] // London
         [DataRow(WeatherModelOptionsParameter.gfs_seamless, 40.7128, -74.0060)] // New York
