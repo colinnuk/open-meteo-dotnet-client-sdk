@@ -1,6 +1,4 @@
-using OpenMeteo.Weather.Forecast.Metadata;
-using OpenMeteo.Weather.Forecast.Options;
-using System;
+﻿using OpenMeteo.Weather.Forecast.Options;
 
 namespace OpenMeteo.Weather.Forecast.RegionalModelCoverage;
 
@@ -9,17 +7,7 @@ public class RegionalModelCoverageHelper : IRegionalModelCoverageHelper
     /// <inheritdoc/>
     public bool? IsLocationInModelCoverage(WeatherModelOptionsParameter weatherModel, float latitude, float longitude)
     {
-        string metaName;
-        try
-        {
-            metaName = MetadataNameHelper.GetMetadataUrlName(weatherModel);
-        }
-        catch (ArgumentOutOfRangeException)
-        {
-            return null;
-        }
-
-        var ring = RegionalModelPolygons.GetExteriorRing(metaName);
+        var ring = RegionalModelPolygons.GetExteriorRing(weatherModel);
         if (ring == null)
             return null;
 
