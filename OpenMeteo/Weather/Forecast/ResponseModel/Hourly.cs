@@ -79,6 +79,9 @@ namespace OpenMeteo.Weather.Forecast.ResponseModel
         public float?[]? Temperature_550hPa { get; set; }
         public float?[]? Temperature_525hPa { get; set; }
         public float?[]? Temperature_500hPa { get; set; }
+        public float?[]? Temperature_475hPa { get; set; }
+        public float?[]? Temperature_450hPa { get; set; }
+        public float?[]? Temperature_425hPa { get; set; }
         public float?[]? Temperature_400hPa { get; set; }
         public float?[]? Temperature_300hPa { get; set; }
         public float?[]? Temperature_250hPa { get; set; }
@@ -93,11 +96,25 @@ namespace OpenMeteo.Weather.Forecast.ResponseModel
         public float?[]? Dewpoint_950hPa { get; set; }
         public float?[]? Dewpoint_925hPa { get; set; }
         public float?[]? Dewpoint_900hPa { get; set; }
+        public float?[]? Dewpoint_875hPa { get; set; }
         public float?[]? Dewpoint_850hPa { get; set; }
+        public float?[]? Dewpoint_825hPa { get; set; }
         public float?[]? Dewpoint_800hPa { get; set; }
+        public float?[]? Dewpoint_775hPa { get; set; }
+        public float?[]? Dewpoint_750hPa { get; set; }
+        public float?[]? Dewpoint_725hPa { get; set; }
         public float?[]? Dewpoint_700hPa { get; set; }
+        public float?[]? Dewpoint_675hPa { get; set; }
+        public float?[]? Dewpoint_650hPa { get; set; }
+        public float?[]? Dewpoint_625hPa { get; set; }
         public float?[]? Dewpoint_600hPa { get; set; }
+        public float?[]? Dewpoint_575hPa { get; set; }
+        public float?[]? Dewpoint_550hPa { get; set; }
+        public float?[]? Dewpoint_525hPa { get; set; }
         public float?[]? Dewpoint_500hPa { get; set; }
+        public float?[]? Dewpoint_475hPa { get; set; }
+        public float?[]? Dewpoint_450hPa { get; set; }
+        public float?[]? Dewpoint_425hPa { get; set; }
         public float?[]? Dewpoint_400hPa { get; set; }
         public float?[]? Dewpoint_300hPa { get; set; }
         public float?[]? Dewpoint_250hPa { get; set; }
@@ -128,6 +145,9 @@ namespace OpenMeteo.Weather.Forecast.ResponseModel
         public int?[]? Relativehumidity_550hPa { get; set; }
         public int?[]? Relativehumidity_525hPa { get; set; }
         public int?[]? Relativehumidity_500hPa { get; set; }
+        public int?[]? Relativehumidity_475hPa { get; set; }
+        public int?[]? Relativehumidity_450hPa { get; set; }
+        public int?[]? Relativehumidity_425hPa { get; set; }
         public int?[]? Relativehumidity_400hPa { get; set; }
         public int?[]? Relativehumidity_300hPa { get; set; }
         public int?[]? Relativehumidity_250hPa { get; set; }
@@ -158,6 +178,9 @@ namespace OpenMeteo.Weather.Forecast.ResponseModel
         public int?[]? Cloudcover_550hPa { get; set; }
         public int?[]? Cloudcover_525hPa { get; set; }
         public int?[]? Cloudcover_500hPa { get; set; }
+        public int?[]? Cloudcover_475hPa { get; set; }
+        public int?[]? Cloudcover_450hPa { get; set; }
+        public int?[]? Cloudcover_425hPa { get; set; }
         public int?[]? Cloudcover_400hPa { get; set; }
         public int?[]? Cloudcover_300hPa { get; set; }
         public int?[]? Cloudcover_250hPa { get; set; }
@@ -172,11 +195,25 @@ namespace OpenMeteo.Weather.Forecast.ResponseModel
         public float?[]? Windspeed_950hPa { get; set; }
         public float?[]? Windspeed_925hPa { get; set; }
         public float?[]? Windspeed_900hPa { get; set; }
+        public float?[]? Windspeed_875hPa { get; set; }
         public float?[]? Windspeed_850hPa { get; set; }
+        public float?[]? Windspeed_825hPa { get; set; }
         public float?[]? Windspeed_800hPa { get; set; }
+        public float?[]? Windspeed_775hPa { get; set; }
+        public float?[]? Windspeed_750hPa { get; set; }
+        public float?[]? Windspeed_725hPa { get; set; }
         public float?[]? Windspeed_700hPa { get; set; }
+        public float?[]? Windspeed_675hPa { get; set; }
+        public float?[]? Windspeed_650hPa { get; set; }
+        public float?[]? Windspeed_625hPa { get; set; }
         public float?[]? Windspeed_600hPa { get; set; }
+        public float?[]? Windspeed_575hPa { get; set; }
+        public float?[]? Windspeed_550hPa { get; set; }
+        public float?[]? Windspeed_525hPa { get; set; }
         public float?[]? Windspeed_500hPa { get; set; }
+        public float?[]? Windspeed_475hPa { get; set; }
+        public float?[]? Windspeed_450hPa { get; set; }
+        public float?[]? Windspeed_425hPa { get; set; }
         public float?[]? Windspeed_400hPa { get; set; }
         public float?[]? Windspeed_300hPa { get; set; }
         public float?[]? Windspeed_250hPa { get; set; }
@@ -191,11 +228,25 @@ namespace OpenMeteo.Weather.Forecast.ResponseModel
         public int?[]? Winddirection_950hPa { get; set; }
         public int?[]? Winddirection_925hPa { get; set; }
         public int?[]? Winddirection_900hPa { get; set; }
+        public int?[]? Winddirection_875hPa { get; set; }
         public int?[]? Winddirection_850hPa { get; set; }
+        public int?[]? Winddirection_825hPa { get; set; }
         public int?[]? Winddirection_800hPa { get; set; }
+        public int?[]? Winddirection_775hPa { get; set; }
+        public int?[]? Winddirection_750hPa { get; set; }
+        public int?[]? Winddirection_725hPa { get; set; }
         public int?[]? Winddirection_700hPa { get; set; }
+        public int?[]? Winddirection_675hPa { get; set; }
+        public int?[]? Winddirection_650hPa { get; set; }
+        public int?[]? Winddirection_625hPa { get; set; }
         public int?[]? Winddirection_600hPa { get; set; }
+        public int?[]? Winddirection_575hPa { get; set; }
+        public int?[]? Winddirection_550hPa { get; set; }
+        public int?[]? Winddirection_525hPa { get; set; }
         public int?[]? Winddirection_500hPa { get; set; }
+        public int?[]? Winddirection_475hPa { get; set; }
+        public int?[]? Winddirection_450hPa { get; set; }
+        public int?[]? Winddirection_425hPa { get; set; }
         public int?[]? Winddirection_400hPa { get; set; }
         public int?[]? Winddirection_300hPa { get; set; }
         public int?[]? Winddirection_250hPa { get; set; }
@@ -226,6 +277,9 @@ namespace OpenMeteo.Weather.Forecast.ResponseModel
         public float?[]? Geopotential_height_550hPa { get; set; }
         public float?[]? Geopotential_height_525hPa { get; set; }
         public float?[]? Geopotential_height_500hPa { get; set; }
+        public float?[]? Geopotential_height_475hPa { get; set; }
+        public float?[]? Geopotential_height_450hPa { get; set; }
+        public float?[]? Geopotential_height_425hPa { get; set; }
         public float?[]? Geopotential_height_400hPa { get; set; }
         public float?[]? Geopotential_height_300hPa { get; set; }
         public float?[]? Geopotential_height_250hPa { get; set; }
