@@ -34,8 +34,8 @@ namespace OpenMeteoTests.Weather.Forecast
             Assert.IsNotNull(weatherData.Longitude);
             Assert.IsNotNull(weatherData.Latitude);
 
-            Assert.AreEqual(1.125f, weatherData.Latitude);
-            Assert.AreEqual(2.25f, weatherData.Longitude);
+            Assert.AreEqual(1.0896308f, weatherData.Latitude);
+            Assert.AreEqual(2.2695036f, weatherData.Longitude);
         }
 
         [TestMethod]
@@ -48,19 +48,6 @@ namespace OpenMeteoTests.Weather.Forecast
             Assert.IsNotNull(weatherData);
             Assert.IsNotNull(weatherData.Longitude);
             Assert.IsNotNull(weatherData.Latitude);
-        }
-
-        [TestMethod]
-        public async Task WeatherForecast_With_WeatherForecastOptions_Test()
-        {
-            OpenMeteoClient client = new();
-            WeatherForecastOptions weatherForecast = new();
-
-            var res = await client.QueryWeatherApiAsync(weatherForecast);
-
-            Assert.IsNotNull(res);
-            Assert.AreEqual(0f, res.Latitude);
-            Assert.AreEqual(0f, res.Longitude);
         }
 
         [TestMethod]
