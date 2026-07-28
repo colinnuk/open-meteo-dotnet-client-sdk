@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text.Json;
@@ -45,6 +46,24 @@ namespace OpenMeteoTests.Weather.Forecast
             }
         }
 
+        [TestMethod]
+        public async Task DeserializeJsonListAsync_MultipleForecasts_ReturnsAllForecasts()
+        {
+            const string json = "[{\"latitude\":52.52,\"longitude\":13.41},{\"latitude\":50.12,\"longitude\":8.68}]";
+            var response = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(json)
+            };
+            var parser = new WeatherForecastResponseParser(_jsonSerializerOptions);
+
+            var forecasts = await parser.DeserializeJsonListAsync(response, new WeatherForecastOptions());
+
+            Assert.IsNotNull(forecasts);
+            Assert.AreEqual(2, forecasts.Count);
+            Assert.AreEqual(52.52f, forecasts[0].Latitude);
+            Assert.AreEqual(8.68f, forecasts[1].Longitude);
+        }
+
         [DataTestMethod]
         [DataRow("FlatbuffersResponse_UTC", "GMT", 0)]
         [DataRow("FlatbuffersResponse_NonUTC", "America/Vancouver", -8)]
@@ -72,6 +91,25 @@ namespace OpenMeteoTests.Weather.Forecast
             {
                 Assert.AreEqual(TimeSpan.FromHours(expectedOffsetHours), dt.Offset);
             }
+        }
+
+        [TestMethod]
+        public async Task ConvertFlatBuffersListAsync_ConcatenatedResponses_ReturnsAllForecasts()
+        {
+            var filePath = Path.Combine("Weather", "Forecast", "ExampleResponses", "FlatbuffersResponse_UTC");
+            var bytes = await File.ReadAllBytesAsync(filePath);
+            var response = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new ByteArrayContent(bytes.Concat(bytes).ToArray())
+            };
+            var parser = new WeatherForecastResponseParser(_jsonSerializerOptions);
+
+            var forecasts = await parser.ConvertFlatBuffersListAsync(response, new WeatherForecastOptions { Timezone = "GMT" });
+
+            Assert.IsNotNull(forecasts);
+            Assert.AreEqual(2, forecasts.Count);
+            Assert.AreEqual(forecasts[0].Latitude, forecasts[1].Latitude);
+            Assert.AreEqual(forecasts[0].Longitude, forecasts[1].Longitude);
         }
 
         [DataTestMethod]

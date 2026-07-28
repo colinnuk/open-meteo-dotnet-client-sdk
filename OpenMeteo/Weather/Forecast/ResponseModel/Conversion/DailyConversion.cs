@@ -10,7 +10,7 @@ namespace OpenMeteo.Weather.Forecast.ResponseModel.Conversion
 {
     internal static class DailyConversion
     {
-        public static Daily? ConvertDaily(VariablesWithTime? fbDaily, WeatherForecastOptions? forecastOptions)
+        public static Daily? ConvertDaily(VariablesWithTime? fbDaily, IWeatherForecastOptions? forecastOptions)
         {
             if (fbDaily == null) return null;
             if (forecastOptions?.Daily == null || forecastOptions.Daily.Count == 0) return null;

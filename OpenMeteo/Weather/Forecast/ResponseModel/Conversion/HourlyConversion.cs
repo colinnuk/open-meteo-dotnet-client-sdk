@@ -8,7 +8,7 @@ namespace OpenMeteo.Weather.Forecast.ResponseModel.Conversion
 {
     internal static class HourlyConversion
     {
-        public static Hourly? ConvertHourly(VariablesWithTime? fbHourly, WeatherForecastOptions? forecastOptions)
+        public static Hourly? ConvertHourly(VariablesWithTime? fbHourly, IWeatherForecastOptions? forecastOptions)
         {
             if (fbHourly == null) return null;
             if (forecastOptions?.Hourly == null || forecastOptions.Hourly.Count == 0) return null;

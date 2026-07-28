@@ -39,6 +39,31 @@ namespace OpenMeteoTests.Weather.Forecast
         }
 
         [TestMethod]
+        public void MultipleWeatherForecastOptions_Constructor_InitializesCoordinatesAndSharedOptions_Test()
+        {
+            var coordinates = new[]
+            {
+                new WeatherForecastCoordinate(52.52f, 13.41f),
+                new WeatherForecastCoordinate(50.12f, 8.68f)
+            };
+
+            var options = new MultipleWeatherForecastOptions(coordinates)
+            {
+                Temperature_Unit = TemperatureUnitType.fahrenheit,
+                Timezone = "America/New_York",
+                Hourly = new HourlyOptions(HourlyOptionsParameter.temperature_2m)
+            };
+
+            Assert.AreEqual(2, options.Coordinates.Count);
+            CollectionAssert.AreEqual(coordinates, options.Coordinates);
+            Assert.AreEqual(TemperatureUnitType.fahrenheit, options.Temperature_Unit);
+            Assert.AreEqual("America/New_York", options.Timezone);
+            Assert.AreEqual(1, options.Hourly.Count);
+            Assert.AreEqual(WindspeedUnitType.kmh, options.Windspeed_Unit);
+            Assert.AreEqual(PrecipitationUnitType.mm, options.Precipitation_Unit);
+        }
+
+        [TestMethod]
         public void Full_WeatherForecastOptions_Constructor_Test()
         {
             WeatherForecastOptions options = new(

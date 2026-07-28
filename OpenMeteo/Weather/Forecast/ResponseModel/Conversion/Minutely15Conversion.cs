@@ -8,7 +8,7 @@ namespace OpenMeteo.Weather.Forecast.ResponseModel.Conversion
 {
     internal static class Minutely15Conversion
     {
-        public static Minutely15? ConvertMinutely15(VariablesWithTime? fbMinutely15, WeatherForecastOptions? forecastOptions)
+        public static Minutely15? ConvertMinutely15(VariablesWithTime? fbMinutely15, IWeatherForecastOptions? forecastOptions)
         {
             if (fbMinutely15 == null) return null;
             if (forecastOptions?.Minutely_15 == null || forecastOptions.Minutely_15.Count ==0) return null;
