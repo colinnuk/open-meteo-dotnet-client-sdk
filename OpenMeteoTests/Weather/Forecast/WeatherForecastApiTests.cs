@@ -33,9 +33,39 @@ namespace OpenMeteoTests.Weather.Forecast
             Assert.IsNotNull(weatherData);
             Assert.IsNotNull(weatherData.Longitude);
             Assert.IsNotNull(weatherData.Latitude);
+            Assert.AreEqual(1.125f, weatherData.Latitude, 0.1f);
+            Assert.AreEqual(2.25f, weatherData.Longitude, 0.1f);
+        }
 
-            Assert.AreEqual(1.125f, weatherData.Latitude);
-            Assert.AreEqual(2.25f, weatherData.Longitude);
+        [DataTestMethod]
+        [DataRow(false)]
+        [DataRow(true)]
+        public async Task MultipleWeatherForecastOptions_ReturnsForecastForEachCoordinate_Test(bool useFlatbuffers)
+        {
+            var client = new OpenMeteoClient
+            {
+                RethrowExceptions = true,
+                UseFlatbuffers = useFlatbuffers
+            };
+            var options = new MultipleWeatherForecastOptions([
+                new WeatherForecastCoordinate(52.52f, 13.41f),
+                new WeatherForecastCoordinate(50.12f, 8.68f),
+                new WeatherForecastCoordinate(53.55f, 9.99f)
+            ])
+            {
+                Hourly = new HourlyOptions(HourlyOptionsParameter.temperature_2m)
+            };
+
+            var forecasts = await client.QueryWeatherApiAsync(options);
+
+            Assert.IsNotNull(forecasts);
+            Assert.AreEqual(options.Coordinates.Count, forecasts.Count);
+            for (var index = 0; index < options.Coordinates.Count; index++)
+            {
+                Assert.AreEqual(options.Coordinates[index].Latitude, forecasts[index].Latitude, 0.1f);
+                Assert.AreEqual(options.Coordinates[index].Longitude, forecasts[index].Longitude, 0.1f);
+                Assert.IsNotNull(forecasts[index].Hourly);
+            }
         }
 
         [TestMethod]
@@ -48,19 +78,6 @@ namespace OpenMeteoTests.Weather.Forecast
             Assert.IsNotNull(weatherData);
             Assert.IsNotNull(weatherData.Longitude);
             Assert.IsNotNull(weatherData.Latitude);
-        }
-
-        [TestMethod]
-        public async Task WeatherForecast_With_WeatherForecastOptions_Test()
-        {
-            OpenMeteoClient client = new();
-            WeatherForecastOptions weatherForecast = new();
-
-            var res = await client.QueryWeatherApiAsync(weatherForecast);
-
-            Assert.IsNotNull(res);
-            Assert.AreEqual(0f, res.Latitude);
-            Assert.AreEqual(0f, res.Longitude);
         }
 
         [TestMethod]

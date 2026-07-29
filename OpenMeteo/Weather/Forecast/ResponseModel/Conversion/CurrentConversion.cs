@@ -8,7 +8,7 @@ namespace OpenMeteo.Weather.Forecast.ResponseModel.Conversion
 {
     internal static class CurrentConversion
     {
-        public static Current? ConvertCurrent(VariablesWithTime? fbCurrent, WeatherForecastOptions? forecastOptions)
+        public static Current? ConvertCurrent(VariablesWithTime? fbCurrent, IWeatherForecastOptions? forecastOptions)
         {
             if (fbCurrent == null) return null;
             if (forecastOptions?.Current == null || forecastOptions.Current.Count == 0) return null;

@@ -24,6 +24,43 @@ namespace OpenMeteoTests.Weather.Forecast
         }
 
         [TestMethod]
+        public void Build_WithMultipleWeatherForecastOptions_Test()
+        {
+            var options = new MultipleWeatherForecastOptions([
+                new WeatherForecastCoordinate(52.52f, 13.41f),
+                new WeatherForecastCoordinate(50.12f, 8.68f)
+            ])
+            {
+                Hourly = new HourlyOptions(HourlyOptionsParameter.temperature_2m)
+            };
+
+            var url = new WeatherForecastUrlBuilder()
+                .WithOptions(options)
+                .Build();
+
+            var expectedUrl = "https://api.open-meteo.com/v1/forecast?temperature_unit=celsius&windspeed_unit=kmh&precipitation_unit=mm&timezone=GMT&timeformat=iso8601&cell_selection=land&latitude=52.52,50.12&longitude=13.41,8.68&hourly=temperature_2m";
+            Assert.AreEqual(expectedUrl, url);
+        }
+
+        [TestMethod]
+        public void Build_WithMultipleCoordinates_Test()
+        {
+            var coordinates = new[]
+            {
+                new WeatherForecastCoordinate(52.52f, 13.41f),
+                new WeatherForecastCoordinate(50.12f, 8.68f),
+                new WeatherForecastCoordinate(53.55f, 9.99f)
+            };
+
+            var url = new WeatherForecastUrlBuilder()
+                .WithOptions(new WeatherForecastOptions(), coordinates)
+                .Build();
+
+            var expectedUrl = "https://api.open-meteo.com/v1/forecast?temperature_unit=celsius&windspeed_unit=kmh&precipitation_unit=mm&timezone=GMT&timeformat=iso8601&cell_selection=land&latitude=52.52,50.12,53.55&longitude=13.41,8.68,9.99";
+            Assert.AreEqual(expectedUrl, url);
+        }
+
+        [TestMethod]
         public void Build_WithOptionsPastDays_Test()
         {
             var options = GetWeatherForecastOptions();

@@ -4,7 +4,8 @@ using System.Text.Json.Serialization;
 
 namespace OpenMeteo.Weather.Forecast.Options
 {
-    public class WeatherForecastOptions
+
+    public class WeatherForecastOptions : IWeatherForecastOptions
     {
         /// <summary>
         /// Geographical WGS84 coordinate of the location

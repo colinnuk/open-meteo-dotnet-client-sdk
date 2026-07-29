@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Text.Json;
@@ -203,7 +204,38 @@ namespace OpenMeteo
         }
 
         /// <summary>
-        /// Gets Weather Forecast for a given location with individual options
+        /// Gets weather forecasts for multiple geographical coordinates.
+        /// </summary>
+        /// <param name="coordinates">Coordinates to include in the request.</param>
+        /// <returns>Forecasts in the same order as <paramref name="coordinates"/>, or <see langword="null"/> when the request fails.</returns>
+        public async Task<IReadOnlyList<WeatherForecast>?> QueryWeatherApiAsync(IEnumerable<WeatherForecastCoordinate> coordinates)
+        {
+            return await QueryWeatherApiAsync(coordinates, new WeatherForecastOptions());
+        }
+
+        /// <summary>
+        /// Gets weather forecasts for multiple geographical coordinates
+        /// </summary>
+        /// <param name="coordinates">Coordinates to include in the request.</param>
+        /// <param name="options">Forecast options shared by all coordinates.</param>
+        /// <returns>Forecasts in the same order as <paramref name="coordinates"/>, or <see langword="null"/> when the request fails.</returns>
+        public async Task<IReadOnlyList<WeatherForecast>?> QueryWeatherApiAsync(IEnumerable<WeatherForecastCoordinate> coordinates, WeatherForecastOptions options)
+        {
+            return await GetWeatherForecastsAsync(coordinates, options);
+        }
+
+        /// <summary>
+        /// Gets weather forecasts for the coordinates specified in <paramref name="options"/>.
+        /// </summary>
+        /// <param name="options">Multi-coordinate forecast options.</param>
+        /// <returns>Forecasts in the same order as <see cref="MultipleWeatherForecastOptions.Coordinates"/>, or <see langword="null"/> when the request fails.</returns>
+        public async Task<IReadOnlyList<WeatherForecast>?> QueryWeatherApiAsync(MultipleWeatherForecastOptions options)
+        {
+            return await GetWeatherForecastsAsync(options);
+        }
+
+        /// <summary>
+        /// Gets Weather Forecast for a given location
         /// </summary>
         /// <param name="location"></param>
         /// <param name="options"></param>
@@ -220,8 +252,62 @@ namespace OpenMeteo
             return await GetWeatherForecastAsync(options);
         }
 
+        private async Task<IReadOnlyList<WeatherForecast>?> GetWeatherForecastsAsync(IEnumerable<WeatherForecastCoordinate> coordinates, IWeatherForecastOptions options)
+        {
+            try
+            {
+                var url = UrlBuilderFactory.Create<WeatherForecastUrlBuilder>(_customBaseUri, _apiKey)
+                    .WithOptions(options, coordinates)
+                    .WithFlatbuffers(UseFlatbuffers)
+                    .Build();
+                HttpResponseMessage response = await httpController.Client.GetAsync(url);
+                if (response.IsSuccessStatusCode)
+                {
+                    return UseFlatbuffers
+                        ? await _weatherForecastParser.ConvertFlatBuffersListAsync(response, options)
+                        : await _weatherForecastParser.DeserializeJsonListAsync(response, options);
+                }
+
+                ErrorResponse? error = await ParseErrorResponseAsync(response);
+                throw new OpenMeteoClientException(error?.Reason ?? "Exception in OpenMeteoClient", response.StatusCode);
+            }
+            catch (Exception)
+            {
+                if (RethrowExceptions)
+                    throw;
+                return null;
+            }
+        }
+
+        private async Task<IReadOnlyList<WeatherForecast>?> GetWeatherForecastsAsync(MultipleWeatherForecastOptions options)
+        {
+            try
+            {
+                var url = UrlBuilderFactory.Create<WeatherForecastUrlBuilder>(_customBaseUri, _apiKey)
+                    .WithOptions(options)
+                    .WithFlatbuffers(UseFlatbuffers)
+                    .Build();
+                HttpResponseMessage response = await httpController.Client.GetAsync(url);
+                if (response.IsSuccessStatusCode)
+                {
+                    return UseFlatbuffers
+                        ? await _weatherForecastParser.ConvertFlatBuffersListAsync(response, options)
+                        : await _weatherForecastParser.DeserializeJsonListAsync(response, options);
+                }
+
+                ErrorResponse? error = await ParseErrorResponseAsync(response);
+                throw new OpenMeteoClientException(error?.Reason ?? "Exception in OpenMeteoClient", response.StatusCode);
+            }
+            catch (Exception)
+            {
+                if (RethrowExceptions)
+                    throw;
+                return null;
+            }
+        }
+
         /// <summary>
-        /// Gets ensemble weather forecast data for a given location with individual options
+        /// Gets ensemble weather forecast data for a given location
         /// </summary>
         /// <param name="options">Ensemble options for the request</param>
         /// <returns><see cref="WeatherEnsemble"/> if successful or <see cref="null"/> if failed</returns>
@@ -247,7 +333,7 @@ namespace OpenMeteo
         }
 
         /// <summary>
-        /// Gets ensemble weather forecast for a given location with individual options
+        /// Gets ensemble weather forecast for a given location
         /// </summary>
         /// <param name="location">Name of location or city</param>
         /// <param name="options">Ensemble options for the request</param>
@@ -265,7 +351,7 @@ namespace OpenMeteo
         }
 
         /// <summary>
-        /// Gets air quality data for a given location with individual options
+        /// Gets air quality data for a given location
         /// </summary>
         /// <param name="options">options for air quality request</param>
         /// <returns><see cref="AirQualityResponse"/> if successfull or <see cref="null"/> if failed</returns>

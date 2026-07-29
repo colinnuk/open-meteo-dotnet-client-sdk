@@ -2,6 +2,7 @@ using OpenMeteo.Url;
 using OpenMeteo.Weather.Forecast.Options;
 using OpenMeteo.Weather.Utilities;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
@@ -32,6 +33,37 @@ namespace OpenMeteo.Weather.Forecast
         {
             _urlBuilder.AddParameter(nameof(options.Latitude).ToLower(), options.Latitude.ToString(CultureInfo.InvariantCulture));
             _urlBuilder.AddParameter(nameof(options.Longitude).ToLower(), options.Longitude.ToString(CultureInfo.InvariantCulture));
+            return WithSharedOptions(options);
+        }
+
+        public WeatherForecastUrlBuilder WithOptions(WeatherForecastOptions options, IEnumerable<WeatherForecastCoordinate> coordinates)
+        {
+            return WithOptions((IWeatherForecastOptions)options, coordinates);
+        }
+
+        public WeatherForecastUrlBuilder WithOptions(IWeatherForecastOptions options, IEnumerable<WeatherForecastCoordinate> coordinates)
+        {
+            var locations = coordinates.ToList();
+            if (locations.Count == 0)
+                throw new ArgumentException("At least one coordinate must be specified.", nameof(coordinates));
+
+            _urlBuilder.AddCollection("latitude", locations.Select(location => location.Latitude.ToString(CultureInfo.InvariantCulture)));
+            _urlBuilder.AddCollection("longitude", locations.Select(location => location.Longitude.ToString(CultureInfo.InvariantCulture)));
+            return WithSharedOptions(options);
+        }
+
+        public WeatherForecastUrlBuilder WithOptions(MultipleWeatherForecastOptions options)
+        {
+            if (options.Coordinates.Count == 0)
+                throw new ArgumentException("At least one coordinate must be specified.", nameof(options));
+
+            _urlBuilder.AddCollection("latitude", options.Coordinates.Select(coordinate => coordinate.Latitude.ToString(CultureInfo.InvariantCulture)));
+            _urlBuilder.AddCollection("longitude", options.Coordinates.Select(coordinate => coordinate.Longitude.ToString(CultureInfo.InvariantCulture)));
+            return WithSharedOptions(options);
+        }
+
+        private WeatherForecastUrlBuilder WithSharedOptions(IWeatherForecastOptions options)
+        {
             _urlBuilder.AddParameter(nameof(options.Temperature_Unit).ToLower(), options.Temperature_Unit.ToString());
             _urlBuilder.AddParameter(nameof(options.Windspeed_Unit).ToLower(), options.Windspeed_Unit.ToString());
             _urlBuilder.AddParameter(nameof(options.Precipitation_Unit).ToLower(), options.Precipitation_Unit.ToString());

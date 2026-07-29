@@ -1,4 +1,7 @@
 using System;
+using System.Buffers.Binary;
+using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -21,7 +24,7 @@ namespace OpenMeteo.Weather.Forecast.ResponseModel
         /// <param name="response">HttpResponseMessage containing the JSON response</param>
         /// <param name="options">WeatherForecastOptions object containing the options for the request</param>
         /// <returns></returns>
-        public async Task<WeatherForecast?> DeserializeJsonAsync(HttpResponseMessage response, WeatherForecastOptions options)
+        public async Task<WeatherForecast?> DeserializeJsonAsync(HttpResponseMessage response, IWeatherForecastOptions options)
         {
             if (response == null || !response.IsSuccessStatusCode)
                 return null;
@@ -33,6 +36,20 @@ namespace OpenMeteo.Weather.Forecast.ResponseModel
         }
 
         /// <summary>
+        /// Deserializes a multi-location JSON response into weather forecasts.
+        /// </summary>
+        public async Task<IReadOnlyList<WeatherForecast>?> DeserializeJsonListAsync(HttpResponseMessage response, IWeatherForecastOptions options)
+        {
+            if (response == null || !response.IsSuccessStatusCode)
+                return null;
+
+            var customOptions = new JsonSerializerOptions(_jsonSerializerOptions);
+            customOptions.Converters.Add(new DateTimeOffsetWithTimezoneConverter(options.Timezone));
+
+            return await JsonSerializer.DeserializeAsync<List<WeatherForecast>>(await response.Content.ReadAsStreamAsync(), customOptions);
+        }
+
+        /// <summary>
         /// Converts a FlatBuffers response into a WeatherForecast object.
         /// </summary>
         /// <param name="response"></param>
@@ -40,7 +57,7 @@ namespace OpenMeteo.Weather.Forecast.ResponseModel
         /// <returns></returns>
         /// <exception cref="InvalidOperationException"></exception>
         public async Task<WeatherForecast?> ConvertFlatBuffersAsync(HttpResponseMessage response,
-            WeatherForecastOptions? options)
+            IWeatherForecastOptions? options)
         {
             if (response == null || !response.IsSuccessStatusCode)
                 return null;
@@ -56,7 +73,50 @@ namespace OpenMeteo.Weather.Forecast.ResponseModel
             }
         }
 
-        private WeatherForecast? ConvertFlatBuffers(byte[] bytes, WeatherForecastOptions? options)
+        /// <summary>
+        /// Converts a multi-location FlatBuffers response into weather forecasts.
+        /// </summary>
+        public async Task<IReadOnlyList<WeatherForecast>?> ConvertFlatBuffersListAsync(HttpResponseMessage response, IWeatherForecastOptions? options)
+        {
+            if (response == null || !response.IsSuccessStatusCode)
+                return null;
+
+            try
+            {
+                return ConvertFlatBuffersList(await response.Content.ReadAsByteArrayAsync(), options);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Failed to deserialize FlatBuffers response: {ex.Message}", ex);
+            }
+        }
+
+        private static IReadOnlyList<WeatherForecast> ConvertFlatBuffersList(byte[] bytes, IWeatherForecastOptions? options)
+        {
+            if (bytes.Length == 0)
+                return [];
+
+            var forecasts = new List<WeatherForecast>();
+            var offset = 0;
+            while (offset < bytes.Length)
+            {
+                if (bytes.Length - offset < sizeof(int))
+                    throw new InvalidDataException("The FlatBuffers response contains an incomplete size prefix.");
+
+                var messageLength = BinaryPrimitives.ReadInt32LittleEndian(bytes.AsSpan(offset, sizeof(int)));
+                if (messageLength <= 0 || messageLength > bytes.Length - offset - sizeof(int))
+                    throw new InvalidDataException("The FlatBuffers response contains an invalid message size.");
+
+                var byteBuffer = new ByteBuffer(bytes, offset + sizeof(int));
+                var fbResponse = openmeteo_sdk.WeatherApiResponse.GetRootAsWeatherApiResponse(byteBuffer);
+                forecasts.Add(ConvertFromFlatBuffers(fbResponse, options));
+                offset += sizeof(int) + messageLength;
+            }
+
+            return forecasts;
+        }
+
+        private WeatherForecast? ConvertFlatBuffers(byte[] bytes, IWeatherForecastOptions? options)
         {
             if (bytes == null || bytes.Length == 0)
                 return null;
@@ -75,7 +135,7 @@ namespace OpenMeteo.Weather.Forecast.ResponseModel
             }
         }
 
-        private static WeatherForecast ConvertFromFlatBuffers(openmeteo_sdk.WeatherApiResponse fbResponse, WeatherForecastOptions? options)
+        private static WeatherForecast ConvertFromFlatBuffers(openmeteo_sdk.WeatherApiResponse fbResponse, IWeatherForecastOptions? options)
         {
             return new WeatherForecast
             {
