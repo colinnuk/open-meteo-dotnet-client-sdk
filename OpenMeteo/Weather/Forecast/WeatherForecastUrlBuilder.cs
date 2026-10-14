@@ -62,7 +62,7 @@ namespace OpenMeteo.Weather.Forecast
             return WithSharedOptions(options);
         }
 
-        private WeatherForecastUrlBuilder WithSharedOptions(IWeatherForecastOptions options)
+        protected WeatherForecastUrlBuilder WithSharedOptions(IWeatherForecastOptions options)
         {
             _urlBuilder.AddParameter(nameof(options.Temperature_Unit).ToLower(), options.Temperature_Unit.ToString());
             _urlBuilder.AddParameter(nameof(options.Windspeed_Unit).ToLower(), options.Windspeed_Unit.ToString());
