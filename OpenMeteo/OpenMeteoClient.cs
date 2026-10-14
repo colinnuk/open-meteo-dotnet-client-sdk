@@ -19,6 +19,8 @@ using OpenMeteo.Weather.Metadata;
 using OpenMeteo.Weather.PreviousRuns;
 using OpenMeteo.Weather.PreviousRuns.Options;
 using OpenMeteo.Weather.PreviousRuns.ResponseModel;
+using OpenMeteo.Weather.SingleRuns;
+using OpenMeteo.Weather.SingleRuns.Options;
 
 namespace OpenMeteo
 {
@@ -209,6 +211,33 @@ namespace OpenMeteo
         }
 
         /// <summary>
+        /// Gets a weather forecast from a specific model initialization run.
+        /// </summary>
+        /// <param name="options">Single model run options.</param>
+        /// <returns>The weather forecast from the requested run, or <see langword="null"/> when the request fails.</returns>
+        public async Task<WeatherForecast?> QuerySingleRunsApiAsync(SingleRunsOptions options)
+        {
+            return await GetSingleRunAsync(options);
+        }
+
+        /// <summary>
+        /// Gets a weather forecast from a specific model initialization run for a location.
+        /// </summary>
+        /// <param name="location">Name of the location to geocode.</param>
+        /// <param name="options">Single model run options.</param>
+        /// <returns>The weather forecast from the requested run, or <see langword="null"/> when the request fails.</returns>
+        public async Task<WeatherForecast?> QuerySingleRunsApiAsync(string location, SingleRunsOptions options)
+        {
+            GeocodingApiResponse? response = await GetLocationDataAsync(location);
+            if (response?.Locations is null || response.Locations.Length == 0)
+                return null;
+
+            options.Latitude = response.Locations[0].Latitude;
+            options.Longitude = response.Locations[0].Longitude;
+            return await GetSingleRunAsync(options);
+        }
+
+        /// <summary>
         /// Gets hourly forecasts produced by previous model runs for coordinates.
         /// </summary>
         /// <param name="latitude">Location latitude.</param>
@@ -320,6 +349,33 @@ namespace OpenMeteo
                     return UseFlatbuffers
                         ? await _weatherForecastParser.ConvertFlatBuffersListAsync(response, options)
                         : await _weatherForecastParser.DeserializeJsonListAsync(response, options);
+                }
+
+                ErrorResponse? error = await ParseErrorResponseAsync(response);
+                throw new OpenMeteoClientException(error?.Reason ?? "Exception in OpenMeteoClient", response.StatusCode);
+            }
+            catch (Exception)
+            {
+                if (RethrowExceptions)
+                    throw;
+                return null;
+            }
+        }
+
+        private async Task<WeatherForecast?> GetSingleRunAsync(SingleRunsOptions options)
+        {
+            try
+            {
+                var url = UrlBuilderFactory.Create<SingleRunsUrlBuilder>(_customBaseUri, _apiKey)
+                    .WithOptions(options)
+                    .WithFlatbuffers(UseFlatbuffers)
+                    .Build();
+                HttpResponseMessage response = await httpController.Client.GetAsync(url);
+                if (response.IsSuccessStatusCode)
+                {
+                    return UseFlatbuffers
+                        ? await _weatherForecastParser.ConvertFlatBuffersAsync(response, options)
+                        : await _weatherForecastParser.DeserializeJsonAsync(response, options);
                 }
 
                 ErrorResponse? error = await ParseErrorResponseAsync(response);
