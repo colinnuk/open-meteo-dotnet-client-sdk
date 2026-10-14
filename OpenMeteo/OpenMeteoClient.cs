@@ -16,6 +16,9 @@ using OpenMeteo.Weather.Ensemble.Metadata;
 using OpenMeteo.Weather.Ensemble.Options;
 using OpenMeteo.Weather.Ensemble.ResponseModel;
 using OpenMeteo.Weather.Metadata;
+using OpenMeteo.Weather.PreviousRuns;
+using OpenMeteo.Weather.PreviousRuns.Options;
+using OpenMeteo.Weather.PreviousRuns.ResponseModel;
 
 namespace OpenMeteo
 {
@@ -30,6 +33,7 @@ namespace OpenMeteo
         private readonly string? _apiKey;
         private readonly WeatherForecastResponseParser _weatherForecastParser;
         private readonly WeatherEnsembleResponseParser _weatherEnsembleParser;
+        private readonly PreviousRunsWeatherForecastResponseParser _previousRunsParser;
 
         /// <summary>
         /// If set to true, exceptions from the OpenMeteo API will be rethrown. Default is false.
@@ -49,6 +53,7 @@ namespace OpenMeteo
             httpController = new HttpController();
             _weatherForecastParser = new WeatherForecastResponseParser(_jsonSerializerOptions);
             _weatherEnsembleParser = new WeatherEnsembleResponseParser(_jsonSerializerOptions);
+            _previousRunsParser = new PreviousRunsWeatherForecastResponseParser(_jsonSerializerOptions);
         }
 
         /// <summary>
@@ -60,6 +65,7 @@ namespace OpenMeteo
             httpController = new HttpController(httpClient);
             _weatherForecastParser = new WeatherForecastResponseParser(_jsonSerializerOptions);
             _weatherEnsembleParser = new WeatherEnsembleResponseParser(_jsonSerializerOptions);
+            _previousRunsParser = new PreviousRunsWeatherForecastResponseParser(_jsonSerializerOptions);
         }
 
         /// <summary>
@@ -72,6 +78,7 @@ namespace OpenMeteo
             _apiKey = apiKey;
             _weatherForecastParser = new WeatherForecastResponseParser(_jsonSerializerOptions);
             _weatherEnsembleParser = new WeatherEnsembleResponseParser(_jsonSerializerOptions);
+            _previousRunsParser = new PreviousRunsWeatherForecastResponseParser(_jsonSerializerOptions);
         }
 
         /// <summary>
@@ -85,6 +92,7 @@ namespace OpenMeteo
             _apiKey = apiKey;
             _weatherForecastParser = new WeatherForecastResponseParser(_jsonSerializerOptions);
             _weatherEnsembleParser = new WeatherEnsembleResponseParser(_jsonSerializerOptions);
+            _previousRunsParser = new PreviousRunsWeatherForecastResponseParser(_jsonSerializerOptions);
         }
 
         /// <summary>
@@ -99,6 +107,7 @@ namespace OpenMeteo
             _customBaseUri = customBaseUri;
             _weatherForecastParser = new WeatherForecastResponseParser(_jsonSerializerOptions);
             _weatherEnsembleParser = new WeatherEnsembleResponseParser(_jsonSerializerOptions);
+            _previousRunsParser = new PreviousRunsWeatherForecastResponseParser(_jsonSerializerOptions);
         }
 
         /// <summary>
@@ -114,6 +123,7 @@ namespace OpenMeteo
             _customBaseUri = customBaseUri;
             _weatherForecastParser = new WeatherForecastResponseParser(_jsonSerializerOptions);
             _weatherEnsembleParser = new WeatherEnsembleResponseParser(_jsonSerializerOptions);
+            _previousRunsParser = new PreviousRunsWeatherForecastResponseParser(_jsonSerializerOptions);
         }
 
         /// <summary>
@@ -126,6 +136,7 @@ namespace OpenMeteo
             _customBaseUri = customBaseUri;
             _weatherForecastParser = new WeatherForecastResponseParser(_jsonSerializerOptions);
             _weatherEnsembleParser = new WeatherEnsembleResponseParser(_jsonSerializerOptions);
+            _previousRunsParser = new PreviousRunsWeatherForecastResponseParser(_jsonSerializerOptions);
         }
 
         /// <summary>
@@ -139,6 +150,7 @@ namespace OpenMeteo
             _customBaseUri = customBaseUri;
             _weatherForecastParser = new WeatherForecastResponseParser(_jsonSerializerOptions);
             _weatherEnsembleParser = new WeatherEnsembleResponseParser(_jsonSerializerOptions);
+            _previousRunsParser = new PreviousRunsWeatherForecastResponseParser(_jsonSerializerOptions);
         }
 
         /// <summary>
@@ -184,6 +196,48 @@ namespace OpenMeteo
         public async Task<WeatherForecast?> QueryWeatherApiAsync(WeatherForecastOptions options)
         {
             return await GetWeatherForecastAsync(options);
+        }
+
+        /// <summary>
+        /// Gets hourly forecasts produced by previous model runs.
+        /// </summary>
+        /// <param name="options">Previous model run options.</param>
+        /// <returns>Hourly forecasts grouped by the number of days before valid time, or <see langword="null"/> when the request fails.</returns>
+        public async Task<PreviousRunsWeatherForecast?> QueryPreviousRunsApiAsync(PreviousRunsOptions options)
+        {
+            return await GetPreviousRunsAsync(options);
+        }
+
+        /// <summary>
+        /// Gets hourly forecasts produced by previous model runs for coordinates.
+        /// </summary>
+        /// <param name="latitude">Location latitude.</param>
+        /// <param name="longitude">Location longitude.</param>
+        /// <returns>Hourly forecasts grouped by the number of days before valid time, or <see langword="null"/> when the request fails.</returns>
+        public async Task<PreviousRunsWeatherForecast?> QueryPreviousRunsApiAsync(float latitude, float longitude)
+        {
+            return await GetPreviousRunsAsync(new PreviousRunsOptions
+            {
+                Latitude = latitude,
+                Longitude = longitude
+            });
+        }
+
+        /// <summary>
+        /// Gets hourly forecasts produced by previous model runs for a location.
+        /// </summary>
+        /// <param name="location">Name of the location to geocode.</param>
+        /// <param name="options">Previous model run options.</param>
+        /// <returns>Hourly forecasts grouped by the number of days before valid time, or <see langword="null"/> when the request fails.</returns>
+        public async Task<PreviousRunsWeatherForecast?> QueryPreviousRunsApiAsync(string location, PreviousRunsOptions options)
+        {
+            GeocodingApiResponse? response = await GetLocationDataAsync(location);
+            if (response?.Locations is null || response.Locations.Length == 0)
+                return null;
+
+            options.Latitude = response.Locations[0].Latitude;
+            options.Longitude = response.Locations[0].Longitude;
+            return await GetPreviousRunsAsync(options);
         }
 
         /// <summary>
@@ -494,6 +548,28 @@ namespace OpenMeteo
                         ? await _weatherForecastParser.ConvertFlatBuffersAsync(response, options)
                         : await _weatherForecastParser.DeserializeJsonAsync(response, options);
                 }
+
+                ErrorResponse? error = await ParseErrorResponseAsync(response);
+                throw new OpenMeteoClientException(error?.Reason ?? "Exception in OpenMeteoClient", response.StatusCode);
+            }
+            catch (Exception)
+            {
+                if (RethrowExceptions)
+                    throw;
+                return null;
+            }
+        }
+
+        private async Task<PreviousRunsWeatherForecast?> GetPreviousRunsAsync(PreviousRunsOptions options)
+        {
+            try
+            {
+                var url = UrlBuilderFactory.Create<PreviousRunsUrlBuilder>(_customBaseUri, _apiKey)
+                    .WithOptions(options)
+                    .Build();
+                HttpResponseMessage response = await httpController.Client.GetAsync(url);
+                if (response.IsSuccessStatusCode)
+                    return await _previousRunsParser.DeserializeJsonAsync(response, options);
 
                 ErrorResponse? error = await ParseErrorResponseAsync(response);
                 throw new OpenMeteoClientException(error?.Reason ?? "Exception in OpenMeteoClient", response.StatusCode);
