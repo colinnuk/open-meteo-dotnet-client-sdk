@@ -24,7 +24,6 @@ public class EnsembleApiIntegrationTests
     [DataRow(EnsembleModelOptionsParameter.ecmwf_ifs025, 48.8566, 2.3522)] // Paris
     [DataRow(EnsembleModelOptionsParameter.ecmwf_aifs025, 48.8566, 2.3522)] // Paris
     [DataRow(EnsembleModelOptionsParameter.gem_global, 45.4215, -75.6997)] // Ottawa
-    [DataRow(EnsembleModelOptionsParameter.bom_access_global_ensemble, -33.8688, 151.2093)] // Sydney
     [DataRow(EnsembleModelOptionsParameter.ukmo_global_ensemble_20km, 51.5074, -0.1278)] // London
     [DataRow(EnsembleModelOptionsParameter.ukmo_uk_ensemble_2km, 53.4808, -2.2426)] // Manchester
     [DataRow(EnsembleModelOptionsParameter.meteoswiss_icon_ch1, 47.3769, 8.5417)] // Zurich

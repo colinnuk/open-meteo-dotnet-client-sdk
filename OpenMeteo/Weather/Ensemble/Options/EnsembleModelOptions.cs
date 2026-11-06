@@ -107,11 +107,14 @@ public enum EnsembleModelOptionsParameter
     gfs05,
     ecmwf_ifs025,
     ecmwf_aifs025,
+    ecmwf_ifs_europe_ensemble,
+    ecmwf_aifs_europe_ensemble,
     gem_global,
-    bom_access_global_ensemble,
     ukmo_global_ensemble_20km,
     ukmo_uk_ensemble_2km,
     meteoswiss_icon_ch1,
     meteoswiss_icon_ch2,
-    ncep_aigefs025
+    ncep_aigefs025,
+    ncep_rrfs_conus_ensemble,
+    google_weathernext2_ensemble, 
 }

@@ -81,16 +81,6 @@ public class WeatherEnsembleMetadataUrlBuilderTests
     }
 
     [TestMethod]
-    public void Build_DefaultConstructor_WithModel_BomAccess_Test()
-    {
-        var url = new WeatherEnsembleMetadataUrlBuilder()
-            .WithModel(EnsembleModelOptionsParameter.bom_access_global_ensemble)
-            .Build();
-        var expectedUrl = "https://ensemble-api.open-meteo.com/data/bom_access_global_ensemble/static/meta.json";
-        Assert.AreEqual(expectedUrl, url);
-    }
-
-    [TestMethod]
     public void Build_DefaultConstructor_WithModel_UkmoGlobal_Test()
     {
         var url = new WeatherEnsembleMetadataUrlBuilder()
