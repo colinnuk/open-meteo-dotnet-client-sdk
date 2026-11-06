@@ -19,7 +19,7 @@ namespace OpenMeteoTests.Weather.Forecast
                 .WithOptions(options)
                 .Build();
 
-            var expectedUrl = "https://api.open-meteo.com/v1/forecast?latitude=40.7128&longitude=-74.006&temperature_unit=celsius&windspeed_unit=kmh&precipitation_unit=mm&timezone=America%2FNew_York&timeformat=iso8601&start_date=2023-01-01&end_date=2023-01-02&cell_selection=nearest&hourly=temperature_2m,windspeed_10m&daily=temperature_2m_max,temperature_2m_min&models=gfs_hrrr,gfs_global&current=temperature_2m&minutely_15=precipitation";
+            var expectedUrl = "https://api.open-meteo.com/v1/forecast?latitude=40.7128&longitude=-74.006&temperature_unit=celsius&windspeed_unit=kmh&precipitation_unit=mm&timezone=America%2FNew_York&timeformat=iso8601&start_date=2023-01-01&end_date=2023-01-02&cell_selection=nearest&hourly=temperature_2m,windspeed_10m&daily=temperature_2m_max,temperature_2m_min&models=ncep_rrfs_conus,gfs_global&current=temperature_2m&minutely_15=precipitation";
             Assert.AreEqual(expectedUrl, url);
         }
 
@@ -68,7 +68,7 @@ namespace OpenMeteoTests.Weather.Forecast
                 .WithOptions(options)
                 .Build();
 
-            var expectedUrl = "https://api.open-meteo.com/v1/forecast?latitude=40.7128&longitude=-74.006&temperature_unit=celsius&windspeed_unit=kmh&precipitation_unit=mm&timezone=America%2FNew_York&timeformat=iso8601&past_days=3&cell_selection=nearest&hourly=temperature_2m,windspeed_10m&daily=temperature_2m_max,temperature_2m_min&models=gfs_hrrr,gfs_global&current=temperature_2m&minutely_15=precipitation";
+            var expectedUrl = "https://api.open-meteo.com/v1/forecast?latitude=40.7128&longitude=-74.006&temperature_unit=celsius&windspeed_unit=kmh&precipitation_unit=mm&timezone=America%2FNew_York&timeformat=iso8601&past_days=3&cell_selection=nearest&hourly=temperature_2m,windspeed_10m&daily=temperature_2m_max,temperature_2m_min&models=ncep_rrfs_conus,gfs_global&current=temperature_2m&minutely_15=precipitation";
             Assert.AreEqual(expectedUrl, url);
         }
 
@@ -79,7 +79,7 @@ namespace OpenMeteoTests.Weather.Forecast
                 .WithOptions(GetWeatherForecastOptions())
                 .Build();
 
-            var expectedUrl = "https://customer-api.open-meteo.com/v1/forecast?latitude=40.7128&longitude=-74.006&temperature_unit=celsius&windspeed_unit=kmh&precipitation_unit=mm&timezone=America%2FNew_York&timeformat=iso8601&past_days=3&cell_selection=nearest&hourly=temperature_2m,windspeed_10m&daily=temperature_2m_max,temperature_2m_min&models=gfs_hrrr,gfs_global&current=temperature_2m&minutely_15=precipitation&apikey=testApiKey";
+            var expectedUrl = "https://customer-api.open-meteo.com/v1/forecast?latitude=40.7128&longitude=-74.006&temperature_unit=celsius&windspeed_unit=kmh&precipitation_unit=mm&timezone=America%2FNew_York&timeformat=iso8601&past_days=3&cell_selection=nearest&hourly=temperature_2m,windspeed_10m&daily=temperature_2m_max,temperature_2m_min&models=ncep_rrfs_conus,gfs_global&current=temperature_2m&minutely_15=precipitation&apikey=testApiKey";
             Assert.AreEqual(expectedUrl, url);
         }
 
@@ -91,7 +91,7 @@ namespace OpenMeteoTests.Weather.Forecast
                 .WithOptions(GetWeatherForecastOptions())
                 .Build();
 
-            var expectedUrl = "https://custom.example.com/v1/forecast?latitude=40.7128&longitude=-74.006&temperature_unit=celsius&windspeed_unit=kmh&precipitation_unit=mm&timezone=America%2FNew_York&timeformat=iso8601&past_days=3&cell_selection=nearest&hourly=temperature_2m,windspeed_10m&daily=temperature_2m_max,temperature_2m_min&models=gfs_hrrr,gfs_global&current=temperature_2m&minutely_15=precipitation";
+            var expectedUrl = "https://custom.example.com/v1/forecast?latitude=40.7128&longitude=-74.006&temperature_unit=celsius&windspeed_unit=kmh&precipitation_unit=mm&timezone=America%2FNew_York&timeformat=iso8601&past_days=3&cell_selection=nearest&hourly=temperature_2m,windspeed_10m&daily=temperature_2m_max,temperature_2m_min&models=ncep_rrfs_conus,gfs_global&current=temperature_2m&minutely_15=precipitation";
             Assert.AreEqual(expectedUrl, url);
         }
 
@@ -103,7 +103,7 @@ namespace OpenMeteoTests.Weather.Forecast
                 .WithOptions(GetWeatherForecastOptions())
                 .Build();
 
-            var expectedUrl = "https://custom.example.com/v1/forecast?latitude=40.7128&longitude=-74.006&temperature_unit=celsius&windspeed_unit=kmh&precipitation_unit=mm&timezone=America%2FNew_York&timeformat=iso8601&past_days=3&cell_selection=nearest&hourly=temperature_2m,windspeed_10m&daily=temperature_2m_max,temperature_2m_min&models=gfs_hrrr,gfs_global&current=temperature_2m&minutely_15=precipitation&apikey=testApiKey";
+            var expectedUrl = "https://custom.example.com/v1/forecast?latitude=40.7128&longitude=-74.006&temperature_unit=celsius&windspeed_unit=kmh&precipitation_unit=mm&timezone=America%2FNew_York&timeformat=iso8601&past_days=3&cell_selection=nearest&hourly=temperature_2m,windspeed_10m&daily=temperature_2m_max,temperature_2m_min&models=ncep_rrfs_conus,gfs_global&current=temperature_2m&minutely_15=precipitation&apikey=testApiKey";
             Assert.AreEqual(expectedUrl, url);
         }
 
@@ -120,7 +120,7 @@ namespace OpenMeteoTests.Weather.Forecast
             Hourly = new HourlyOptions([HourlyOptionsParameter.temperature_2m, HourlyOptionsParameter.windspeed_10m]),
             Daily = new DailyOptions([DailyOptionsParameter.temperature_2m_max, DailyOptionsParameter.temperature_2m_min]),
             Cell_Selection = CellSelectionType.nearest,
-            Models = new WeatherModelOptions([WeatherModelOptionsParameter.gfs_hrrr, WeatherModelOptionsParameter.gfs_global]),
+            Models = new WeatherModelOptions([WeatherModelOptionsParameter.ncep_rrfs_conus, WeatherModelOptionsParameter.gfs_global]),
             Current = new CurrentOptions([CurrentOptionsParameter.temperature_2m]),
             Minutely_15 = new Minutely15Options([Minutely15OptionsParameter.precipitation])
         };

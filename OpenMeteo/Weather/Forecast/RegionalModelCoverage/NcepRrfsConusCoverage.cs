@@ -1,6 +1,6 @@
 ﻿namespace OpenMeteo.Weather.Forecast.RegionalModelCoverage;
 
-internal static class NcepNamConusCoverage
+internal static class NcepRrfsConusCoverage
 {
     internal static readonly (double Longitude, double Latitude)[] ExteriorRing =
     [

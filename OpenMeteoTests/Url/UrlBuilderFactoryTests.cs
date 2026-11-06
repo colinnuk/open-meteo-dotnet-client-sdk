@@ -69,8 +69,8 @@ namespace OpenMeteoTests.Url
         {
             var builder = UrlBuilderFactory.Create<WeatherForecastMetadataUrlBuilder>();
             Assert.IsInstanceOfType(builder, typeof(WeatherForecastMetadataUrlBuilder));
-            var url = builder.WithModel(WeatherModelOptionsParameter.gfs_hrrr).Build();
-            StringAssert.StartsWith(url, "https://api.open-meteo.com/data/ncep_hrrr_conus/static/meta.json");
+            var url = builder.WithModel(WeatherModelOptionsParameter.ncep_rrfs_conus).Build();
+            StringAssert.StartsWith(url, "https://api.open-meteo.com/data/ncep_rrfs_conus/static/meta.json");
         }
 
         [TestMethod]
@@ -79,8 +79,8 @@ namespace OpenMeteoTests.Url
             var customUri = new Uri("https://custom.com");
             var builder = UrlBuilderFactory.Create<WeatherForecastMetadataUrlBuilder>(customBaseUri: customUri);
             Assert.IsInstanceOfType(builder, typeof(WeatherForecastMetadataUrlBuilder));
-            var url = builder.WithModel(WeatherModelOptionsParameter.gfs_hrrr).Build();
-            StringAssert.StartsWith(url, "https://custom.com/data/ncep_hrrr_conus/static/meta.json");
+            var url = builder.WithModel(WeatherModelOptionsParameter.ncep_rrfs_conus).Build();
+            StringAssert.StartsWith(url, "https://custom.com/data/ncep_rrfs_conus/static/meta.json");
         }
 
         [TestMethod]
@@ -88,8 +88,8 @@ namespace OpenMeteoTests.Url
         {
             var builder = UrlBuilderFactory.Create<WeatherForecastMetadataUrlBuilder>(apiKey: "test-key");
             Assert.IsInstanceOfType(builder, typeof(WeatherForecastMetadataUrlBuilder));
-            var url = builder.WithModel(WeatherModelOptionsParameter.gfs_hrrr).Build();
-            StringAssert.StartsWith(url, "https://customer-api.open-meteo.com/data/ncep_hrrr_conus/static/meta.json");
+            var url = builder.WithModel(WeatherModelOptionsParameter.ncep_rrfs_conus).Build();
+            StringAssert.StartsWith(url, "https://customer-api.open-meteo.com/data/ncep_rrfs_conus/static/meta.json");
             StringAssert.Contains(url, "apikey=test-key");
         }
 
@@ -99,8 +99,8 @@ namespace OpenMeteoTests.Url
             var customUri = new Uri("https://custom.com");
             var builder = UrlBuilderFactory.Create<WeatherForecastMetadataUrlBuilder>(customBaseUri: customUri, apiKey: "test-key");
             Assert.IsInstanceOfType(builder, typeof(WeatherForecastMetadataUrlBuilder));
-            var url = builder.WithModel(WeatherModelOptionsParameter.gfs_hrrr).Build();
-            StringAssert.StartsWith(url, "https://custom.com/data/ncep_hrrr_conus/static/meta.json");
+            var url = builder.WithModel(WeatherModelOptionsParameter.ncep_rrfs_conus).Build();
+            StringAssert.StartsWith(url, "https://custom.com/data/ncep_rrfs_conus/static/meta.json");
             StringAssert.Contains(url, "apikey=test-key");
         }
 
@@ -109,8 +109,8 @@ namespace OpenMeteoTests.Url
         {
             var builder = UrlBuilderFactory.Create<WeatherForecastMetadataUrlBuilder>(customBaseUri: null, apiKey: "test-key");
             Assert.IsInstanceOfType(builder, typeof(WeatherForecastMetadataUrlBuilder));
-            var url = builder.WithModel(WeatherModelOptionsParameter.gfs_hrrr).Build();
-            StringAssert.StartsWith(url, "https://customer-api.open-meteo.com/data/ncep_hrrr_conus/static/meta.json");
+            var url = builder.WithModel(WeatherModelOptionsParameter.ncep_rrfs_conus).Build();
+            StringAssert.StartsWith(url, "https://customer-api.open-meteo.com/data/ncep_rrfs_conus/static/meta.json");
             StringAssert.Contains(url, "apikey=test-key");
         }
     }

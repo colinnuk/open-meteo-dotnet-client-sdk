@@ -12,8 +12,8 @@ public class RegionalModelCoverageHelperTests
     [DataTestMethod]
     [DataRow(WeatherModelOptionsParameter.icon_d2, 52.52f, 13.41f)]                    // Berlin, Germany
     [DataRow(WeatherModelOptionsParameter.icon_eu, 48.85f, 2.35f)]                     // Paris, France
-    [DataRow(WeatherModelOptionsParameter.gfs_hrrr, 39.73f, -104.99f)]                 // Denver, CO
-    [DataRow(WeatherModelOptionsParameter.ncep_nam_conus, 39.73f, -104.99f)]           // Denver, CO
+    [DataRow(WeatherModelOptionsParameter.ncep_rrfs_conus, 39.73f, -104.99f)]          // Denver, CO
+    [DataRow(WeatherModelOptionsParameter.ncep_rrfs_north_america, 39.73f, -104.99f)]  // Denver, CO
     [DataRow(WeatherModelOptionsParameter.ncep_nbm_conus, 39.73f, -104.99f)]           // Denver, CO
     [DataRow(WeatherModelOptionsParameter.meteofrance_arome_france, 48.85f, 2.35f)]    // Paris, France
     [DataRow(WeatherModelOptionsParameter.meteofrance_arome_france_hd, 48.85f, 2.35f)] // Paris, France
@@ -38,8 +38,8 @@ public class RegionalModelCoverageHelperTests
     [DataTestMethod]
     [DataRow(WeatherModelOptionsParameter.icon_d2, 40.71f, -74.01f)]                    // New York, USA
     [DataRow(WeatherModelOptionsParameter.icon_eu, 35.69f, 139.69f)]                    // Tokyo, Japan
-    [DataRow(WeatherModelOptionsParameter.gfs_hrrr, 51.51f, -0.13f)]                    // London, UK
-    [DataRow(WeatherModelOptionsParameter.ncep_nam_conus, 51.51f, -0.13f)]              // London, UK
+    [DataRow(WeatherModelOptionsParameter.ncep_rrfs_conus, 51.51f, -0.13f)]             // London, UK
+    [DataRow(WeatherModelOptionsParameter.ncep_rrfs_north_america, 51.51f, -0.13f)]     // London, UK
     [DataRow(WeatherModelOptionsParameter.ncep_nbm_conus, 51.51f, -0.13f)]              // London, UK
     [DataRow(WeatherModelOptionsParameter.meteofrance_arome_france, 55.75f, 37.62f)]    // Moscow, Russia
     [DataRow(WeatherModelOptionsParameter.meteofrance_arome_france_hd, 55.75f, 37.62f)] // Moscow, Russia
