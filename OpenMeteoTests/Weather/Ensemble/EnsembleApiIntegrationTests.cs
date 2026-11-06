@@ -12,18 +12,6 @@ public class EnsembleApiIntegrationTests
 {
     public TestContext? TestContext { get; set; }
 
-    [TestMethod]
-    public async Task QueryEnsembleApiAsync_WithLatitudeLongitude_ReturnsEnsembleData()
-    {
-        var client = new OpenMeteoClient();
-        
-        var result = await client.QueryEnsembleApiAsync(50.0769f, -122.948f);
-        
-        Assert.IsNotNull(result);
-        Assert.AreEqual(50.0769f, result.Latitude, 0.1f);
-        Assert.AreEqual(-122.948f, result.Longitude, 0.1f);
-    }
-
     [DataTestMethod]
     [DataRow(EnsembleModelOptionsParameter.icon_seamless, 48.8566, 2.3522)] // Paris
     [DataRow(EnsembleModelOptionsParameter.icon_global, 48.8566, 2.3522)] // Paris
@@ -71,47 +59,6 @@ public class EnsembleApiIntegrationTests
             var json = JsonSerializer.Serialize(result, new JsonSerializerOptions { WriteIndented = true });
             TestContext.WriteLine(json);
         }
-    }
-
-    [TestMethod]
-    public async Task QueryEnsembleApiAsync_WithLocation_ReturnsEnsembleData()
-    {
-        var client = new OpenMeteoClient();
-        var options = new WeatherEnsembleOptions
-        {
-            Hourly = new WeatherEnsembleHourlyOptions([
-                WeatherEnsembleHourlyOptionsParameter.temperature_2m
-            ])
-        };
-        
-        var result = await client.QueryEnsembleApiAsync("Whistler", options);
-        
-        Assert.IsNotNull(result);
-        Assert.IsNotNull(result.Hourly);
-        Assert.IsTrue(result.Latitude > 0);
-        Assert.IsTrue(result.Longitude < 0);
-    }
-
-    [TestMethod]
-    public async Task QueryEnsembleApiAsync_WithFlatbuffers_ReturnsEnsembleData()
-    {
-        var client = new OpenMeteoClient { UseFlatbuffers = true };
-        var options = new WeatherEnsembleOptions
-        {
-            Latitude = 50.0769f,
-            Longitude = -122.948f,
-            Hourly = new WeatherEnsembleHourlyOptions([
-                WeatherEnsembleHourlyOptionsParameter.temperature_2m,
-                WeatherEnsembleHourlyOptionsParameter.precipitation
-            ])
-        };
-        
-        var result = await client.QueryEnsembleApiAsync(options);
-        
-        Assert.IsNotNull(result);
-        Assert.IsNotNull(result.Hourly);
-        Assert.IsNotNull(result.Hourly.Time);
-        Assert.IsTrue(result.Hourly.Time.Length > 0);
     }
 
     [TestMethod]

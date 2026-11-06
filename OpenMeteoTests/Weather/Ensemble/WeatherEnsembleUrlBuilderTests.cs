@@ -90,15 +90,28 @@ public class WeatherEnsembleUrlBuilderTests
         var options = new WeatherEnsembleOptions
         {
             Latitude = 40.7128f,
-            Longitude = -74.006f
+            Longitude = -74.006f,
+            Models = new EnsembleModelOptions(EnsembleModelOptionsParameter.icon_global)
         };
-        
+
         var url = new WeatherEnsembleUrlBuilder()
             .WithOptions(options)
             .Build();
 
-        var expectedUrl = "https://ensemble-api.open-meteo.com/v1/ensemble?latitude=40.7128&longitude=-74.006&temperature_unit=celsius&windspeed_unit=kmh&precipitation_unit=mm&timezone=GMT&timeformat=iso8601&cell_selection=land";
+        var expectedUrl = "https://ensemble-api.open-meteo.com/v1/ensemble?latitude=40.7128&longitude=-74.006&temperature_unit=celsius&windspeed_unit=kmh&precipitation_unit=mm&timezone=GMT&timeformat=iso8601&cell_selection=land&models=icon_global";
         Assert.AreEqual(expectedUrl, url);
+    }
+
+    [TestMethod]
+    public void Build_WithNoModels_ThrowsArgumentException()
+    {
+        var options = new WeatherEnsembleOptions(52.52f, 13.41f);
+
+        var exception = Assert.ThrowsException<ArgumentException>(() =>
+            new WeatherEnsembleUrlBuilder().WithOptions(options));
+
+        Assert.AreEqual("options", exception.ParamName);
+        StringAssert.Contains(exception.Message, "At least one ensemble model must be specified.");
     }
 
     [TestMethod]
@@ -110,14 +123,15 @@ public class WeatherEnsembleUrlBuilderTests
                 WeatherEnsembleHourlyOptionsParameter.temperature_2m,
                 WeatherEnsembleHourlyOptionsParameter.windspeed_10m,
                 WeatherEnsembleHourlyOptionsParameter.precipitation
-            ])
+            ]),
+            Models = new EnsembleModelOptions(EnsembleModelOptionsParameter.icon_global)
         };
 
         var url = new WeatherEnsembleUrlBuilder()
             .WithOptions(options)
             .Build();
 
-        var expectedUrl = "https://ensemble-api.open-meteo.com/v1/ensemble?latitude=52.52&longitude=13.41&temperature_unit=celsius&windspeed_unit=kmh&precipitation_unit=mm&timezone=GMT&timeformat=iso8601&cell_selection=land&hourly=temperature_2m,windspeed_10m,precipitation";
+        var expectedUrl = "https://ensemble-api.open-meteo.com/v1/ensemble?latitude=52.52&longitude=13.41&temperature_unit=celsius&windspeed_unit=kmh&precipitation_unit=mm&timezone=GMT&timeformat=iso8601&cell_selection=land&hourly=temperature_2m,windspeed_10m,precipitation&models=icon_global";
         Assert.AreEqual(expectedUrl, url);
     }
 
@@ -130,14 +144,15 @@ public class WeatherEnsembleUrlBuilderTests
                 WeatherEnsembleDailyOptionsParameter.temperature_2m_max,
                 WeatherEnsembleDailyOptionsParameter.temperature_2m_min,
                 WeatherEnsembleDailyOptionsParameter.precipitation_sum
-            ])
+            ]),
+            Models = new EnsembleModelOptions(EnsembleModelOptionsParameter.icon_global)
         };
 
         var url = new WeatherEnsembleUrlBuilder()
             .WithOptions(options)
             .Build();
 
-        var expectedUrl = "https://ensemble-api.open-meteo.com/v1/ensemble?latitude=52.52&longitude=13.41&temperature_unit=celsius&windspeed_unit=kmh&precipitation_unit=mm&timezone=GMT&timeformat=iso8601&cell_selection=land&daily=temperature_2m_max,temperature_2m_min,precipitation_sum";
+        var expectedUrl = "https://ensemble-api.open-meteo.com/v1/ensemble?latitude=52.52&longitude=13.41&temperature_unit=celsius&windspeed_unit=kmh&precipitation_unit=mm&timezone=GMT&timeformat=iso8601&cell_selection=land&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&models=icon_global";
         Assert.AreEqual(expectedUrl, url);
     }
 
@@ -169,14 +184,15 @@ public class WeatherEnsembleUrlBuilderTests
             Longitude = -74.006f,
             Temperature_Unit = TemperatureUnitType.fahrenheit,
             Windspeed_Unit = WindspeedUnitType.mph,
-            Precipitation_Unit = PrecipitationUnitType.inch
+            Precipitation_Unit = PrecipitationUnitType.inch,
+            Models = new EnsembleModelOptions(EnsembleModelOptionsParameter.icon_global)
         };
 
         var url = new WeatherEnsembleUrlBuilder()
             .WithOptions(options)
             .Build();
 
-        var expectedUrl = "https://ensemble-api.open-meteo.com/v1/ensemble?latitude=40.7128&longitude=-74.006&temperature_unit=fahrenheit&windspeed_unit=mph&precipitation_unit=inch&timezone=GMT&timeformat=iso8601&cell_selection=land";
+        var expectedUrl = "https://ensemble-api.open-meteo.com/v1/ensemble?latitude=40.7128&longitude=-74.006&temperature_unit=fahrenheit&windspeed_unit=mph&precipitation_unit=inch&timezone=GMT&timeformat=iso8601&cell_selection=land&models=icon_global";
         Assert.AreEqual(expectedUrl, url);
     }
 
@@ -212,7 +228,8 @@ public class WeatherEnsembleUrlBuilderTests
                 WeatherEnsembleHourlyOptionsParameter.temperature_850hPa,
                 WeatherEnsembleHourlyOptionsParameter.geopotential_height_500hPa,
                 WeatherEnsembleHourlyOptionsParameter.windspeed_250hPa
-            ])
+            ]),
+            Models = new EnsembleModelOptions(EnsembleModelOptionsParameter.icon_global)
         };
 
         var url = new WeatherEnsembleUrlBuilder()
@@ -220,6 +237,7 @@ public class WeatherEnsembleUrlBuilderTests
             .Build();
 
         Assert.IsTrue(url.Contains("hourly=temperature_850hPa,geopotential_height_500hPa,windspeed_250hPa"));
+        Assert.IsTrue(url.Contains("models=icon_global"));
     }
 
     private static WeatherEnsembleOptions GetWeatherEnsembleOptions() => new()

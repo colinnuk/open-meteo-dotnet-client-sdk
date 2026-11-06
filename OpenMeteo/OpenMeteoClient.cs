@@ -427,22 +427,6 @@ namespace OpenMeteo
         }
 
         /// <summary>
-        /// Gets ensemble weather forecast data for a given latitude and longitude
-        /// </summary>
-        /// <param name="latitude">Latitude</param>
-        /// <param name="longitude">Longitude</param>
-        /// <returns>Awaitable Task containing WeatherEnsemble or NULL</returns>
-        public async Task<WeatherEnsemble?> QueryEnsembleApiAsync(float latitude, float longitude)
-        {
-            WeatherEnsembleOptions options = new()
-            {
-                Latitude = latitude,
-                Longitude = longitude
-            };
-            return await QueryEnsembleApiAsync(options);
-        }
-
-        /// <summary>
         /// Gets ensemble weather forecast for a given location
         /// </summary>
         /// <param name="location">Name of location or city</param>
