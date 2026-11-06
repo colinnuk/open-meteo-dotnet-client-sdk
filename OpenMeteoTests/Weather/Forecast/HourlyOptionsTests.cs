@@ -66,12 +66,12 @@ namespace OpenMeteoTests.Weather.Forecast
         public void HourlyOptions_ArgumentException_Test()
         {
             static void action() => new HourlyOptions("A not existing parameter");
-            Assert.ThrowsException<ArgumentException>(action);
+            Assert.ThrowsExactly<ArgumentException>(action);
 
             static void action_array() => new HourlyOptions(new string[] { 
                 "A", "not", "existing", "Array", "of", "parameter"
             });
-            Assert.ThrowsException<ArgumentException>(action_array);
+            Assert.ThrowsExactly<ArgumentException>(action_array);
         }*/
 
         /*[TestMethod]

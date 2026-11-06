@@ -247,7 +247,7 @@ public class WeatherEnsembleResponseParserTests
         var parser = new WeatherEnsembleResponseParser(_jsonSerializerOptions);
         var options = new WeatherEnsembleOptions();
 
-        await Assert.ThrowsExceptionAsync<InvalidOperationException>(
+        await Assert.ThrowsExactlyAsync<InvalidOperationException>(
             async () => await parser.ConvertFlatBuffersAsync(response, options));
     }
 

@@ -123,7 +123,7 @@ namespace OpenMeteoTests.Weather.Forecast
                 Models = new WeatherModelOptions(WeatherModelOptionsParameter.ncep_rrfs_conus),
             };
 
-            var ex = await Assert.ThrowsExceptionAsync<OpenMeteoClientException>(async () => await client.QueryWeatherApiAsync(options));
+            var ex = await Assert.ThrowsExactlyAsync<OpenMeteoClientException>(async () => await client.QueryWeatherApiAsync(options));
             Assert.AreEqual(System.Net.HttpStatusCode.BadRequest, ex.StatusCode);
             Assert.AreEqual("No data is available for this location", ex.Message);
         }
