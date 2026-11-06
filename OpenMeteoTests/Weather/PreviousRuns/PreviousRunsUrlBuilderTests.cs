@@ -30,7 +30,7 @@ namespace OpenMeteoTests.Weather.PreviousRuns
         {
             var options = new PreviousRunsOptions { Previous_Days = 0 };
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => new PreviousRunsUrlBuilder().WithOptions(options));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => new PreviousRunsUrlBuilder().WithOptions(options));
         }
     }
 }

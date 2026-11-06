@@ -107,7 +107,7 @@ public class WeatherEnsembleUrlBuilderTests
     {
         var options = new WeatherEnsembleOptions(52.52f, 13.41f);
 
-        var exception = Assert.ThrowsException<ArgumentException>(() =>
+        var exception = Assert.ThrowsExactly<ArgumentException>(() =>
             new WeatherEnsembleUrlBuilder().WithOptions(options));
 
         Assert.AreEqual("options", exception.ParamName);

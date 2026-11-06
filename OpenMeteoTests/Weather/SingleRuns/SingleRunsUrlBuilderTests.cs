@@ -29,7 +29,7 @@ namespace OpenMeteoTests.Weather.SingleRuns
         [TestMethod]
         public void Build_WithUnspecifiedRun_Throws()
         {
-            Assert.ThrowsException<ArgumentException>(() => new SingleRunsUrlBuilder().WithOptions(new SingleRunsOptions()));
+            Assert.ThrowsExactly<ArgumentException>(() => new SingleRunsUrlBuilder().WithOptions(new SingleRunsOptions()));
         }
     }
 }

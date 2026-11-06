@@ -85,7 +85,7 @@ public class EnsembleApiIntegrationTests
             Longitude = 1000f  // Invalid longitude
         };
         
-        await Assert.ThrowsExceptionAsync<OpenMeteoClientException>(
+        await Assert.ThrowsExactlyAsync<OpenMeteoClientException>(
             async () => await client.QueryEnsembleApiAsync(options));
     }
 }
