@@ -20,8 +20,9 @@ internal static class RegionalModelPolygons
         [WeatherModelOptionsParameter.meteoswiss_icon_ch1] = MeteoswissIconCh1Coverage.ExteriorRing,
         [WeatherModelOptionsParameter.meteoswiss_icon_ch2] = MeteoswissIconCh2Coverage.ExteriorRing,
         [WeatherModelOptionsParameter.metno_nordic] = MetnoNordicPpCoverage.ExteriorRing,
-        [WeatherModelOptionsParameter.gfs_hrrr] = NcepHrrrConusCoverage.ExteriorRing,
-        [WeatherModelOptionsParameter.ncep_nam_conus] = NcepNamConusCoverage.ExteriorRing,
+        [WeatherModelOptionsParameter.ncep_rrfs_conus] = NcepRrfsConusCoverage.ExteriorRing,
+        [WeatherModelOptionsParameter.ncep_rrfs_conus_15min] = NcepRrfsConusCoverage.ExteriorRing,
+        [WeatherModelOptionsParameter.ncep_rrfs_north_america] = NcepRrfsNorthAmericaCoverage.ExteriorRing,
         [WeatherModelOptionsParameter.ncep_nbm_conus] = NcepNbmConusCoverage.ExteriorRing,
         [WeatherModelOptionsParameter.ukmo_uk_deterministic_2km] = UkmoUkDeterministic2kmCoverage.ExteriorRing,
         [WeatherModelOptionsParameter.geosphere_arome_austria] = GeosphereAromeAustriaCoverage.ExteriorRing

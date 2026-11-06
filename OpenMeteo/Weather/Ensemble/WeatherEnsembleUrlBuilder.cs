@@ -30,6 +30,9 @@ namespace OpenMeteo.Weather.Ensemble
 
         public WeatherEnsembleUrlBuilder WithOptions(WeatherEnsembleOptions options)
         {
+            if (options.Models.Count == 0)
+                throw new ArgumentException("At least one ensemble model must be specified.", nameof(options));
+
             _urlBuilder.AddParameter(nameof(options.Latitude).ToLower(), options.Latitude.ToString(CultureInfo.InvariantCulture));
             _urlBuilder.AddParameter(nameof(options.Longitude).ToLower(), options.Longitude.ToString(CultureInfo.InvariantCulture));
             _urlBuilder.AddParameter(nameof(options.Temperature_Unit).ToLower(), options.Temperature_Unit.ToString());

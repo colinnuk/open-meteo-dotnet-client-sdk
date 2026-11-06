@@ -12,9 +12,9 @@ namespace OpenMeteoTests.Weather.Forecast
         public void Build_DefaultConstructor_WithModel_Test()
         {
             var url = new WeatherForecastMetadataUrlBuilder()
-            .WithModel(WeatherModelOptionsParameter.gfs_hrrr)
+            .WithModel(WeatherModelOptionsParameter.ncep_rrfs_conus)
             .Build();
-            var expectedUrl = "https://api.open-meteo.com/data/ncep_hrrr_conus/static/meta.json";
+            var expectedUrl = "https://api.open-meteo.com/data/ncep_rrfs_conus/static/meta.json";
             Assert.AreEqual(expectedUrl, url);
         }
 
@@ -33,9 +33,9 @@ namespace OpenMeteoTests.Weather.Forecast
         public void Build_ApiKey_WithModel_Test()
         {
             var url = new WeatherForecastMetadataUrlBuilder("testApiKey")
-            .WithModel(WeatherModelOptionsParameter.gfs_hrrr)
+            .WithModel(WeatherModelOptionsParameter.ncep_rrfs_conus)
             .Build();
-            var expectedUrl = "https://customer-api.open-meteo.com/data/ncep_hrrr_conus/static/meta.json?apikey=testApiKey";
+            var expectedUrl = "https://customer-api.open-meteo.com/data/ncep_rrfs_conus/static/meta.json?apikey=testApiKey";
             Assert.AreEqual(expectedUrl, url);
         }
 

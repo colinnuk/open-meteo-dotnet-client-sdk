@@ -120,7 +120,7 @@ namespace OpenMeteoTests.Weather.Forecast
             {
                 Latitude = 1,
                 Longitude = 1,
-                Models = new WeatherModelOptions(WeatherModelOptionsParameter.gfs_hrrr),
+                Models = new WeatherModelOptions(WeatherModelOptionsParameter.ncep_rrfs_conus),
             };
 
             var ex = await Assert.ThrowsExceptionAsync<OpenMeteoClientException>(async () => await client.QueryWeatherApiAsync(options));
@@ -206,7 +206,7 @@ namespace OpenMeteoTests.Weather.Forecast
         [DataRow(WeatherModelOptionsParameter.ukmo_global_deterministic_10km, 51.5074, -0.1278)] // London
         [DataRow(WeatherModelOptionsParameter.ncep_aigfs025, 40.7128, -74.0060)] // New York
         [DataRow(WeatherModelOptionsParameter.ncep_hgefs025_ensemble_mean, 40.7128, -74.0060)] // New York
-        [DataRow(WeatherModelOptionsParameter.ncep_nam_conus, 40.7128, -74.0060)] // New York
+        [DataRow(WeatherModelOptionsParameter.ncep_rrfs_north_america, 40.7128, -74.0060)] // New York
         public async Task QueryWeatherApiAsync_WithModel_ReturnsWeatherForecast(WeatherModelOptionsParameter model, double lat, double lon)
         {
             var client = new OpenMeteoClient();

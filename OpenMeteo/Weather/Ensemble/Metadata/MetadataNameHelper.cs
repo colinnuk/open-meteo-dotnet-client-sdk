@@ -19,16 +19,19 @@ internal static class MetadataNameHelper
         
         // NOAA AI-based Ensemble Model
         EnsembleModelOptionsParameter.ncep_aigefs025 => "ncep_aigefs025",
-        
+        EnsembleModelOptionsParameter.ncep_rrfs_conus_ensemble => "ncep_rrfs_conus_ensemble",
+
+        // Google WeatherNext2 Ensemble Model
+        EnsembleModelOptionsParameter.google_weathernext2_ensemble => "google_weathernext2_ensemble",
+
         // ECMWF Ensemble Models
         EnsembleModelOptionsParameter.ecmwf_ifs025 => "ecmwf_ifs025_ensemble",
         EnsembleModelOptionsParameter.ecmwf_aifs025 => "ecmwf_aifs025_ensemble",
-        
+        EnsembleModelOptionsParameter.ecmwf_ifs_europe_ensemble => "ecmwf_ifs_europe_ensemble",
+        EnsembleModelOptionsParameter.ecmwf_aifs_europe_ensemble => "ecmwf_aifs_europe_ensemble",
+
         // Canadian GEM Ensemble
         EnsembleModelOptionsParameter.gem_global => "cmc_gem_geps",
-        
-        // BOM ACCESS Ensemble
-        EnsembleModelOptionsParameter.bom_access_global_ensemble => "bom_access_global_ensemble",
         
         // UK Met Office Ensemble Models
         EnsembleModelOptionsParameter.ukmo_global_ensemble_20km => "ukmo_global_ensemble_20km",
