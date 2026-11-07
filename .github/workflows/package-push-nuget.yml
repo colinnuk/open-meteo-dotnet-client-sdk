@@ -24,6 +24,12 @@ jobs:
       with:
           configFilePath: ./.github/gitversion.yml
 
+    - name: NuGet login (OIDC → temp API key)
+      uses: NuGet/login@v1
+      id: login
+      with:
+        user: colinnuk
+
     - name: Restore dependencies
       run: dotnet restore
       
@@ -50,4 +56,4 @@ jobs:
         fi
 
     - name: Push generated package to NuGet.org
-      run: dotnet nuget push ./package/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+      run: dotnet nuget push ./package/*.nupkg --api-key ${{steps.login.outputs.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json --skip-duplicate
