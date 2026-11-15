@@ -28,6 +28,10 @@ public class EnsembleApiIntegrationTests
     [DataRow(EnsembleModelOptionsParameter.ukmo_uk_ensemble_2km, 53.4808, -2.2426)] // Manchester
     [DataRow(EnsembleModelOptionsParameter.meteoswiss_icon_ch1, 47.3769, 8.5417)] // Zurich
     [DataRow(EnsembleModelOptionsParameter.meteoswiss_icon_ch2, 46.948, 7.4474)] // Bern
+    [DataRow(EnsembleModelOptionsParameter.ncep_rrfs_conus_ensemble, 39.7392, -104.9903)] // Denver
+    [DataRow(EnsembleModelOptionsParameter.ecmwf_ifs_europe_ensemble, 48.8566, 2.3522)] // Paris
+    [DataRow(EnsembleModelOptionsParameter.ecmwf_aifs_europe_ensemble, 48.8566, 2.3522)] // Paris
+    [DataRow(EnsembleModelOptionsParameter.google_weathernext2_ensemble, 51.5074, -0.1278)] // London
     public async Task QueryEnsembleApiAsync_WithOptions_ReturnsEnsembleData(EnsembleModelOptionsParameter model, double lat, double lon)
     {
         var client = new OpenMeteoClient();
@@ -60,6 +64,35 @@ public class EnsembleApiIntegrationTests
         }
     }
 
+    [DataTestMethod]
+    [DataRow(false)]
+    [DataRow(true)]
+    public async Task QueryEnsembleApiAsync_AllDailyVariables_AreAcceptedByApi(bool useFlatbuffers)
+    {
+        // Fails if any daily option name is not one the API accepts.
+        // Every hourly variable at once would use up the free API's per-minute allowance, so only a few are requested here.
+        var client = new OpenMeteoClient { RethrowExceptions = true, UseFlatbuffers = useFlatbuffers };
+        var options = new WeatherEnsembleOptions(47.3769f, 8.5417f) // Zurich
+        {
+            Hourly = [
+                WeatherEnsembleHourlyOptionsParameter.temperature_2m,
+                WeatherEnsembleHourlyOptionsParameter.is_day,
+                WeatherEnsembleHourlyOptionsParameter.soil_moisture_100_to_200cm
+            ],
+            Daily = WeatherEnsembleDailyOptions.All,
+            Models = new EnsembleModelOptions(EnsembleModelOptionsParameter.gfs025),
+            Forecast_Days = 1
+        };
+
+        var result = await client.QueryEnsembleApiAsync(options);
+
+        Assert.IsNotNull(result);
+        Assert.IsTrue(result.Hourly!.Temperature_2m!.Count > 1);
+        Assert.IsTrue(result.Daily!.Temperature_2m_max!.Count > 1);
+        Assert.IsTrue(result.Daily.Windspeed_100m_max!.Count > 1);
+        Assert.IsTrue(result.Daily.Relativehumidity_2m_mean!.Count > 1);
+    }
+
     [TestMethod]
     public async Task QueryEnsembleApiAsync_WithInvalidOptions_ReturnsNull()
     {
@@ -82,7 +115,8 @@ public class EnsembleApiIntegrationTests
         var options = new WeatherEnsembleOptions
         {
             Latitude = 1000f, // Invalid latitude
-            Longitude = 1000f  // Invalid longitude
+            Longitude = 1000f, // Invalid longitude
+            Models = new EnsembleModelOptions(EnsembleModelOptionsParameter.gfs025)
         };
         
         await Assert.ThrowsExactlyAsync<OpenMeteoClientException>(

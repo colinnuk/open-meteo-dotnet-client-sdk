@@ -9,6 +9,24 @@ namespace OpenMeteoTests.Weather.Ensemble;
 public class WeatherEnsembleMetadataUrlBuilderTests
 {
     [TestMethod]
+    public void Build_DefaultConstructor_WithModel_GoogleWeatherNext2_Test()
+    {
+        var url = new WeatherEnsembleMetadataUrlBuilder()
+            .WithModel(EnsembleModelOptionsParameter.google_weathernext2_ensemble)
+            .Build();
+        Assert.AreEqual("https://ensemble-api.open-meteo.com/data/google_weathernext2_ensemble/static/meta.json", url);
+    }
+
+    [DataTestMethod]
+    [DataRow(EnsembleModelOptionsParameter.ncep_rrfs_conus_ensemble)]
+    [DataRow(EnsembleModelOptionsParameter.ecmwf_ifs_europe_ensemble)]
+    [DataRow(EnsembleModelOptionsParameter.ecmwf_aifs_europe_ensemble)]
+    public void WithModel_ModelWithoutMetadata_Throws(EnsembleModelOptionsParameter model)
+    {
+        Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => new WeatherEnsembleMetadataUrlBuilder().WithModel(model));
+    }
+
+    [TestMethod]
     public void Build_DefaultConstructor_WithModel_GemGlobal_Test()
     {
         var url = new WeatherEnsembleMetadataUrlBuilder()
@@ -24,7 +42,7 @@ public class WeatherEnsembleMetadataUrlBuilderTests
         var url = new WeatherEnsembleMetadataUrlBuilder()
             .WithModel(EnsembleModelOptionsParameter.icon_seamless)
             .Build();
-        var expectedUrl = "https://ensemble-api.open-meteo.com/data/dwd_icon_eps/static/meta.json";
+        var expectedUrl = "https://ensemble-api.open-meteo.com/data/dwd_icon_global_eps_native/static/meta.json";
         Assert.AreEqual(expectedUrl, url);
     }
 
@@ -76,7 +94,7 @@ public class WeatherEnsembleMetadataUrlBuilderTests
         var url = new WeatherEnsembleMetadataUrlBuilder(customUri, "testApiKey")
             .WithModel(EnsembleModelOptionsParameter.icon_global)
             .Build();
-        var expectedUrl = "https://custom.example.com/data/dwd_icon_eps/static/meta.json?apikey=testApiKey";
+        var expectedUrl = "https://custom.example.com/data/dwd_icon_global_eps_native/static/meta.json?apikey=testApiKey";
         Assert.AreEqual(expectedUrl, url);
     }
 
@@ -116,7 +134,7 @@ public class WeatherEnsembleMetadataUrlBuilderTests
         var url = new WeatherEnsembleMetadataUrlBuilder()
             .WithModel(EnsembleModelOptionsParameter.icon_eu)
             .Build();
-        var expectedUrl = "https://ensemble-api.open-meteo.com/data/dwd_icon_eu_eps/static/meta.json";
+        var expectedUrl = "https://ensemble-api.open-meteo.com/data/dwd_icon_eu_eps_native/static/meta.json";
         Assert.AreEqual(expectedUrl, url);
     }
 
@@ -126,7 +144,7 @@ public class WeatherEnsembleMetadataUrlBuilderTests
         var url = new WeatherEnsembleMetadataUrlBuilder()
             .WithModel(EnsembleModelOptionsParameter.icon_d2)
             .Build();
-        var expectedUrl = "https://ensemble-api.open-meteo.com/data/dwd_icon_d2_eps/static/meta.json";
+        var expectedUrl = "https://ensemble-api.open-meteo.com/data/dwd_icon_d2_eps_native/static/meta.json";
         Assert.AreEqual(expectedUrl, url);
     }
 

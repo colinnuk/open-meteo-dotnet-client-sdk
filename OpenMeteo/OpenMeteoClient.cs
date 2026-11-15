@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -421,13 +422,44 @@ namespace OpenMeteo
         }
 
         /// <summary>
-        /// Gets ensemble weather forecast data for a given location
+        /// Gets ensemble weather forecast data for a given location.
+        /// When <see cref="WeatherEnsembleOptions.Models"/> holds several models, returns the data for the first one;
+        /// use <see cref="QueryEnsembleModelsApiAsync(WeatherEnsembleOptions)"/> to get all of them.
         /// </summary>
         /// <param name="options">Ensemble options for the request</param>
         /// <returns><see cref="WeatherEnsemble"/> if successful or <see cref="null"/> if failed</returns>
         public async Task<WeatherEnsemble?> QueryEnsembleApiAsync(WeatherEnsembleOptions options)
         {
-            return await GetWeatherEnsembleAsync(options);
+            var ensembles = await GetWeatherEnsemblesAsync(options);
+            return ensembles?.FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Gets ensemble weather forecast data for every model in <see cref="WeatherEnsembleOptions.Models"/> in one request.
+        /// </summary>
+        /// <param name="options">Ensemble options for the request</param>
+        /// <returns>One <see cref="WeatherEnsemble"/> per model, in the order of <see cref="WeatherEnsembleOptions.Models"/>, or <see langword="null"/> when the request fails.</returns>
+        public async Task<IReadOnlyList<WeatherEnsemble>?> QueryEnsembleModelsApiAsync(WeatherEnsembleOptions options)
+        {
+            return await GetWeatherEnsemblesAsync(options);
+        }
+
+        /// <summary>
+        /// Gets ensemble weather forecast data for every model in <see cref="WeatherEnsembleOptions.Models"/> for a location.
+        /// </summary>
+        /// <param name="location">Name of location or city</param>
+        /// <param name="options">Ensemble options for the request</param>
+        /// <returns>One <see cref="WeatherEnsemble"/> per model for the FIRST found result for <paramref name="location"/>, or <see langword="null"/> when the request fails.</returns>
+        public async Task<IReadOnlyList<WeatherEnsemble>?> QueryEnsembleModelsApiAsync(string location, WeatherEnsembleOptions options)
+        {
+            GeocodingApiResponse? geocodingApiResponse = await GetLocationDataAsync(location);
+            if (geocodingApiResponse?.Locations is null || geocodingApiResponse.Locations.Length == 0)
+                return null;
+
+            options.Longitude = geocodingApiResponse.Locations[0].Longitude;
+            options.Latitude = geocodingApiResponse.Locations[0].Latitude;
+
+            return await GetWeatherEnsemblesAsync(options);
         }
 
         /// <summary>
@@ -445,7 +477,8 @@ namespace OpenMeteo
             options.Longitude = geocodingApiResponse.Locations[0].Longitude;
             options.Latitude = geocodingApiResponse.Locations[0].Latitude;
 
-            return await GetWeatherEnsembleAsync(options);
+            var ensembles = await GetWeatherEnsemblesAsync(options);
+            return ensembles?.FirstOrDefault();
         }
 
         /// <summary>
@@ -656,7 +689,7 @@ namespace OpenMeteo
             }
         }
 
-        private async Task<WeatherEnsemble?> GetWeatherEnsembleAsync(WeatherEnsembleOptions options)
+        private async Task<IReadOnlyList<WeatherEnsemble>?> GetWeatherEnsemblesAsync(WeatherEnsembleOptions options)
         {
             try
             {
@@ -668,8 +701,8 @@ namespace OpenMeteo
                 if (response.IsSuccessStatusCode)
                 {
                     return UseFlatbuffers
-                        ? await _weatherEnsembleParser.ConvertFlatBuffersAsync(response, options)
-                        : await _weatherEnsembleParser.DeserializeJsonAsync(response, options);
+                        ? await _weatherEnsembleParser.ConvertFlatBuffersListAsync(response, options)
+                        : await _weatherEnsembleParser.DeserializeJsonListAsync(response, options);
                 }
 
                 ErrorResponse? error = await ParseErrorResponseAsync(response);

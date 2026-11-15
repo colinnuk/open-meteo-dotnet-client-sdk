@@ -73,7 +73,10 @@ public class EnsembleHourly
     public Dictionary<int, float?[]?>? Soil_moisture_0_to_7cm { get; set; }
     public Dictionary<int, float?[]?>? Soil_moisture_7_to_28cm { get; set; }
     public Dictionary<int, float?[]?>? Soil_moisture_28_to_100cm { get; set; }
-    public Dictionary<int, float?[]?>? Soil_moisture_100_to_400cm { get; set; }
+    public Dictionary<int, float?[]?>? Soil_moisture_100_to_200cm { get; set; }
+
+    // Day or night (1 = day, 0 = night)
+    public Dictionary<int, int?[]?>? Is_day { get; set; }
 
     // UV and Temperature Extremes
     public Dictionary<int, float?[]?>? Uv_index { get; set; }
