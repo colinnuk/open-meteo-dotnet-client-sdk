@@ -63,6 +63,22 @@ To use an OpenMeteo API key, you can use the constructor with the API key as a p
 var client = OpenMeteoClient("YourSecretApiKeyHere");
 ```
 
+### Seasonal forecast
+The [Seasonal Forecast API](https://open-meteo.com/en/docs/seasonal-forecast-api) (ECMWF SEAS5/EC46) is available through `QuerySeasonalApiAsync`:
+```cs
+var options = new SeasonalOptions(52.52f, 13.41f)
+{
+    Daily = [SeasonalDailyOptionsParameter.temperature_2m_max],
+    Monthly = [SeasonalMonthlyOptionsParameter.temperature_2m_anomaly],
+    Forecast_Days = 30
+};
+var seasonal = await client.QuerySeasonalApiAsync(options);
+
+float?[]? control = seasonal.Daily.Get("temperature_2m_max");
+IReadOnlyList<float?[]> members = seasonal.Daily.GetMembers("temperature_2m_max"); // one array per ensemble member
+```
+Note that the Seasonal API serves 6-hourly data via `Hourly`. `UseFlatbuffers` is supported for hourly, daily and monthly data and returns the same result as JSON. The binary format has no start date for weekly data, so requests that include `Weekly` variables always use JSON.
+
 The best place to look for more usage examples is the [tests](https://github.com/colinnuk/open-meteo-dotnet-client-sdk/tree/master/OpenMeteoTests).
 
 ## 🗂️ Scripts
