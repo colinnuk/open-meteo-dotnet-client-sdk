@@ -74,7 +74,7 @@ jobs:
       run: dotnet test --filter "TestCategory!=Integration" --configuration Release --no-build --verbosity normal
 
     - name: Package nuget
-      run: dotnet pack ./OpenMeteo/OpenMeteo.csproj --configuration release --no-build -o:package /p:PackageVersion=${{ steps.version.outputs.package_version }} /p:Version=${{ steps.version.outputs.package_version }}
+      run: dotnet pack ./OpenMeteo/OpenMeteo.csproj --configuration release -o:package /p:PackageVersion=${{ steps.version.outputs.package_version }} /p:Version=${{ steps.version.outputs.package_version }}
 
     # Tag first: if this fails (permissions, etc.) nothing has been published yet,
     # so a retry computes the same version instead of leaving an untagged package on NuGet.
