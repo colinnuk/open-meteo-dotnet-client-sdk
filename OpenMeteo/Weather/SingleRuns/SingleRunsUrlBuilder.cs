@@ -39,6 +39,7 @@ namespace OpenMeteo.Weather.SingleRuns
 
             base.WithOptions(options);
             _urlBuilder.AddParameter("run", options.Run.ToString("yyyy-MM-dd'T'HH:mm", CultureInfo.InvariantCulture));
+            _urlBuilder.AddParameter("forecast_days", options.Forecast_Days?.ToString(CultureInfo.InvariantCulture));
             return this;
         }
     }
