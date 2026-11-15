@@ -2,6 +2,15 @@
 
 on:
   workflow_dispatch:
+    inputs:
+      bump:
+        description: 'Version part to increment from the latest release tag'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+        default: patch
 
 jobs:
   build:
@@ -11,21 +20,43 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Install GitVersion
-      uses: gittools/actions/gitversion/setup@v4
-      with:
-          versionSpec: '6.x'
-
-    - name: Check out Code 
+    - name: Check out Code
       uses: actions/checkout@v6
       with:
           fetch-depth: 0
 
     - name: Determine Version
-      id: gitversion
-      uses: gittools/actions/gitversion/execute@v4
-      with:
-          configFilePath: ./.github/gitversion.yml
+      id: version
+      run: |
+        # Latest stable tag (x.y.z) by semantic order, falling back to 0.0.0
+        latest=$(git tag --list | grep -E '^v?[0-9]+\.[0-9]+\.[0-9]+$' | sed 's/^v//' | sort -V | tail -n1)
+        latest=${latest:-0.0.0}
+        IFS=. read -r major minor patch <<< "$latest"
+        case "${{ inputs.bump }}" in
+          major) major=$((major+1)); minor=0; patch=0 ;;
+          minor) minor=$((minor+1)); patch=0 ;;
+          *)     patch=$((patch+1)) ;;
+        esac
+        next="$major.$minor.$patch"
+
+        if [[ "${{ github.ref }}" == "refs/heads/master" ]]; then
+          echo "release=true" >> "$GITHUB_OUTPUT"
+          echo "package_version=$next" >> "$GITHUB_OUTPUT"
+        else
+          # Non-master branches publish a prerelease package and never tag
+          branch=$(echo "${GITHUB_REF_NAME}" | tr -c 'A-Za-z0-9' '-' | sed 's/-*$//')
+          echo "release=false" >> "$GITHUB_OUTPUT"
+          echo "package_version=$next-$branch.${{ github.run_number }}" >> "$GITHUB_OUTPUT"
+        fi
+        echo "assembly_version=$next.0" >> "$GITHUB_OUTPUT"
+        echo "Latest tag: $latest -> new version: $next"
+
+    - name: Fail early if the tag already exists
+      if: steps.version.outputs.release == 'true'
+      run: |
+        if git rev-parse -q --verify "refs/tags/${{ steps.version.outputs.package_version }}" > /dev/null; then
+          echo "Tag ${{ steps.version.outputs.package_version }} already exists"; exit 1
+        fi
 
     - name: NuGet login (OIDC → temp API key)
       uses: NuGet/login@v1
@@ -35,29 +66,23 @@ jobs:
 
     - name: Restore dependencies
       run: dotnet restore
-      
-    - name: Build dotnet 
-      run: dotnet build --configuration release /p:Version=${{ steps.gitversion.outputs.AssemblySemVer }} /p:AssemblyVersion=${{ steps.gitversion.outputs.AssemblySemVer }} /p:InformationalVersion=${{ steps.gitversion.outputs.InformationalVersion }} --no-restore
-      
+
+    - name: Build dotnet
+      run: dotnet build --configuration release /p:Version=${{ steps.version.outputs.package_version }} /p:AssemblyVersion=${{ steps.version.outputs.assembly_version }} --no-restore
+
     - name: Run tests
-      run: dotnet test --filter "TestCategory!=Integration" --configuration Release /p:Version=${{ steps.gitversion.outputs.AssemblySemVer }} --no-build --verbosity normal
+      run: dotnet test --filter "TestCategory!=Integration" --configuration Release --no-build --verbosity normal
 
     - name: Package nuget
-      run: |
-        if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
-          dotnet pack ./OpenMeteo/OpenMeteo.csproj --configuration release -o:package /p:PackageVersion=${{ steps.gitversion.outputs.FullSemVer }}
-        else
-          dotnet pack ./OpenMeteo/OpenMeteo.csproj --configuration release -o:package /p:PackageVersion=${{ steps.gitversion.outputs.AssemblySemVer }}
-        fi
+      run: dotnet pack ./OpenMeteo/OpenMeteo.csproj --configuration release --no-build -o:package /p:PackageVersion=${{ steps.version.outputs.package_version }} /p:Version=${{ steps.version.outputs.package_version }}
+
+    # Tag first: if this fails (permissions, etc.) nothing has been published yet,
+    # so a retry computes the same version instead of leaving an untagged package on NuGet.
+    - name: Create Release for Tag
+      if: steps.version.outputs.release == 'true'
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: gh release create "${{ steps.version.outputs.package_version }}" --target "${{ github.sha }}" --title "${{ steps.version.outputs.package_version }}" --generate-notes
 
     - name: Push generated package to NuGet.org
       run: dotnet nuget push ./package/*.nupkg --api-key ${{steps.login.outputs.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json --skip-duplicate
-
-    - name: Create Release for Tag
-      if: github.ref == 'refs/heads/master'
-      uses: elgohr/Github-Release-Action@v5
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        title: ${{ steps.gitversion.outputs.FullSemVer }}
-        tag: ${{ steps.gitversion.outputs.FullSemVer }}

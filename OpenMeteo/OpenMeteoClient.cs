@@ -21,6 +21,9 @@ using OpenMeteo.Weather.PreviousRuns.Options;
 using OpenMeteo.Weather.PreviousRuns.ResponseModel;
 using OpenMeteo.Weather.SingleRuns;
 using OpenMeteo.Weather.SingleRuns.Options;
+using OpenMeteo.Weather.Seasonal;
+using OpenMeteo.Weather.Seasonal.Options;
+using OpenMeteo.Weather.Seasonal.ResponseModel;
 
 namespace OpenMeteo
 {
@@ -36,6 +39,7 @@ namespace OpenMeteo
         private readonly WeatherForecastResponseParser _weatherForecastParser;
         private readonly WeatherEnsembleResponseParser _weatherEnsembleParser;
         private readonly PreviousRunsWeatherForecastResponseParser _previousRunsParser;
+        private readonly SeasonalResponseParser _seasonalParser = new();
 
         /// <summary>
         /// If set to true, exceptions from the OpenMeteo API will be rethrown. Default is false.
@@ -445,6 +449,36 @@ namespace OpenMeteo
         }
 
         /// <summary>
+        /// Gets seasonal forecast data (https://open-meteo.com/en/docs/seasonal-forecast-api) for a given location.
+        /// Honors <see cref="UseFlatbuffers"/>, except for requests with weekly variables, which always use JSON because the binary format has no start date for weekly data.
+        /// </summary>
+        /// <param name="options">Seasonal options for the request</param>
+        /// <returns><see cref="WeatherSeasonal"/> if successful or <see cref="null"/> if failed</returns>
+        public async Task<WeatherSeasonal?> QuerySeasonalApiAsync(SeasonalOptions options)
+        {
+            return await GetWeatherSeasonalAsync(options);
+        }
+
+        /// <summary>
+        /// Gets seasonal forecast data (https://open-meteo.com/en/docs/seasonal-forecast-api) for a given location name.
+        /// Honors <see cref="UseFlatbuffers"/>, except for requests with weekly variables, which always use JSON because the binary format has no start date for weekly data.
+        /// </summary>
+        /// <param name="location">Name of location or city</param>
+        /// <param name="options">Seasonal options for the request</param>
+        /// <returns><see cref="WeatherSeasonal"/> for the FIRST found result for <paramref name="location"/></returns>
+        public async Task<WeatherSeasonal?> QuerySeasonalApiAsync(string location, SeasonalOptions options)
+        {
+            GeocodingApiResponse? geocodingApiResponse = await GetLocationDataAsync(location);
+            if (geocodingApiResponse == null || geocodingApiResponse?.Locations == null)
+                return null;
+
+            options.Longitude = geocodingApiResponse.Locations[0].Longitude;
+            options.Latitude = geocodingApiResponse.Locations[0].Latitude;
+
+            return await GetWeatherSeasonalAsync(options);
+        }
+
+        /// <summary>
         /// Gets air quality data for a given location
         /// </summary>
         /// <param name="options">options for air quality request</param>
@@ -636,6 +670,35 @@ namespace OpenMeteo
                     return UseFlatbuffers
                         ? await _weatherEnsembleParser.ConvertFlatBuffersAsync(response, options)
                         : await _weatherEnsembleParser.DeserializeJsonAsync(response, options);
+                }
+
+                ErrorResponse? error = await ParseErrorResponseAsync(response);
+                throw new OpenMeteoClientException(error?.Reason ?? "Exception in OpenMeteoClient", response.StatusCode);
+            }
+            catch (Exception)
+            {
+                if (RethrowExceptions)
+                    throw;
+                return null;
+            }
+        }
+
+        private async Task<WeatherSeasonal?> GetWeatherSeasonalAsync(SeasonalOptions options)
+        {
+            try
+            {
+                // The binary format has no start date for weekly data, so weekly requests always use JSON
+                bool useFlatbuffers = UseFlatbuffers && options.Weekly.Count == 0;
+                var url = UrlBuilderFactory.Create<SeasonalUrlBuilder>(_customBaseUri, _apiKey)
+                    .WithOptions(options)
+                    .WithFlatbuffers(useFlatbuffers)
+                    .Build();
+                HttpResponseMessage response = await httpController.Client.GetAsync(url);
+                if (response.IsSuccessStatusCode)
+                {
+                    return useFlatbuffers
+                        ? await _seasonalParser.ConvertFlatBuffersAsync(response, options.Timezone)
+                        : await _seasonalParser.DeserializeJsonAsync(response);
                 }
 
                 ErrorResponse? error = await ParseErrorResponseAsync(response);
