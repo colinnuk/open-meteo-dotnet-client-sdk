@@ -1,4 +1,8 @@
 using System;
+using System.Buffers.Binary;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -16,31 +20,63 @@ public class WeatherEnsembleResponseParser(JsonSerializerOptions jsonSerializerO
     private readonly JsonSerializerOptions _jsonSerializerOptions = jsonSerializerOptions;
 
     /// <summary>
-    /// Deserializes a JSON response into a WeatherEnsemble object
+    /// Deserializes a JSON response into a WeatherEnsemble object.
+    /// When several models were requested, returns the data for the first one; use <see cref="DeserializeJsonListAsync"/> to get all of them.
     /// </summary>
     /// <param name="response">HttpResponseMessage containing the JSON response</param>
     /// <param name="options">WeatherEnsembleOptions object containing the options for the request</param>
     /// <returns></returns>
     public async Task<WeatherEnsemble?> DeserializeJsonAsync(HttpResponseMessage response, WeatherEnsembleOptions options)
     {
+        var ensembles = await DeserializeJsonListAsync(response, options);
+        return ensembles?.FirstOrDefault();
+    }
+
+    /// <summary>
+    /// Deserializes a JSON response into one <see cref="WeatherEnsemble"/> per requested model, in the order of <see cref="WeatherEnsembleOptions.Models"/>.
+    /// </summary>
+    /// <param name="response">HttpResponseMessage containing the JSON response</param>
+    /// <param name="options">WeatherEnsembleOptions object containing the options for the request</param>
+    public async Task<IReadOnlyList<WeatherEnsemble>?> DeserializeJsonListAsync(HttpResponseMessage response, WeatherEnsembleOptions options)
+    {
         if (response == null || !response.IsSuccessStatusCode)
             return null;
 
         var dto = await JsonSerializer.DeserializeAsync<WeatherEnsembleDto>(
-            await response.Content.ReadAsStreamAsync(), 
+            await response.Content.ReadAsStreamAsync(),
             _jsonSerializerOptions);
+        if (dto == null)
+            return null;
 
-        return ConvertDtoToPublicModel(dto, options);
+        // With one model the keys carry no model suffix
+        if (options == null || options.Models.Count <= 1)
+            return [ConvertDtoToPublicModel(dto, options, ModelAt(options, 0))];
+
+        return EnsembleModelSplitter.Split(dto, options)
+            .Select((modelDto, index) => ConvertDtoToPublicModel(modelDto, options, ModelAt(options, index)))
+            .ToList();
     }
 
     /// <summary>
     /// Converts a FlatBuffers response into a WeatherEnsemble object.
+    /// When several models were requested, returns the data for the first one; use <see cref="ConvertFlatBuffersListAsync"/> to get all of them.
     /// </summary>
     /// <param name="response"></param>
     /// <param name="options"></param>
     /// <returns></returns>
     /// <exception cref="InvalidOperationException"></exception>
     public async Task<WeatherEnsemble?> ConvertFlatBuffersAsync(HttpResponseMessage response,
+        WeatherEnsembleOptions? options)
+    {
+        var ensembles = await ConvertFlatBuffersListAsync(response, options);
+        return ensembles?.FirstOrDefault();
+    }
+
+    /// <summary>
+    /// Converts a FlatBuffers response into one <see cref="WeatherEnsemble"/> per requested model, in the order of <see cref="WeatherEnsembleOptions.Models"/>.
+    /// </summary>
+    /// <exception cref="InvalidOperationException"></exception>
+    public async Task<IReadOnlyList<WeatherEnsemble>?> ConvertFlatBuffersListAsync(HttpResponseMessage response,
         WeatherEnsembleOptions? options)
     {
         if (response == null || !response.IsSuccessStatusCode)
@@ -57,18 +93,31 @@ public class WeatherEnsembleResponseParser(JsonSerializerOptions jsonSerializerO
         }
     }
 
-    private WeatherEnsemble? ConvertFlatBuffers(byte[] bytes, WeatherEnsembleOptions? options)
+    private static IReadOnlyList<WeatherEnsemble>? ConvertFlatBuffers(byte[] bytes, WeatherEnsembleOptions? options)
     {
         if (bytes == null || bytes.Length == 0)
             return null;
 
         try
         {
-            // Open-Meteo API sends FlatBuffers with a 4-byte size prefix
-            // We need to skip the first 4 bytes to get to the actual FlatBuffer data
-            var byteBuffer = new ByteBuffer(bytes, 4);
-            var fbResponse = openmeteo_sdk.WeatherApiResponse.GetRootAsWeatherApiResponse(byteBuffer);
-            return ConvertFromFlatBuffers(fbResponse, options);
+            // The API sends one size-prefixed FlatBuffers message per model, in the requested order
+            var ensembles = new List<WeatherEnsemble>();
+            var offset = 0;
+            while (offset < bytes.Length)
+            {
+                if (bytes.Length - offset < sizeof(int))
+                    throw new InvalidDataException("The FlatBuffers response contains an incomplete size prefix.");
+
+                var messageLength = BinaryPrimitives.ReadInt32LittleEndian(bytes.AsSpan(offset, sizeof(int)));
+                if (messageLength <= 0 || messageLength > bytes.Length - offset - sizeof(int))
+                    throw new InvalidDataException("The FlatBuffers response contains an invalid message size.");
+
+                var byteBuffer = new ByteBuffer(bytes, offset + sizeof(int));
+                var fbResponse = openmeteo_sdk.WeatherApiResponse.GetRootAsWeatherApiResponse(byteBuffer);
+                ensembles.Add(ConvertFromFlatBuffers(fbResponse, options, ModelAt(options, ensembles.Count)));
+                offset += sizeof(int) + messageLength;
+            }
+            return ensembles;
         }
         catch (Exception ex)
         {
@@ -76,10 +125,14 @@ public class WeatherEnsembleResponseParser(JsonSerializerOptions jsonSerializerO
         }
     }
 
-    private static WeatherEnsemble ConvertFromFlatBuffers(openmeteo_sdk.WeatherApiResponse fbResponse, WeatherEnsembleOptions? options)
+    private static EnsembleModelOptionsParameter? ModelAt(WeatherEnsembleOptions? options, int index) =>
+        options != null && index < options.Models.Count ? options.Models[index] : null;
+
+    private static WeatherEnsemble ConvertFromFlatBuffers(openmeteo_sdk.WeatherApiResponse fbResponse, WeatherEnsembleOptions? options, EnsembleModelOptionsParameter? model)
     {
         return new WeatherEnsemble
         {
+            Model = model,
             Latitude = fbResponse.Latitude,
             Longitude = fbResponse.Longitude,
             Elevation = fbResponse.Elevation,
@@ -94,12 +147,11 @@ public class WeatherEnsembleResponseParser(JsonSerializerOptions jsonSerializerO
         };
     }
 
-    private static WeatherEnsemble? ConvertDtoToPublicModel(WeatherEnsembleDto? dto, WeatherEnsembleOptions? options)
+    private static WeatherEnsemble ConvertDtoToPublicModel(WeatherEnsembleDto dto, WeatherEnsembleOptions? options, EnsembleModelOptionsParameter? model)
     {
-        if (dto == null) return null;
-
         return new WeatherEnsemble
         {
+            Model = model,
             Latitude = dto.Latitude,
             Longitude = dto.Longitude,
             Elevation = dto.Elevation,

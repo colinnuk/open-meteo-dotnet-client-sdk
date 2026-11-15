@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using System;
+using System.Linq;
 
 namespace OpenMeteo.Weather.Ensemble.ResponseModel.Conversion;
 
@@ -11,7 +12,13 @@ internal static class EnsembleConversionHelpers
     public static string BuildPropertyName(VariableWithValues variable)
     {
         var variableName = variable.Variable.ToString().ToLower();
-        var aggregation = variable.Aggregation.ToString().ToLower();
+        // The API names daily variables with min/max, but the FlatBuffers aggregations are minimum/maximum
+        var aggregation = variable.Aggregation switch
+        {
+            Aggregation.minimum => EnsembleConversionConstants.AggregationMin,
+            Aggregation.maximum => EnsembleConversionConstants.AggregationMax,
+            _ => variable.Aggregation.ToString().ToLower()
+        };
         var altitude = variable.Altitude;
         var pressureLevel = variable.PressureLevel;
         var depth = variable.Depth;
@@ -107,8 +114,15 @@ internal static class EnsembleConversionHelpers
             {
                 property.SetValue(target, members);
             }
+            else if (property != null && property.PropertyType == typeof(Dictionary<int, int?[]?>))
+            {
+                // FlatBuffers sends some whole-number variables (humidity, cloud cover, direction) as floats
+                property.SetValue(target, members.ToDictionary(
+                    member => member.Key,
+                    member => member.Value?.Select(v => v.HasValue && !float.IsNaN(v.Value) ? (int?)Math.Round(v.Value) : null).ToArray()));
+            }
         }
-        
+
         foreach (var (propertyName, members) in intMembers)
         {
             var property = type.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);

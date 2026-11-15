@@ -1,3 +1,4 @@
+using OpenMeteo.Weather.Ensemble.Options;
 using OpenMeteo.Weather.Ensemble.Units;
 
 namespace OpenMeteo.Weather.Ensemble.ResponseModel;
@@ -7,6 +8,12 @@ namespace OpenMeteo.Weather.Ensemble.ResponseModel;
 /// </summary>
 public class WeatherEnsemble
 {
+    /// <summary>
+    /// The ensemble model this data comes from, as given in <see cref="WeatherEnsembleOptions.Models"/>.
+    /// <see langword="null"/> when the request options named no model.
+    /// </summary>
+    public EnsembleModelOptionsParameter? Model { get; set; }
+
     /// <summary>
     /// WGS84 of the center of the weather grid-cell which was used to generate this forecast. 
     /// This coordinate might be up to 5 km away.

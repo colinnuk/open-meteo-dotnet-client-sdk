@@ -88,6 +88,21 @@ foreach (var (member, values) in ensemble!.Hourly!.Temperature_2m!)
     Console.WriteLine($"Member {member}: {values?[0]}");
 ```
 
+To compare several ensemble models, for example GFS, ECMWF IFS and Google WeatherNext 2, list them all in `Models` and call `QueryEnsembleModelsApiAsync`. It makes one request and returns one `WeatherEnsemble` per model, in the order you listed them. Each result's `Model` property says which model it holds. (`QueryEnsembleApiAsync` returns only the first model.)
+
+```cs
+var options = new WeatherEnsembleOptions(52.52f, 13.41f)
+{
+    Hourly = [WeatherEnsembleHourlyOptionsParameter.temperature_2m],
+    Models = [EnsembleModelOptionsParameter.gfs025, EnsembleModelOptionsParameter.ecmwf_ifs025, EnsembleModelOptionsParameter.google_weathernext2_ensemble]
+};
+
+var ensembles = await client.QueryEnsembleModelsApiAsync(options);
+
+foreach (var ensemble in ensembles!)
+    Console.WriteLine($"{ensemble.Model}: {ensemble.Hourly!.Temperature_2m!.Count} members");
+```
+
 ### Seasonal forecast
 The [Seasonal Forecast API](https://open-meteo.com/en/docs/seasonal-forecast-api) (ECMWF SEAS5 and EC46) forecasts up to 7 months ahead as hourly (6-hourly), daily, weekly and monthly data.
 
