@@ -10,6 +10,7 @@ Forked from [AlienDwarf/open-meteo-dotnet](https://github.com/AlienDwarf/open-me
 ## ❕ Features
 
 - Typed clients for the Open-Meteo [forecast](#weather-forecast), [ensemble](#ensemble-forecast), [seasonal](#seasonal-forecast), [previous runs and single runs](#previous-runs-and-single-runs), [air quality](#air-quality), [geocoding and elevation](#geocoding-and-elevation) APIs
+- Offline [regional model coverage](#regional-model-coverage) checks for deterministic and ensemble models
 - Most of the Open-Meteo weather models (as of October 2025)
 - Look up a location by name, or query by latitude and longitude
 - API key support, custom base URLs for self-hosted instances, and bring-your-own `HttpClient`
@@ -149,6 +150,22 @@ Console.WriteLine(location?.Locations?[0].Name);
 var elevation = await client.QueryElevationAsync(52.52f, 13.41f);
 Console.WriteLine(elevation?.Elevation?[0]);
 ```
+
+### Regional model coverage
+Regional models only cover part of the world. You can check whether a location falls inside a model's area without calling the API. The boundaries are built into the library. `IsLocationInModelCoverage` returns `true` or `false` for regional models and `null` for global ones.
+
+```cs
+using OpenMeteo.Weather.Ensemble.RegionalModelCoverage;
+using OpenMeteo.Weather.Forecast.RegionalModelCoverage;
+
+bool? inIconD2 = new RegionalModelCoverageHelper()
+    .IsLocationInModelCoverage(WeatherModelOptionsParameter.icon_d2, 52.52f, 13.41f);   // true
+
+bool? inEcmwfEurope = new EnsembleModelCoverageHelper()
+    .IsLocationInModelCoverage(EnsembleModelOptionsParameter.ecmwf_ifs_europe_ensemble, 40.71f, -74.01f); // false
+```
+
+Both helpers have interfaces (`IRegionalModelCoverageHelper` and `IEnsembleModelCoverageHelper`) for dependency injection. The ICON-EU and ICON-D2 ensembles use the deterministic ICON boundaries, which are close to, but not exactly, their native grids.
 
 ## ⚙️ Configuration
 
