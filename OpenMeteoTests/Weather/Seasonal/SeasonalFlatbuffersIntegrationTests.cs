@@ -119,6 +119,50 @@ public class SeasonalFlatbuffersIntegrationTests
     }
 
     [TestMethod]
+    public async Task Monthly_AllAnomalies_MatchJson_Async_Test()
+    {
+        var options = new SeasonalOptions(52.52f, 13.41f)
+        {
+            Monthly =
+            [
+                SeasonalMonthlyOptionsParameter.temperature_2m_anomaly,
+                SeasonalMonthlyOptionsParameter.precipitation_anomaly,
+                SeasonalMonthlyOptionsParameter.snowfall_anomaly,
+                SeasonalMonthlyOptionsParameter.cloud_cover_anomaly,
+                SeasonalMonthlyOptionsParameter.sunshine_duration_anomaly
+            ]
+        };
+
+        var (json, fb) = await QueryBothAsync(options);
+
+        AssertSeriesEqual(json.Monthly, fb.Monthly);
+        foreach (var name in new[] { "temperature_2m_anomaly", "precipitation_anomaly", "snowfall_anomaly", "cloud_cover_anomaly", "sunshine_duration_anomaly" })
+            Assert.IsTrue(fb.Monthly!.Variables.TryGetValue(name, out var values) && values.Length > 0, name);
+    }
+
+    [TestMethod]
+    public async Task Weekly_AllAnomalies_Async_Test()
+    {
+        var options = new SeasonalOptions(52.52f, 13.41f)
+        {
+            Weekly =
+            [
+                SeasonalWeeklyOptionsParameter.temperature_2m_anomaly,
+                SeasonalWeeklyOptionsParameter.precipitation_anomaly,
+                SeasonalWeeklyOptionsParameter.snowfall_anomaly,
+                SeasonalWeeklyOptionsParameter.cloud_cover_anomaly,
+                SeasonalWeeklyOptionsParameter.sunshine_duration_anomaly
+            ]
+        };
+
+        var (json, fb) = await QueryBothAsync(options);
+
+        AssertSeriesEqual(json.Weekly, fb.Weekly);
+        foreach (var name in new[] { "temperature_2m_anomaly", "precipitation_anomaly", "snowfall_anomaly", "cloud_cover_anomaly", "sunshine_duration_anomaly" })
+            Assert.IsTrue(fb.Weekly!.Variables.TryGetValue(name, out var values) && values.Length > 0, name);
+    }
+
+    [TestMethod]
     public async Task Daily_WithTimezoneAcrossDst_MatchJson_Async_Test()
     {
         var options = new SeasonalOptions(52.52f, 13.41f)
