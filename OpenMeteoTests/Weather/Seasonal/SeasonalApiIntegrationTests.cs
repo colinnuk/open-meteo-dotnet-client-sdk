@@ -46,6 +46,41 @@ public class SeasonalApiIntegrationTests
     }
 
     [TestMethod]
+    public async Task QuerySeasonalApi_AllAnomalies_Async_Test()
+    {
+        OpenMeteoClient client = new() { RethrowExceptions = true };
+        var options = new SeasonalOptions(52.52f, 13.41f)
+        {
+            Weekly =
+            [
+                SeasonalWeeklyOptionsParameter.temperature_2m_anomaly,
+                SeasonalWeeklyOptionsParameter.precipitation_anomaly,
+                SeasonalWeeklyOptionsParameter.snowfall_anomaly,
+                SeasonalWeeklyOptionsParameter.cloud_cover_anomaly,
+                SeasonalWeeklyOptionsParameter.sunshine_duration_anomaly
+            ],
+            Monthly =
+            [
+                SeasonalMonthlyOptionsParameter.temperature_2m_anomaly,
+                SeasonalMonthlyOptionsParameter.precipitation_anomaly,
+                SeasonalMonthlyOptionsParameter.snowfall_anomaly,
+                SeasonalMonthlyOptionsParameter.cloud_cover_anomaly,
+                SeasonalMonthlyOptionsParameter.sunshine_duration_anomaly
+            ]
+        };
+
+        var res = await client.QuerySeasonalApiAsync(options);
+
+        Assert.IsNotNull(res?.Weekly);
+        Assert.IsNotNull(res.Monthly);
+        foreach (var name in new[] { "temperature_2m_anomaly", "precipitation_anomaly", "snowfall_anomaly", "cloud_cover_anomaly", "sunshine_duration_anomaly" })
+        {
+            Assert.IsTrue(res.Weekly.Variables.TryGetValue(name, out var weekly) && weekly.Length > 0, $"weekly {name}");
+            Assert.IsTrue(res.Monthly.Variables.TryGetValue(name, out var monthly) && monthly.Length > 0, $"monthly {name}");
+        }
+    }
+
+    [TestMethod]
     public async Task QuerySeasonalApi_EnsembleMeanModel_Async_Test()
     {
         OpenMeteoClient client = new() { RethrowExceptions = true };

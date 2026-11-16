@@ -65,10 +65,13 @@ public enum SeasonalWeeklyOptionsParameter
     precipitation_anomaly,
     precipitation_efi,
     snowfall_mean,
+    snowfall_anomaly,
     pressure_msl_mean,
     wind_speed_10m_mean,
     cloud_cover_mean,
+    cloud_cover_anomaly,
     sunshine_duration_mean,
+    sunshine_duration_anomaly,
     sea_surface_temperature_mean
 }
 
@@ -82,7 +85,11 @@ public enum SeasonalMonthlyOptionsParameter
     precipitation_mean,
     precipitation_anomaly,
     snowfall_mean,
+    snowfall_anomaly,
     cloud_cover_mean,
+    cloud_cover_anomaly,
+    sunshine_duration_mean,
+    sunshine_duration_anomaly,
     pressure_msl_mean,
     wind_speed_10m_mean,
     shortwave_radiation_mean,
